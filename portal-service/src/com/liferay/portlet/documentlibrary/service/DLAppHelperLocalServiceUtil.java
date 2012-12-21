@@ -167,6 +167,15 @@ public class DLAppHelperLocalServiceUtil {
 			serviceContext);
 	}
 
+	/**
+	* Moves the file entry to the recycle bin.
+	*
+	* @param userId the primary key of the user moving the file entry
+	* @param fileEntry the file entry to be moved
+	* @return the moved file entry
+	* @throws PortalException if a user with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
 	public static com.liferay.portal.kernel.repository.model.FileEntry moveFileEntryToTrash(
 		long userId,
 		com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
@@ -187,6 +196,15 @@ public class DLAppHelperLocalServiceUtil {
 			newFolderId, serviceContext);
 	}
 
+	/**
+	* Moves the file shortcut to the recycle bin.
+	*
+	* @param userId the primary key of the user moving the file shortcut
+	* @param dlFileShortcut the file shortcut to be moved
+	* @return the moved file shortcut
+	* @throws PortalException if a user with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
 	public static com.liferay.portlet.documentlibrary.model.DLFileShortcut moveFileShortcutToTrash(
 		long userId,
 		com.liferay.portlet.documentlibrary.model.DLFileShortcut dlFileShortcut)
@@ -213,6 +231,15 @@ public class DLAppHelperLocalServiceUtil {
 			serviceContext);
 	}
 
+	/**
+	* Moves the folder to the recycle bin.
+	*
+	* @param userId the primary key of the user moving the folder
+	* @param folder the folder to be moved
+	* @return the moved folder
+	* @throws PortalException if a user with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
 	public static com.liferay.portal.kernel.repository.model.Folder moveFolderToTrash(
 		long userId, com.liferay.portal.kernel.repository.model.Folder folder)
 		throws com.liferay.portal.kernel.exception.PortalException,

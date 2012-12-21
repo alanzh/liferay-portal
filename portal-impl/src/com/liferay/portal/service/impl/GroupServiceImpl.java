@@ -242,7 +242,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	 * @param  portlets the portlets to manage
 	 * @param  max the upper bound of the range of groups to consider (not
 	 *         inclusive)
-	 * @return the range of site groups for which the user has control panel
+	 * @return the range of site groups for which the user has Control Panel
 	 *         access
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
@@ -398,8 +398,8 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 
 	/**
 	 * Returns the user's group &quot;places&quot; associated with the group
-	 * entity class names, including the control panel group if the user is
-	 * permitted to view the control panel.
+	 * entity class names, including the Control Panel group if the user is
+	 * permitted to view the Control Panel.
 	 *
 	 * <p>
 	 * <ul> <li> Class name &quot;User&quot; includes the user's layout set
@@ -457,13 +457,9 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		if ((classNames == null) ||
 			ArrayUtil.contains(classNames, Organization.class.getName())) {
 
-			LinkedHashMap<String, Object> organizationParams =
-				new LinkedHashMap<String, Object>();
-
-			organizationParams.put("usersOrgs", new Long(userId));
-
-			List<Organization> userOrgs = organizationLocalService.search(
-				user.getCompanyId(), organizationParams, start, end);
+			List<Organization> userOrgs =
+				organizationLocalService.getOrganizations(
+					userId, start, end, null);
 
 			for (Organization organization : userOrgs) {
 				if (!organization.hasPrivateLayouts() &&
@@ -525,6 +521,10 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		}
 
 		if ((end != QueryUtil.ALL_POS) && (userPlaces.size() > end)) {
+			if (start < 0) {
+				start = 0;
+			}
+
 			userPlaces = ListUtil.subList(userPlaces, start, end);
 		}
 
@@ -533,8 +533,8 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 
 	/**
 	 * Returns the guest or current user's group &quot;places&quot; associated
-	 * with the group entity class names, including the control panel group if
-	 * the user is permitted to view the control panel.
+	 * with the group entity class names, including the Control Panel group if
+	 * the user is permitted to view the Control Panel.
 	 *
 	 * <p>
 	 * <ul> <li> Class name &quot;User&quot; includes the user's layout set
@@ -559,6 +559,23 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return getUserPlaces(getGuestOrUserId(), classNames, false, max);
+	}
+
+	/**
+	 * Returns the number of the guest or current user's group
+	 * &quot;places&quot; associated with the group entity class names,
+	 * including the Control Panel group if the user is permitted to view the
+	 * Control Panel.
+	 *
+	 * @return the number of user's group &quot;places&quot;
+	 * @throws PortalException if a portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int getUserPlacesCount() throws PortalException, SystemException {
+		List<Group> userPlaces = getUserPlaces(
+			getGuestOrUserId(), null, true, QueryUtil.ALL_POS);
+
+		return userPlaces.size();
 	}
 
 	/**

@@ -107,7 +107,7 @@ public class JournalArticleFinderImpl
 	public int countByG_F_S(long groupId, List<Long> folderIds, int status)
 		throws SystemException {
 
-		return doCountByG_F_S(groupId, folderIds, status, true);
+		return doCountByG_F_S(groupId, folderIds, status, false);
 	}
 
 	public int countByC_G_F_C_A_V_T_D_C_T_S_T_D_S_R(
@@ -199,7 +199,7 @@ public class JournalArticleFinderImpl
 			long groupId, List<Long> folderIds, int status)
 		throws SystemException {
 
-		return doCountByG_F_S(groupId, folderIds, status, false);
+		return doCountByG_F_S(groupId, folderIds, status, true);
 	}
 
 	public int filterCountByC_G_F_C_A_V_T_D_C_T_S_T_D_S_R(
@@ -718,22 +718,6 @@ public class JournalArticleFinderImpl
 
 			sql = CustomSQLUtil.replaceAndOperator(sql, andOperator);
 
-			if ((articleIds != null) &&
-				((articleIds.length > 1) ||
-				 ((articleIds.length == 1) && (articleIds[0] != null))) &&
-				(version == null)) {
-
-				sql = StringUtil.replace(
-					sql, "MAX(version) AS tempVersion",
-					"version AS tempVersion");
-				sql = StringUtil.replace(
-					sql, "[$GROUP_BY_CLAUSE$]", StringPool.BLANK);
-			}
-			else {
-				sql = StringUtil.replace(
-					sql, "[$GROUP_BY_CLAUSE$]", "GROUP BY groupId, articleId");
-			}
-
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
 					sql, JournalArticle.class.getName(),
@@ -903,23 +887,6 @@ public class JournalArticleFinderImpl
 			}
 
 			sql = CustomSQLUtil.replaceAndOperator(sql, andOperator);
-
-			if ((articleIds != null) &&
-				((articleIds.length > 1) ||
-				 ((articleIds.length == 1) && (articleIds[0] != null))) &&
-				(version == null)) {
-
-				sql = StringUtil.replace(
-					sql, "MAX(version) AS tempVersion",
-					"version AS tempVersion");
-				sql = StringUtil.replace(
-					sql, "[$GROUP_BY_CLAUSE$]", StringPool.BLANK);
-			}
-			else {
-				sql = StringUtil.replace(
-					sql, "[$GROUP_BY_CLAUSE$]", "GROUP BY groupId, articleId");
-			}
-
 			sql = CustomSQLUtil.replaceOrderBy(sql, orderByComparator);
 
 			if (inlineSQLHelper) {

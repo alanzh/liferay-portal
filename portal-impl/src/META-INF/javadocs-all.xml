@@ -77689,6 +77689,110 @@ Holds context information that is used during exporting and importing portlet da
 		</field>
 	</javadoc>
 	<javadoc>
+		<name>StagedModelDataHandlerRegistry</name>
+		<type>com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistry</type>
+		<author><![CDATA[Mate Thurzo]]></author>
+		<see><![CDATA[com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil]]></see>
+		<since><![CDATA[6.2]]></since>
+		<method>
+			<name>getStagedModelDataHandler</name>
+			<param>
+				<name>className</name>
+				<type>java.lang.String</type>
+			</param>
+		</method>
+		<method>
+			<name>getStagedModelDataHandlers</name>
+		</method>
+		<method>
+			<name>register</name>
+			<param>
+				<name>stagedModelDataHandler</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandler</type>
+			</param>
+		</method>
+		<method>
+			<name>unregister</name>
+			<param>
+				<name>stagedModelDataHandler</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandler</type>
+			</param>
+		</method>
+	</javadoc>
+	<javadoc>
+		<name>StagedModelDataHandlerRegistryUtil</name>
+		<type>com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil</type>
+		<comment><![CDATA[Provides a utility facade to the staged model data handler registry framework.]]></comment>
+		<author><![CDATA[Mate Thurzo]]></author>
+		<author><![CDATA[Brian Wing Shun Chan]]></author>
+		<since><![CDATA[6.2]]></since>
+		<method>
+			<name>getStagedModelDataHandler</name>
+			<comment><![CDATA[Returns the registered staged model data handler with the class name.]]></comment>
+			<param>
+				<name>className</name>
+				<type>java.lang.String</type>
+				<comment><![CDATA[the name of the staged model class]]></comment>
+			</param>
+			<return>
+				<comment><![CDATA[the registered staged model data handler with the class name, or <code>null</code> if none are registered with the class name]]></comment>
+			</return>
+		</method>
+		<method>
+			<name>getStagedModelDataHandlerRegistry</name>
+			<comment><![CDATA[Returns the staged model data handler registry.]]></comment>
+			<return>
+				<comment><![CDATA[the staged model data handler registry]]></comment>
+			</return>
+		</method>
+		<method>
+			<name>getStagedModelDataHandlers</name>
+			<comment><![CDATA[Returns all the registered staged model data handlers.]]></comment>
+			<return>
+				<comment><![CDATA[the registered staged model data handlers]]></comment>
+			</return>
+		</method>
+		<method>
+			<name>register</name>
+			<comment><![CDATA[Registers the staged model data handler.]]></comment>
+			<param>
+				<name>stagedModelDataHandler</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandler</type>
+				<comment><![CDATA[the staged model data handler to register]]></comment>
+			</param>
+		</method>
+		<method>
+			<name>unregister</name>
+			<comment><![CDATA[Unregisters the staged model data handlers.]]></comment>
+			<param>
+				<name>stagedModelDataHandlers</name>
+				<type>java.util.List</type>
+				<comment><![CDATA[the staged model data handlers to unregister]]></comment>
+			</param>
+		</method>
+		<method>
+			<name>unregister</name>
+			<comment><![CDATA[Unregisters the staged model data handler.]]></comment>
+			<param>
+				<name>stagedModelDataHandler</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandler</type>
+				<comment><![CDATA[the staged model data handler to unregister]]></comment>
+			</param>
+		</method>
+		<method>
+			<name>setStagedModelDataHandlerRegistry</name>
+			<comment><![CDATA[Sets the staged model data handler registry.]]></comment>
+			<param>
+				<name>stagedModelDataHandlerRegistry</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistry</type>
+				<comment><![CDATA[the staged model data handler registry]]></comment>
+			</param>
+		</method>
+		<field>
+			<name>_stagedModelDataHandlerRegistry</name>
+		</field>
+	</javadoc>
+	<javadoc>
 		<name>UserIdStrategy</name>
 		<type>com.liferay.portal.kernel.lar.UserIdStrategy</type>
 		<author><![CDATA[Bruno Farache]]></author>
@@ -130454,30 +130558,6 @@ This method is used to check for duplicates when a trash entry is being restored
 			</throws>
 		</method>
 		<method>
-			<name>deleteTrashAttachments</name>
-			<comment><![CDATA[Deletes the group's attachments that were trashed before the given date.]]></comment>
-			<param>
-				<name>group</name>
-				<type>com.liferay.portal.model.Group</type>
-				<comment><![CDATA[ID the primary key of the group]]></comment>
-			</param>
-			<param>
-				<name>date</name>
-				<type>java.util.Date</type>
-				<comment><![CDATA[the date from which attachments will be deleted]]></comment>
-			</param>
-			<throws>
-				<name>PortalException</name>
-				<type>com.liferay.portal.kernel.exception.PortalException</type>
-				<comment><![CDATA[if any one of the attachment file paths were invalid]]></comment>
-			</throws>
-			<throws>
-				<name>SystemException</name>
-				<type>com.liferay.portal.kernel.exception.SystemException</type>
-				<comment><![CDATA[if a system exception occurred]]></comment>
-			</throws>
-		</method>
-		<method>
 			<name>deleteTrashEntries</name>
 			<comment><![CDATA[Deletes all the model entities with the primary keys.]]></comment>
 			<param>
@@ -130593,6 +130673,10 @@ This method is used to check for duplicates when a trash entry is being restored
 			</throws>
 		</method>
 		<method>
+			<name>getContainerModelClassName</name>
+			<comment><![CDATA[Returns the parent container model's class name.]]></comment>
+		</method>
+		<method>
 			<name>getContainerModelName</name>
 			<comment><![CDATA[Returns the name of the container model (e.g. folder name).]]></comment>
 			<return>
@@ -130687,6 +130771,48 @@ If the language key (e.g. <code>found-in-deleted-folder-x</code>) used accepts a
 			</return>
 		</method>
 		<method>
+			<name>getParentContainerModel</name>
+			<comment><![CDATA[Returns the parent container model of the model entity with the primary key.]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of a model entity the container models must be able to contain]]></comment>
+			</param>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
+			<name>getParentContainerModels</name>
+			<comment><![CDATA[Returns all the parent container models of the model entity with the primary key ordered by hierarchy.
+
+<p>
+For example, if the primary key is for a file entry inside folder C, which is inside folder B, which is inside folder A; this method returns container models for folders A, B, and C.
+</p>]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of a model entity the container models must be able to contain]]></comment>
+			</param>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
 			<name>getRestoreLink</name>
 			<comment><![CDATA[Returns the link to the location to which the model entity was restored.]]></comment>
 			<param>
@@ -130755,6 +130881,157 @@ If the language key (e.g. <code>found-in-deleted-folder-x</code>) used accepts a
 			</return>
 		</method>
 		<method>
+			<name>getTrashContainedModelName</name>
+			<comment><![CDATA[Returns the name of the contained model.
+
+<p>
+For example, "files" may be the model name for a folder and "pages" may be the model name for a wiki node.
+</p>]]></comment>
+			<return>
+				<comment><![CDATA[the name of the contained model]]></comment>
+			</return>
+		</method>
+		<method>
+			<name>getTrashContainedModelsCount</name>
+			<comment><![CDATA[Returns the number of model entities (excluding container model entities) that are children of the parent container model identified by the primary key.
+
+<p>
+For example, for a folder with subfolders and documents, the number of documents (excluding those explicitely moved to the recycle bin) is returned.
+</p>]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of a container model]]></comment>
+			</param>
+			<return>
+				<comment><![CDATA[the number of model entities that are children of the parent container model identified by the primary key]]></comment>
+			</return>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
+			<name>getTrashContainedModelTrashRenderers</name>
+			<comment><![CDATA[Returns a range of all the trash renderers of model entities (excluding container models) that are children of the parent container model identified by the primary key.
+
+<p>
+For example, for a folder with subfolders and documents, a range of all the trash renderers of documents (excluding those explicitly moved to the recycle bin) is returned.
+</p>
+
+<p>
+Useful when paginating results. Returns a maximum of <code>end - start</code> instances. The <code>start</code> and <code>end</code> values are not primary keys but, rather, indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+</p>]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of a container model]]></comment>
+			</param>
+			<param>
+				<name>start</name>
+				<type>int</type>
+				<comment><![CDATA[the lower bound of the range of results]]></comment>
+			</param>
+			<param>
+				<name>end</name>
+				<type>int</type>
+				<comment><![CDATA[the upper bound of the range of results (not inclusive)]]></comment>
+			</param>
+			<return>
+				<comment><![CDATA[the range of trash renderers of model entities (excluding container models) that are children of the parent container model identified by the primary key]]></comment>
+			</return>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
+			<name>getTrashContainerModelName</name>
+			<comment><![CDATA[Returns the name of the container model.
+
+<p>
+For example, "folder" may be the container model name for a file entry.
+</p>]]></comment>
+			<return>
+				<comment><![CDATA[the name of the container model]]></comment>
+			</return>
+		</method>
+		<method>
+			<name>getTrashContainerModelsCount</name>
+			<comment><![CDATA[Returns the number of container models that are children of the parent container model identified by the primary key.
+
+<p>
+For example, for a folder with subfolders and documents, the number of folders (excluding those explicitly moved to the recycle bin) is returned.
+</p>]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of a container model]]></comment>
+			</param>
+			<return>
+				<comment><![CDATA[the number of container models that are children of the parent container model identified by the primary key]]></comment>
+			</return>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
+			<name>getTrashContainerModelTrashRenderers</name>
+			<comment><![CDATA[Returns a range of all the trash renderers of model entities that are children of the parent container model identified by the primary key.
+
+<p>
+For example, for a folder with subfolders and documents, the range of renderers representing folders (excluding those explicitly moved to the recycle bin) is returned.
+</p>
+
+<p>
+Useful when paginating results. Returns a maximum of <code>end - start</code> instances. The <code>start</code> and <code>end</code> values are not primary keys but, rather, indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+</p>]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of a container model]]></comment>
+			</param>
+			<param>
+				<name>start</name>
+				<type>int</type>
+				<comment><![CDATA[the lower bound of the range of results]]></comment>
+			</param>
+			<param>
+				<name>end</name>
+				<type>int</type>
+				<comment><![CDATA[the upper bound of the range of results (not inclusive)]]></comment>
+			</param>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
 			<name>getTrashRenderer</name>
 			<comment><![CDATA[Returns the trash renderer associated to the model entity with the primary key.]]></comment>
 			<param>
@@ -130818,6 +131095,13 @@ This method is a mapper for special Recycle Bin operations that are not real per
 			</throws>
 		</method>
 		<method>
+			<name>isContainerModel</name>
+			<comment><![CDATA[Returns <code>true</code> if the entity is a container model.]]></comment>
+			<return>
+				<comment><![CDATA[<code>true</code> if the entity is a container model; <code>false</code> otherwise]]></comment>
+			</return>
+		</method>
+		<method>
 			<name>isInTrash</name>
 			<comment><![CDATA[Returns <code>true</code> if the model entity with the primary key is in the Recycle Bin.]]></comment>
 			<param>
@@ -130838,6 +131122,13 @@ This method is a mapper for special Recycle Bin operations that are not real per
 				<type>com.liferay.portal.kernel.exception.SystemException</type>
 				<comment><![CDATA[if a system exception occurred]]></comment>
 			</throws>
+		</method>
+		<method>
+			<name>isMovable</name>
+			<comment><![CDATA[Returns <code>true</code> if the entity can be moved from one container model (such as a folder) to another.]]></comment>
+			<return>
+				<comment><![CDATA[<code>true</code> if the entity can be moved from one container model to another; <code>false</code> otherwise]]></comment>
+			</return>
 		</method>
 		<method>
 			<name>isRestorable</name>
@@ -130866,6 +131157,30 @@ This method usually returns <code>false</code> if the container (e.g. folder) of
 			</throws>
 		</method>
 		<method>
+			<name>moveEntry</name>
+			<comment><![CDATA[Moves the entity with the class primary key to the container model with the class primary key]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+			</param>
+			<param>
+				<name>containerModelId</name>
+				<type>long</type>
+			</param>
+			<param>
+				<name>serviceContext</name>
+				<type>com.liferay.portal.service.ServiceContext</type>
+			</param>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+			</throws>
+		</method>
+		<method>
 			<name>moveTrashEntry</name>
 			<comment><![CDATA[Moves the model entity with the primary key out of the Recycle Bin to a new destination identified by the container model ID.]]></comment>
 			<param>
@@ -130883,9 +131198,6 @@ This method usually returns <code>false</code> if the container (e.g. folder) of
 				<type>com.liferay.portal.service.ServiceContext</type>
 				<comment><![CDATA[the service context]]></comment>
 			</param>
-			<return>
-				<comment><![CDATA[the moved model entity]]></comment>
-			</return>
 			<throws>
 				<name>PortalException</name>
 				<type>com.liferay.portal.kernel.exception.PortalException</type>
@@ -187831,6 +188143,41 @@ Holds context information that is used during exporting and importing portlet da
 		</field>
 		<field>
 			<name>_permissionImporter</name>
+		</field>
+	</javadoc>
+	<javadoc>
+		<name>StagedModelDataHandlerRegistryImpl</name>
+		<type>com.liferay.portal.lar.StagedModelDataHandlerRegistryImpl</type>
+		<comment><![CDATA[Implementation class for the staged model data handler registry framework]]></comment>
+		<author><![CDATA[Mate Thurzo]]></author>
+		<see><![CDATA[com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil]]></see>
+		<since><![CDATA[6.2]]></since>
+		<method>
+			<name>getStagedModelDataHandler</name>
+			<param>
+				<name>className</name>
+				<type>java.lang.String</type>
+			</param>
+		</method>
+		<method>
+			<name>getStagedModelDataHandlers</name>
+		</method>
+		<method>
+			<name>register</name>
+			<param>
+				<name>stagedModelDataHandler</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandler</type>
+			</param>
+		</method>
+		<method>
+			<name>unregister</name>
+			<param>
+				<name>stagedModelDataHandler</name>
+				<type>com.liferay.portal.kernel.lar.StagedModelDataHandler</type>
+			</param>
+		</method>
+		<field>
+			<name>_stagedModelDataHandlers</name>
 		</field>
 	</javadoc>
 	<javadoc>
@@ -261638,6 +261985,45 @@ Useful when paginating results. Returns a maximum of <code>end - start</code> in
 		</method>
 		<method>
 			<name>getUserPlaces</name>
+			<param>
+				<name>userId</name>
+				<type>long</type>
+			</param>
+			<param>
+				<name>classNames</name>
+				<type>java.lang.String[]</type>
+			</param>
+			<param>
+				<name>name</name>
+				<type>java.lang.String</type>
+			</param>
+			<param>
+				<name>active</name>
+				<type>boolean</type>
+			</param>
+			<param>
+				<name>includeControlPanel</name>
+				<type>boolean</type>
+			</param>
+			<param>
+				<name>start</name>
+				<type>int</type>
+			</param>
+			<param>
+				<name>end</name>
+				<type>int</type>
+			</param>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+			</throws>
+		</method>
+		<method>
+			<name>getUserPlaces</name>
 			<comment><![CDATA[Returns the guest or current user's group &quot;places&quot; associated with the group entity class names, including the control panel group if the user is permitted to view the control panel.
 
 <p>
@@ -261655,6 +262041,23 @@ Useful when paginating results. Returns a maximum of <code>end - start</code> in
 			</param>
 			<return>
 				<comment><![CDATA[the user's group &quot;places&quot;]]></comment>
+			</return>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a portal exception occurred]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
+			<name>getUserPlacesCount</name>
+			<comment><![CDATA[Returns the number of the guest or current user's group &quot;places&quot; associated with the group entity class names, including the control panel group if the user is permitted to view the control panel.]]></comment>
+			<return>
+				<comment><![CDATA[the number of user's group &quot;places&quot;]]></comment>
 			</return>
 			<throws>
 				<name>PortalException</name>

@@ -46,6 +46,7 @@ import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
@@ -698,6 +699,33 @@ public class DLImpl implements DL {
 			boolean manualCheckInRequired)
 		throws PortalException, SystemException {
 
+		StringBundler webDavURL = new StringBundler(7);
+
+		boolean secure = false;
+
+		if (themeDisplay.isSecure() ||
+			PropsValues.WEBDAV_SERVLET_HTTPS_REQUIRED) {
+
+			secure = true;
+		}
+
+		String portalURL = PortalUtil.getPortalURL(
+			themeDisplay.getServerName(), themeDisplay.getServerPort(), secure);
+
+		webDavURL.append(portalURL);
+
+		webDavURL.append(themeDisplay.getPathContext());
+		webDavURL.append("/webdav");
+
+		if (manualCheckInRequired) {
+			webDavURL.append(DLUtil.MANUAL_CHECK_IN_REQUIRED_PATH);
+		}
+
+		Group group = themeDisplay.getScopeGroup();
+
+		webDavURL.append(group.getFriendlyURL());
+		webDavURL.append("/document_library");
+
 		StringBuilder sb = new StringBuilder();
 
 		if (folder != null) {
@@ -724,20 +752,6 @@ public class DLImpl implements DL {
 			sb.append(HttpUtil.encodeURL(fileEntry.getTitle(), true));
 		}
 
-		Group group = themeDisplay.getScopeGroup();
-
-		StringBundler webDavURL = new StringBundler(7);
-
-		webDavURL.append(themeDisplay.getPortalURL());
-		webDavURL.append(themeDisplay.getPathContext());
-		webDavURL.append("/webdav");
-
-		if (manualCheckInRequired) {
-			webDavURL.append(DLUtil.MANUAL_CHECK_IN_REQUIRED_PATH);
-		}
-
-		webDavURL.append(group.getFriendlyURL());
-		webDavURL.append("/document_library");
 		webDavURL.append(sb.toString());
 
 		return webDavURL.toString();
