@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -194,16 +193,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -226,7 +227,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -416,16 +417,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -496,7 +499,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -551,16 +554,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_COUNT_DLFILEVERSION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -574,7 +579,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -597,7 +602,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileVersion.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileVersion.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileVersion.uuid IS NULL OR dlFileVersion.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileVersion.uuid IS NULL OR dlFileVersion.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileVersionModelImpl.FINDER_CACHE_ENABLED,
 			DLFileVersionImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -692,16 +697,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -717,7 +724,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -800,16 +807,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_COUNT_DLFILEVERSION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -825,7 +834,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -850,7 +859,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileVersion.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileVersion.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileVersion.uuid IS NULL OR dlFileVersion.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileVersion.uuid IS NULL OR dlFileVersion.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "dlFileVersion.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileVersionModelImpl.FINDER_CACHE_ENABLED,
@@ -974,16 +983,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1008,7 +1019,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1214,16 +1225,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1296,7 +1309,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1357,16 +1370,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_COUNT_DLFILEVERSION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1382,7 +1397,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1407,7 +1422,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileVersion.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileVersion.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileVersion.uuid IS NULL OR dlFileVersion.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileVersion.uuid IS NULL OR dlFileVersion.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "dlFileVersion.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_FILEENTRYID =
 		new FinderPath(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
@@ -2000,16 +2015,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+			boolean bindMimeType = false;
+
 			if (mimeType == null) {
 				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_1);
 			}
+			else if (mimeType.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_3);
+			}
 			else {
-				if (mimeType.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_2);
-				}
+				bindMimeType = true;
+
+				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -2032,7 +2049,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (mimeType != null) {
+				if (bindMimeType) {
 					qPos.add(mimeType);
 				}
 
@@ -2225,16 +2242,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		query.append(_SQL_SELECT_DLFILEVERSION_WHERE);
 
+		boolean bindMimeType = false;
+
 		if (mimeType == null) {
 			query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_1);
 		}
+		else if (mimeType.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_3);
+		}
 		else {
-			if (mimeType.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_2);
-			}
+			bindMimeType = true;
+
+			query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -2305,7 +2324,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (mimeType != null) {
+		if (bindMimeType) {
 			qPos.add(mimeType);
 		}
 
@@ -2360,16 +2379,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_SQL_COUNT_DLFILEVERSION_WHERE);
 
+			boolean bindMimeType = false;
+
 			if (mimeType == null) {
 				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_1);
 			}
+			else if (mimeType.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_3);
+			}
 			else {
-				if (mimeType.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_2);
-				}
+				bindMimeType = true;
+
+				query.append(_FINDER_COLUMN_MIMETYPE_MIMETYPE_2);
 			}
 
 			String sql = query.toString();
@@ -2383,7 +2404,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (mimeType != null) {
+				if (bindMimeType) {
 					qPos.add(mimeType);
 				}
 
@@ -2406,7 +2427,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 	private static final String _FINDER_COLUMN_MIMETYPE_MIMETYPE_1 = "dlFileVersion.mimeType IS NULL";
 	private static final String _FINDER_COLUMN_MIMETYPE_MIMETYPE_2 = "dlFileVersion.mimeType = ?";
-	private static final String _FINDER_COLUMN_MIMETYPE_MIMETYPE_3 = "(dlFileVersion.mimeType IS NULL OR dlFileVersion.mimeType = ?)";
+	private static final String _FINDER_COLUMN_MIMETYPE_MIMETYPE_3 = "(dlFileVersion.mimeType IS NULL OR dlFileVersion.mimeType = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_F_V = new FinderPath(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileVersionModelImpl.FINDER_CACHE_ENABLED,
 			DLFileVersionImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByF_V",
@@ -2503,16 +2524,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_FINDER_COLUMN_F_V_FILEENTRYID_2);
 
+			boolean bindVersion = false;
+
 			if (version == null) {
 				query.append(_FINDER_COLUMN_F_V_VERSION_1);
 			}
+			else if (version.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_F_V_VERSION_3);
+			}
 			else {
-				if (version.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_F_V_VERSION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_F_V_VERSION_2);
-				}
+				bindVersion = true;
+
+				query.append(_FINDER_COLUMN_F_V_VERSION_2);
 			}
 
 			String sql = query.toString();
@@ -2528,7 +2551,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				qPos.add(fileEntryId);
 
-				if (version != null) {
+				if (bindVersion) {
 					qPos.add(version);
 				}
 
@@ -2611,16 +2634,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_FINDER_COLUMN_F_V_FILEENTRYID_2);
 
+			boolean bindVersion = false;
+
 			if (version == null) {
 				query.append(_FINDER_COLUMN_F_V_VERSION_1);
 			}
+			else if (version.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_F_V_VERSION_3);
+			}
 			else {
-				if (version.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_F_V_VERSION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_F_V_VERSION_2);
-				}
+				bindVersion = true;
+
+				query.append(_FINDER_COLUMN_F_V_VERSION_2);
 			}
 
 			String sql = query.toString();
@@ -2636,7 +2661,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				qPos.add(fileEntryId);
 
-				if (version != null) {
+				if (bindVersion) {
 					qPos.add(version);
 				}
 
@@ -2660,7 +2685,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	private static final String _FINDER_COLUMN_F_V_FILEENTRYID_2 = "dlFileVersion.fileEntryId = ? AND ";
 	private static final String _FINDER_COLUMN_F_V_VERSION_1 = "dlFileVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_F_V_VERSION_2 = "dlFileVersion.version = ?";
-	private static final String _FINDER_COLUMN_F_V_VERSION_3 = "(dlFileVersion.version IS NULL OR dlFileVersion.version = ?)";
+	private static final String _FINDER_COLUMN_F_V_VERSION_3 = "(dlFileVersion.version IS NULL OR dlFileVersion.version = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_F_S = new FinderPath(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileVersionModelImpl.FINDER_CACHE_ENABLED,
 			DLFileVersionImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -3881,28 +3906,32 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_FINDER_COLUMN_G_F_T_V_FOLDERID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_1);
 			}
-			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_F_T_V_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_F_T_V_TITLE_2);
-				}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_3);
 			}
+			else {
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_2);
+			}
+
+			boolean bindVersion = false;
 
 			if (version == null) {
 				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_1);
 			}
+			else if (version.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_3);
+			}
 			else {
-				if (version.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_F_T_V_VERSION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_F_T_V_VERSION_2);
-				}
+				bindVersion = true;
+
+				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_2);
 			}
 
 			if (orderByComparator != null) {
@@ -3929,11 +3958,11 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				qPos.add(folderId);
 
-				if (title != null) {
+				if (bindTitle) {
 					qPos.add(title);
 				}
 
-				if (version != null) {
+				if (bindVersion) {
 					qPos.add(version);
 				}
 
@@ -4166,28 +4195,32 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		query.append(_FINDER_COLUMN_G_F_T_V_FOLDERID_2);
 
+		boolean bindTitle = false;
+
 		if (title == null) {
 			query.append(_FINDER_COLUMN_G_F_T_V_TITLE_1);
 		}
-		else {
-			if (title.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_2);
-			}
+		else if (title.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_F_T_V_TITLE_3);
 		}
+		else {
+			bindTitle = true;
+
+			query.append(_FINDER_COLUMN_G_F_T_V_TITLE_2);
+		}
+
+		boolean bindVersion = false;
 
 		if (version == null) {
 			query.append(_FINDER_COLUMN_G_F_T_V_VERSION_1);
 		}
+		else if (version.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_F_T_V_VERSION_3);
+		}
 		else {
-			if (version.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_2);
-			}
+			bindVersion = true;
+
+			query.append(_FINDER_COLUMN_G_F_T_V_VERSION_2);
 		}
 
 		if (orderByComparator != null) {
@@ -4262,11 +4295,11 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 		qPos.add(folderId);
 
-		if (title != null) {
+		if (bindTitle) {
 			qPos.add(title);
 		}
 
-		if (version != null) {
+		if (bindVersion) {
 			qPos.add(version);
 		}
 
@@ -4333,28 +4366,32 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			query.append(_FINDER_COLUMN_G_F_T_V_FOLDERID_2);
 
+			boolean bindTitle = false;
+
 			if (title == null) {
 				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_1);
 			}
-			else {
-				if (title.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_F_T_V_TITLE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_F_T_V_TITLE_2);
-				}
+			else if (title.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_3);
 			}
+			else {
+				bindTitle = true;
+
+				query.append(_FINDER_COLUMN_G_F_T_V_TITLE_2);
+			}
+
+			boolean bindVersion = false;
 
 			if (version == null) {
 				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_1);
 			}
+			else if (version.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_3);
+			}
 			else {
-				if (version.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_F_T_V_VERSION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_F_T_V_VERSION_2);
-				}
+				bindVersion = true;
+
+				query.append(_FINDER_COLUMN_G_F_T_V_VERSION_2);
 			}
 
 			String sql = query.toString();
@@ -4372,11 +4409,11 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				qPos.add(folderId);
 
-				if (title != null) {
+				if (bindTitle) {
 					qPos.add(title);
 				}
 
-				if (version != null) {
+				if (bindVersion) {
 					qPos.add(version);
 				}
 
@@ -4401,10 +4438,10 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	private static final String _FINDER_COLUMN_G_F_T_V_FOLDERID_2 = "dlFileVersion.folderId = ? AND ";
 	private static final String _FINDER_COLUMN_G_F_T_V_TITLE_1 = "dlFileVersion.title IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_F_T_V_TITLE_2 = "dlFileVersion.title = ? AND ";
-	private static final String _FINDER_COLUMN_G_F_T_V_TITLE_3 = "(dlFileVersion.title IS NULL OR dlFileVersion.title = ?) AND ";
+	private static final String _FINDER_COLUMN_G_F_T_V_TITLE_3 = "(dlFileVersion.title IS NULL OR dlFileVersion.title = '') AND ";
 	private static final String _FINDER_COLUMN_G_F_T_V_VERSION_1 = "dlFileVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_G_F_T_V_VERSION_2 = "dlFileVersion.version = ?";
-	private static final String _FINDER_COLUMN_G_F_T_V_VERSION_3 = "(dlFileVersion.version IS NULL OR dlFileVersion.version = ?)";
+	private static final String _FINDER_COLUMN_G_F_T_V_VERSION_3 = "(dlFileVersion.version IS NULL OR dlFileVersion.version = '')";
 
 	/**
 	 * Caches the document library file version in the entity cache if it is enabled.
@@ -4417,16 +4454,12 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			dlFileVersion);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				dlFileVersion.getUuid(),
-				Long.valueOf(dlFileVersion.getGroupId())
-			}, dlFileVersion);
+			new Object[] { dlFileVersion.getUuid(), dlFileVersion.getGroupId() },
+			dlFileVersion);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_V,
 			new Object[] {
-				Long.valueOf(dlFileVersion.getFileEntryId()),
-				
-			dlFileVersion.getVersion()
+				dlFileVersion.getFileEntryId(), dlFileVersion.getVersion()
 			}, dlFileVersion);
 
 		dlFileVersion.resetOriginalValues();
@@ -4504,8 +4537,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	protected void cacheUniqueFindersCache(DLFileVersion dlFileVersion) {
 		if (dlFileVersion.isNew()) {
 			Object[] args = new Object[] {
-					dlFileVersion.getUuid(),
-					Long.valueOf(dlFileVersion.getGroupId())
+					dlFileVersion.getUuid(), dlFileVersion.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -4514,9 +4546,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 				dlFileVersion);
 
 			args = new Object[] {
-					Long.valueOf(dlFileVersion.getFileEntryId()),
-					
-					dlFileVersion.getVersion()
+					dlFileVersion.getFileEntryId(), dlFileVersion.getVersion()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_F_V, args,
@@ -4530,8 +4560,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			if ((dlFileVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						dlFileVersion.getUuid(),
-						Long.valueOf(dlFileVersion.getGroupId())
+						dlFileVersion.getUuid(), dlFileVersion.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -4543,8 +4572,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			if ((dlFileVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_F_V.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileVersion.getFileEntryId()),
-						
+						dlFileVersion.getFileEntryId(),
 						dlFileVersion.getVersion()
 					};
 
@@ -4560,8 +4588,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		DLFileVersionModelImpl dlFileVersionModelImpl = (DLFileVersionModelImpl)dlFileVersion;
 
 		Object[] args = new Object[] {
-				dlFileVersion.getUuid(),
-				Long.valueOf(dlFileVersion.getGroupId())
+				dlFileVersion.getUuid(), dlFileVersion.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -4571,7 +4598,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					dlFileVersionModelImpl.getOriginalUuid(),
-					Long.valueOf(dlFileVersionModelImpl.getOriginalGroupId())
+					dlFileVersionModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -4579,9 +4606,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		}
 
 		args = new Object[] {
-				Long.valueOf(dlFileVersion.getFileEntryId()),
-				
-				dlFileVersion.getVersion()
+				dlFileVersion.getFileEntryId(), dlFileVersion.getVersion()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_F_V, args);
@@ -4590,8 +4615,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		if ((dlFileVersionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_F_V.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(dlFileVersionModelImpl.getOriginalFileEntryId()),
-					
+					dlFileVersionModelImpl.getOriginalFileEntryId(),
 					dlFileVersionModelImpl.getOriginalVersion()
 				};
 
@@ -4629,7 +4653,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	 */
 	public DLFileVersion remove(long fileVersionId)
 		throws NoSuchFileVersionException, SystemException {
-		return remove(Long.valueOf(fileVersionId));
+		return remove((Serializable)fileVersionId);
 	}
 
 	/**
@@ -4771,7 +4795,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						dlFileVersionModelImpl.getOriginalUuid(),
-						Long.valueOf(dlFileVersionModelImpl.getOriginalCompanyId())
+						dlFileVersionModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -4780,7 +4804,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				args = new Object[] {
 						dlFileVersionModelImpl.getUuid(),
-						Long.valueOf(dlFileVersionModelImpl.getCompanyId())
+						dlFileVersionModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -4791,7 +4815,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			if ((dlFileVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FILEENTRYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getOriginalFileEntryId())
+						dlFileVersionModelImpl.getOriginalFileEntryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEENTRYID,
@@ -4799,9 +4823,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FILEENTRYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getFileEntryId())
-					};
+				args = new Object[] { dlFileVersionModelImpl.getFileEntryId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEENTRYID,
 					args);
@@ -4829,8 +4851,8 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			if ((dlFileVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_F_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getOriginalFileEntryId()),
-						Integer.valueOf(dlFileVersionModelImpl.getOriginalStatus())
+						dlFileVersionModelImpl.getOriginalFileEntryId(),
+						dlFileVersionModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_F_S, args);
@@ -4838,8 +4860,8 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getFileEntryId()),
-						Integer.valueOf(dlFileVersionModelImpl.getStatus())
+						dlFileVersionModelImpl.getFileEntryId(),
+						dlFileVersionModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_F_S, args);
@@ -4850,9 +4872,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			if ((dlFileVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_F_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getOriginalGroupId()),
-						Long.valueOf(dlFileVersionModelImpl.getOriginalFolderId()),
-						Integer.valueOf(dlFileVersionModelImpl.getOriginalStatus())
+						dlFileVersionModelImpl.getOriginalGroupId(),
+						dlFileVersionModelImpl.getOriginalFolderId(),
+						dlFileVersionModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_F_S, args);
@@ -4860,9 +4882,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getGroupId()),
-						Long.valueOf(dlFileVersionModelImpl.getFolderId()),
-						Integer.valueOf(dlFileVersionModelImpl.getStatus())
+						dlFileVersionModelImpl.getGroupId(),
+						dlFileVersionModelImpl.getFolderId(),
+						dlFileVersionModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_F_S, args);
@@ -4873,11 +4895,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			if ((dlFileVersionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_F_T_V.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getOriginalGroupId()),
-						Long.valueOf(dlFileVersionModelImpl.getOriginalFolderId()),
-						
+						dlFileVersionModelImpl.getOriginalGroupId(),
+						dlFileVersionModelImpl.getOriginalFolderId(),
 						dlFileVersionModelImpl.getOriginalTitle(),
-						
 						dlFileVersionModelImpl.getOriginalVersion()
 					};
 
@@ -4886,11 +4906,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlFileVersionModelImpl.getGroupId()),
-						Long.valueOf(dlFileVersionModelImpl.getFolderId()),
-						
+						dlFileVersionModelImpl.getGroupId(),
+						dlFileVersionModelImpl.getFolderId(),
 						dlFileVersionModelImpl.getTitle(),
-						
 						dlFileVersionModelImpl.getVersion()
 					};
 
@@ -4954,13 +4972,24 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	 *
 	 * @param primaryKey the primary key of the document library file version
 	 * @return the document library file version
-	 * @throws com.liferay.portal.NoSuchModelException if a document library file version with the primary key could not be found
+	 * @throws com.liferay.portlet.documentlibrary.NoSuchFileVersionException if a document library file version with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public DLFileVersion findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchFileVersionException, SystemException {
+		DLFileVersion dlFileVersion = fetchByPrimaryKey(primaryKey);
+
+		if (dlFileVersion == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchFileVersionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return dlFileVersion;
 	}
 
 	/**
@@ -4973,18 +5002,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	 */
 	public DLFileVersion findByPrimaryKey(long fileVersionId)
 		throws NoSuchFileVersionException, SystemException {
-		DLFileVersion dlFileVersion = fetchByPrimaryKey(fileVersionId);
-
-		if (dlFileVersion == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + fileVersionId);
-			}
-
-			throw new NoSuchFileVersionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				fileVersionId);
-		}
-
-		return dlFileVersion;
+		return findByPrimaryKey((Serializable)fileVersionId);
 	}
 
 	/**
@@ -4997,20 +5015,8 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	@Override
 	public DLFileVersion fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the document library file version with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param fileVersionId the primary key of the document library file version
-	 * @return the document library file version, or <code>null</code> if a document library file version with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public DLFileVersion fetchByPrimaryKey(long fileVersionId)
-		throws SystemException {
 		DLFileVersion dlFileVersion = (DLFileVersion)EntityCacheUtil.getResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
-				DLFileVersionImpl.class, fileVersionId);
+				DLFileVersionImpl.class, primaryKey);
 
 		if (dlFileVersion == _nullDLFileVersion) {
 			return null;
@@ -5023,20 +5029,19 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 				session = openSession();
 
 				dlFileVersion = (DLFileVersion)session.get(DLFileVersionImpl.class,
-						Long.valueOf(fileVersionId));
+						primaryKey);
 
 				if (dlFileVersion != null) {
 					cacheResult(dlFileVersion);
 				}
 				else {
 					EntityCacheUtil.putResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
-						DLFileVersionImpl.class, fileVersionId,
-						_nullDLFileVersion);
+						DLFileVersionImpl.class, primaryKey, _nullDLFileVersion);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
-					DLFileVersionImpl.class, fileVersionId);
+					DLFileVersionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -5046,6 +5051,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		}
 
 		return dlFileVersion;
+	}
+
+	/**
+	 * Returns the document library file version with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param fileVersionId the primary key of the document library file version
+	 * @return the document library file version, or <code>null</code> if a document library file version with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DLFileVersion fetchByPrimaryKey(long fileVersionId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)fileVersionId);
 	}
 
 	/**

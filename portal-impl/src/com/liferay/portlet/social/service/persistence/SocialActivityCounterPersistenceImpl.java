@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.social.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1351,16 +1350,18 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_S_CLASSPK_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_S_OWNERTYPE_2);
@@ -1384,7 +1385,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 				qPos.add(classPK);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1491,16 +1492,18 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_S_CLASSPK_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_C_C_N_O_S_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_S_OWNERTYPE_2);
@@ -1524,7 +1527,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 				qPos.add(classPK);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1554,7 +1557,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_CLASSPK_2 = "socialActivityCounter.classPK = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_1 = "socialActivityCounter.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_2 = "socialActivityCounter.name = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_3 = "(socialActivityCounter.name IS NULL OR socialActivityCounter.name = ?) AND ";
+	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_3 = "(socialActivityCounter.name IS NULL OR socialActivityCounter.name = '') AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_OWNERTYPE_2 = "socialActivityCounter.ownerType = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_STARTPERIOD_2 = "socialActivityCounter.startPeriod = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_C_C_N_O_E = new FinderPath(SocialActivityCounterModelImpl.ENTITY_CACHE_ENABLED,
@@ -1705,16 +1708,18 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_E_CLASSPK_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_E_OWNERTYPE_2);
@@ -1738,7 +1743,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 				qPos.add(classPK);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1845,16 +1850,18 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_E_CLASSPK_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_C_C_N_O_E_NAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_C_C_N_O_E_OWNERTYPE_2);
@@ -1878,7 +1885,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 				qPos.add(classPK);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1908,7 +1915,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_CLASSPK_2 = "socialActivityCounter.classPK = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_1 = "socialActivityCounter.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_2 = "socialActivityCounter.name = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_3 = "(socialActivityCounter.name IS NULL OR socialActivityCounter.name = ?) AND ";
+	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_3 = "(socialActivityCounter.name IS NULL OR socialActivityCounter.name = '') AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_OWNERTYPE_2 = "socialActivityCounter.ownerType = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_ENDPERIOD_2 = "socialActivityCounter.endPeriod = ?";
 
@@ -1924,24 +1931,22 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
 			new Object[] {
-				Long.valueOf(socialActivityCounter.getGroupId()),
-				Long.valueOf(socialActivityCounter.getClassNameId()),
-				Long.valueOf(socialActivityCounter.getClassPK()),
-				
-			socialActivityCounter.getName(),
-				Integer.valueOf(socialActivityCounter.getOwnerType()),
-				Integer.valueOf(socialActivityCounter.getStartPeriod())
+				socialActivityCounter.getGroupId(),
+				socialActivityCounter.getClassNameId(),
+				socialActivityCounter.getClassPK(),
+				socialActivityCounter.getName(),
+				socialActivityCounter.getOwnerType(),
+				socialActivityCounter.getStartPeriod()
 			}, socialActivityCounter);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
 			new Object[] {
-				Long.valueOf(socialActivityCounter.getGroupId()),
-				Long.valueOf(socialActivityCounter.getClassNameId()),
-				Long.valueOf(socialActivityCounter.getClassPK()),
-				
-			socialActivityCounter.getName(),
-				Integer.valueOf(socialActivityCounter.getOwnerType()),
-				Integer.valueOf(socialActivityCounter.getEndPeriod())
+				socialActivityCounter.getGroupId(),
+				socialActivityCounter.getClassNameId(),
+				socialActivityCounter.getClassPK(),
+				socialActivityCounter.getName(),
+				socialActivityCounter.getOwnerType(),
+				socialActivityCounter.getEndPeriod()
 			}, socialActivityCounter);
 
 		socialActivityCounter.resetOriginalValues();
@@ -2023,13 +2028,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		SocialActivityCounter socialActivityCounter) {
 		if (socialActivityCounter.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(socialActivityCounter.getGroupId()),
-					Long.valueOf(socialActivityCounter.getClassNameId()),
-					Long.valueOf(socialActivityCounter.getClassPK()),
-					
+					socialActivityCounter.getGroupId(),
+					socialActivityCounter.getClassNameId(),
+					socialActivityCounter.getClassPK(),
 					socialActivityCounter.getName(),
-					Integer.valueOf(socialActivityCounter.getOwnerType()),
-					Integer.valueOf(socialActivityCounter.getStartPeriod())
+					socialActivityCounter.getOwnerType(),
+					socialActivityCounter.getStartPeriod()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S, args,
@@ -2038,13 +2042,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 				socialActivityCounter);
 
 			args = new Object[] {
-					Long.valueOf(socialActivityCounter.getGroupId()),
-					Long.valueOf(socialActivityCounter.getClassNameId()),
-					Long.valueOf(socialActivityCounter.getClassPK()),
-					
+					socialActivityCounter.getGroupId(),
+					socialActivityCounter.getClassNameId(),
+					socialActivityCounter.getClassPK(),
 					socialActivityCounter.getName(),
-					Integer.valueOf(socialActivityCounter.getOwnerType()),
-					Integer.valueOf(socialActivityCounter.getEndPeriod())
+					socialActivityCounter.getOwnerType(),
+					socialActivityCounter.getEndPeriod()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E, args,
@@ -2058,13 +2061,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			if ((socialActivityCounterModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_C_C_N_O_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialActivityCounter.getGroupId()),
-						Long.valueOf(socialActivityCounter.getClassNameId()),
-						Long.valueOf(socialActivityCounter.getClassPK()),
-						
+						socialActivityCounter.getGroupId(),
+						socialActivityCounter.getClassNameId(),
+						socialActivityCounter.getClassPK(),
 						socialActivityCounter.getName(),
-						Integer.valueOf(socialActivityCounter.getOwnerType()),
-						Integer.valueOf(socialActivityCounter.getStartPeriod())
+						socialActivityCounter.getOwnerType(),
+						socialActivityCounter.getStartPeriod()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S,
@@ -2076,13 +2078,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			if ((socialActivityCounterModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_C_C_N_O_E.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialActivityCounter.getGroupId()),
-						Long.valueOf(socialActivityCounter.getClassNameId()),
-						Long.valueOf(socialActivityCounter.getClassPK()),
-						
+						socialActivityCounter.getGroupId(),
+						socialActivityCounter.getClassNameId(),
+						socialActivityCounter.getClassPK(),
 						socialActivityCounter.getName(),
-						Integer.valueOf(socialActivityCounter.getOwnerType()),
-						Integer.valueOf(socialActivityCounter.getEndPeriod())
+						socialActivityCounter.getOwnerType(),
+						socialActivityCounter.getEndPeriod()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E,
@@ -2098,13 +2099,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		SocialActivityCounterModelImpl socialActivityCounterModelImpl = (SocialActivityCounterModelImpl)socialActivityCounter;
 
 		Object[] args = new Object[] {
-				Long.valueOf(socialActivityCounter.getGroupId()),
-				Long.valueOf(socialActivityCounter.getClassNameId()),
-				Long.valueOf(socialActivityCounter.getClassPK()),
-				
+				socialActivityCounter.getGroupId(),
+				socialActivityCounter.getClassNameId(),
+				socialActivityCounter.getClassPK(),
 				socialActivityCounter.getName(),
-				Integer.valueOf(socialActivityCounter.getOwnerType()),
-				Integer.valueOf(socialActivityCounter.getStartPeriod())
+				socialActivityCounter.getOwnerType(),
+				socialActivityCounter.getStartPeriod()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S, args);
@@ -2113,13 +2113,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		if ((socialActivityCounterModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_C_C_N_O_S.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
-					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
-					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
-					
+					socialActivityCounterModelImpl.getOriginalGroupId(),
+					socialActivityCounterModelImpl.getOriginalClassNameId(),
+					socialActivityCounterModelImpl.getOriginalClassPK(),
 					socialActivityCounterModelImpl.getOriginalName(),
-					Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType()),
-					Integer.valueOf(socialActivityCounterModelImpl.getOriginalStartPeriod())
+					socialActivityCounterModelImpl.getOriginalOwnerType(),
+					socialActivityCounterModelImpl.getOriginalStartPeriod()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S, args);
@@ -2127,13 +2126,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		}
 
 		args = new Object[] {
-				Long.valueOf(socialActivityCounter.getGroupId()),
-				Long.valueOf(socialActivityCounter.getClassNameId()),
-				Long.valueOf(socialActivityCounter.getClassPK()),
-				
+				socialActivityCounter.getGroupId(),
+				socialActivityCounter.getClassNameId(),
+				socialActivityCounter.getClassPK(),
 				socialActivityCounter.getName(),
-				Integer.valueOf(socialActivityCounter.getOwnerType()),
-				Integer.valueOf(socialActivityCounter.getEndPeriod())
+				socialActivityCounter.getOwnerType(),
+				socialActivityCounter.getEndPeriod()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E, args);
@@ -2142,13 +2140,12 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		if ((socialActivityCounterModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_C_C_N_O_E.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
-					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
-					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
-					
+					socialActivityCounterModelImpl.getOriginalGroupId(),
+					socialActivityCounterModelImpl.getOriginalClassNameId(),
+					socialActivityCounterModelImpl.getOriginalClassPK(),
 					socialActivityCounterModelImpl.getOriginalName(),
-					Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType()),
-					Integer.valueOf(socialActivityCounterModelImpl.getOriginalEndPeriod())
+					socialActivityCounterModelImpl.getOriginalOwnerType(),
+					socialActivityCounterModelImpl.getOriginalEndPeriod()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E, args);
@@ -2181,7 +2178,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	 */
 	public SocialActivityCounter remove(long activityCounterId)
 		throws NoSuchActivityCounterException, SystemException {
-		return remove(Long.valueOf(activityCounterId));
+		return remove((Serializable)activityCounterId);
 	}
 
 	/**
@@ -2299,8 +2296,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			if ((socialActivityCounterModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK())
+						socialActivityCounterModelImpl.getOriginalClassNameId(),
+						socialActivityCounterModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2308,8 +2305,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialActivityCounterModelImpl.getClassNameId()),
-						Long.valueOf(socialActivityCounterModelImpl.getClassPK())
+						socialActivityCounterModelImpl.getClassNameId(),
+						socialActivityCounterModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2320,10 +2317,10 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			if ((socialActivityCounterModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_O.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
-						Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType())
+						socialActivityCounterModelImpl.getOriginalGroupId(),
+						socialActivityCounterModelImpl.getOriginalClassNameId(),
+						socialActivityCounterModelImpl.getOriginalClassPK(),
+						socialActivityCounterModelImpl.getOriginalOwnerType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_O, args);
@@ -2331,10 +2328,10 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialActivityCounterModelImpl.getGroupId()),
-						Long.valueOf(socialActivityCounterModelImpl.getClassNameId()),
-						Long.valueOf(socialActivityCounterModelImpl.getClassPK()),
-						Integer.valueOf(socialActivityCounterModelImpl.getOwnerType())
+						socialActivityCounterModelImpl.getGroupId(),
+						socialActivityCounterModelImpl.getClassNameId(),
+						socialActivityCounterModelImpl.getClassPK(),
+						socialActivityCounterModelImpl.getOwnerType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_O, args);
@@ -2386,13 +2383,24 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	 *
 	 * @param primaryKey the primary key of the social activity counter
 	 * @return the social activity counter
-	 * @throws com.liferay.portal.NoSuchModelException if a social activity counter with the primary key could not be found
+	 * @throws com.liferay.portlet.social.NoSuchActivityCounterException if a social activity counter with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SocialActivityCounter findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchActivityCounterException, SystemException {
+		SocialActivityCounter socialActivityCounter = fetchByPrimaryKey(primaryKey);
+
+		if (socialActivityCounter == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchActivityCounterException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return socialActivityCounter;
 	}
 
 	/**
@@ -2405,18 +2413,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	 */
 	public SocialActivityCounter findByPrimaryKey(long activityCounterId)
 		throws NoSuchActivityCounterException, SystemException {
-		SocialActivityCounter socialActivityCounter = fetchByPrimaryKey(activityCounterId);
-
-		if (socialActivityCounter == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + activityCounterId);
-			}
-
-			throw new NoSuchActivityCounterException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				activityCounterId);
-		}
-
-		return socialActivityCounter;
+		return findByPrimaryKey((Serializable)activityCounterId);
 	}
 
 	/**
@@ -2429,20 +2426,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	@Override
 	public SocialActivityCounter fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the social activity counter with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param activityCounterId the primary key of the social activity counter
-	 * @return the social activity counter, or <code>null</code> if a social activity counter with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SocialActivityCounter fetchByPrimaryKey(long activityCounterId)
-		throws SystemException {
 		SocialActivityCounter socialActivityCounter = (SocialActivityCounter)EntityCacheUtil.getResult(SocialActivityCounterModelImpl.ENTITY_CACHE_ENABLED,
-				SocialActivityCounterImpl.class, activityCounterId);
+				SocialActivityCounterImpl.class, primaryKey);
 
 		if (socialActivityCounter == _nullSocialActivityCounter) {
 			return null;
@@ -2455,20 +2440,20 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 				session = openSession();
 
 				socialActivityCounter = (SocialActivityCounter)session.get(SocialActivityCounterImpl.class,
-						Long.valueOf(activityCounterId));
+						primaryKey);
 
 				if (socialActivityCounter != null) {
 					cacheResult(socialActivityCounter);
 				}
 				else {
 					EntityCacheUtil.putResult(SocialActivityCounterModelImpl.ENTITY_CACHE_ENABLED,
-						SocialActivityCounterImpl.class, activityCounterId,
+						SocialActivityCounterImpl.class, primaryKey,
 						_nullSocialActivityCounter);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(SocialActivityCounterModelImpl.ENTITY_CACHE_ENABLED,
-					SocialActivityCounterImpl.class, activityCounterId);
+					SocialActivityCounterImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2478,6 +2463,18 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		}
 
 		return socialActivityCounter;
+	}
+
+	/**
+	 * Returns the social activity counter with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param activityCounterId the primary key of the social activity counter
+	 * @return the social activity counter, or <code>null</code> if a social activity counter with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SocialActivityCounter fetchByPrimaryKey(long activityCounterId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)activityCounterId);
 	}
 
 	/**

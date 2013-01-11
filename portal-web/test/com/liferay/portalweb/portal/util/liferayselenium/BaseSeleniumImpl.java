@@ -198,6 +198,10 @@ public abstract class BaseSeleniumImpl
 			"isPartialText", new String[] {locator, value,});
 	}
 
+	public boolean isText(String locator, String value) {
+		return LiferaySeleniumHelper.isText(this, locator, value);
+	}
+
 	public void keyDownAndWait(String locator, String keySequence) {
 		super.keyDown(locator, keySequence);
 		super.waitForPageToLoad("30000");
@@ -309,22 +313,7 @@ public abstract class BaseSeleniumImpl
 	}
 
 	public void waitForElementPresent(String locator) throws Exception {
-		for (int second = 0;; second++) {
-			if (second >= TestPropsValues.TIMEOUT_EXPLICIT_WAIT) {
-				BaseTestCase.fail(
-					"Timeout: unable to find the locator \"" + locator + "\"");
-			}
-
-			try {
-				if (isElementPresent(locator)) {
-					break;
-				}
-			}
-			catch (Exception e) {
-			}
-
-			Thread.sleep(1000);
-		}
+		LiferaySeleniumHelper.waitForElementPresent(this, locator);
 	}
 
 	public void waitForNotPartialText(String locator, String value)

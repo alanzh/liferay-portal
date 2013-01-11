@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -192,16 +191,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			query.append(_SQL_SELECT_MBMAILINGLIST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -224,7 +225,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -414,16 +415,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 		query.append(_SQL_SELECT_MBMAILINGLIST_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -494,7 +497,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -549,16 +552,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			query.append(_SQL_COUNT_MBMAILINGLIST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -572,7 +577,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -595,7 +600,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbMailingList.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbMailingList.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
 			MBMailingListImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -690,16 +695,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			query.append(_SQL_SELECT_MBMAILINGLIST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -715,7 +722,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -798,16 +805,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			query.append(_SQL_COUNT_MBMAILINGLIST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -823,7 +832,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -848,7 +857,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbMailingList.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbMailingList.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mbMailingList.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
@@ -970,16 +979,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			query.append(_SQL_SELECT_MBMAILINGLIST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1004,7 +1015,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1210,16 +1221,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 		query.append(_SQL_SELECT_MBMAILINGLIST_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1292,7 +1305,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1353,16 +1366,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			query.append(_SQL_COUNT_MBMAILINGLIST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1378,7 +1393,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1403,7 +1418,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbMailingList.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbMailingList.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mbMailingList.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_ACTIVE = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
@@ -2120,15 +2135,12 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			mbMailingList);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				mbMailingList.getUuid(),
-				Long.valueOf(mbMailingList.getGroupId())
-			}, mbMailingList);
+			new Object[] { mbMailingList.getUuid(), mbMailingList.getGroupId() },
+			mbMailingList);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,
 			new Object[] {
-				Long.valueOf(mbMailingList.getGroupId()),
-				Long.valueOf(mbMailingList.getCategoryId())
+				mbMailingList.getGroupId(), mbMailingList.getCategoryId()
 			}, mbMailingList);
 
 		mbMailingList.resetOriginalValues();
@@ -2206,8 +2218,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	protected void cacheUniqueFindersCache(MBMailingList mbMailingList) {
 		if (mbMailingList.isNew()) {
 			Object[] args = new Object[] {
-					mbMailingList.getUuid(),
-					Long.valueOf(mbMailingList.getGroupId())
+					mbMailingList.getUuid(), mbMailingList.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -2216,8 +2227,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 				mbMailingList);
 
 			args = new Object[] {
-					Long.valueOf(mbMailingList.getGroupId()),
-					Long.valueOf(mbMailingList.getCategoryId())
+					mbMailingList.getGroupId(), mbMailingList.getCategoryId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C, args,
@@ -2231,8 +2241,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			if ((mbMailingListModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						mbMailingList.getUuid(),
-						Long.valueOf(mbMailingList.getGroupId())
+						mbMailingList.getUuid(), mbMailingList.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -2244,8 +2253,8 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			if ((mbMailingListModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbMailingList.getGroupId()),
-						Long.valueOf(mbMailingList.getCategoryId())
+						mbMailingList.getGroupId(),
+						mbMailingList.getCategoryId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C, args,
@@ -2260,8 +2269,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		MBMailingListModelImpl mbMailingListModelImpl = (MBMailingListModelImpl)mbMailingList;
 
 		Object[] args = new Object[] {
-				mbMailingList.getUuid(),
-				Long.valueOf(mbMailingList.getGroupId())
+				mbMailingList.getUuid(), mbMailingList.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -2271,7 +2279,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					mbMailingListModelImpl.getOriginalUuid(),
-					Long.valueOf(mbMailingListModelImpl.getOriginalGroupId())
+					mbMailingListModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -2279,8 +2287,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		}
 
 		args = new Object[] {
-				Long.valueOf(mbMailingList.getGroupId()),
-				Long.valueOf(mbMailingList.getCategoryId())
+				mbMailingList.getGroupId(), mbMailingList.getCategoryId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -2289,8 +2296,8 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		if ((mbMailingListModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_C.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(mbMailingListModelImpl.getOriginalGroupId()),
-					Long.valueOf(mbMailingListModelImpl.getOriginalCategoryId())
+					mbMailingListModelImpl.getOriginalGroupId(),
+					mbMailingListModelImpl.getOriginalCategoryId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -2327,7 +2334,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	 */
 	public MBMailingList remove(long mailingListId)
 		throws NoSuchMailingListException, SystemException {
-		return remove(Long.valueOf(mailingListId));
+		return remove((Serializable)mailingListId);
 	}
 
 	/**
@@ -2469,7 +2476,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						mbMailingListModelImpl.getOriginalUuid(),
-						Long.valueOf(mbMailingListModelImpl.getOriginalCompanyId())
+						mbMailingListModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2478,7 +2485,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				args = new Object[] {
 						mbMailingListModelImpl.getUuid(),
-						Long.valueOf(mbMailingListModelImpl.getCompanyId())
+						mbMailingListModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2489,16 +2496,14 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			if ((mbMailingListModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(mbMailingListModelImpl.getOriginalActive())
+						mbMailingListModelImpl.getOriginalActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
 					args);
 
-				args = new Object[] {
-						Boolean.valueOf(mbMailingListModelImpl.getActive())
-					};
+				args = new Object[] { mbMailingListModelImpl.getActive() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
@@ -2561,13 +2566,24 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	 *
 	 * @param primaryKey the primary key of the message boards mailing list
 	 * @return the message boards mailing list
-	 * @throws com.liferay.portal.NoSuchModelException if a message boards mailing list with the primary key could not be found
+	 * @throws com.liferay.portlet.messageboards.NoSuchMailingListException if a message boards mailing list with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public MBMailingList findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchMailingListException, SystemException {
+		MBMailingList mbMailingList = fetchByPrimaryKey(primaryKey);
+
+		if (mbMailingList == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchMailingListException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return mbMailingList;
 	}
 
 	/**
@@ -2580,18 +2596,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	 */
 	public MBMailingList findByPrimaryKey(long mailingListId)
 		throws NoSuchMailingListException, SystemException {
-		MBMailingList mbMailingList = fetchByPrimaryKey(mailingListId);
-
-		if (mbMailingList == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + mailingListId);
-			}
-
-			throw new NoSuchMailingListException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				mailingListId);
-		}
-
-		return mbMailingList;
+		return findByPrimaryKey((Serializable)mailingListId);
 	}
 
 	/**
@@ -2604,20 +2609,8 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	@Override
 	public MBMailingList fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the message boards mailing list with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param mailingListId the primary key of the message boards mailing list
-	 * @return the message boards mailing list, or <code>null</code> if a message boards mailing list with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public MBMailingList fetchByPrimaryKey(long mailingListId)
-		throws SystemException {
 		MBMailingList mbMailingList = (MBMailingList)EntityCacheUtil.getResult(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
-				MBMailingListImpl.class, mailingListId);
+				MBMailingListImpl.class, primaryKey);
 
 		if (mbMailingList == _nullMBMailingList) {
 			return null;
@@ -2630,20 +2623,19 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 				session = openSession();
 
 				mbMailingList = (MBMailingList)session.get(MBMailingListImpl.class,
-						Long.valueOf(mailingListId));
+						primaryKey);
 
 				if (mbMailingList != null) {
 					cacheResult(mbMailingList);
 				}
 				else {
 					EntityCacheUtil.putResult(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
-						MBMailingListImpl.class, mailingListId,
-						_nullMBMailingList);
+						MBMailingListImpl.class, primaryKey, _nullMBMailingList);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
-					MBMailingListImpl.class, mailingListId);
+					MBMailingListImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2653,6 +2645,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		}
 
 		return mbMailingList;
+	}
+
+	/**
+	 * Returns the message boards mailing list with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param mailingListId the primary key of the message boards mailing list
+	 * @return the message boards mailing list, or <code>null</code> if a message boards mailing list with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MBMailingList fetchByPrimaryKey(long mailingListId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)mailingListId);
 	}
 
 	/**

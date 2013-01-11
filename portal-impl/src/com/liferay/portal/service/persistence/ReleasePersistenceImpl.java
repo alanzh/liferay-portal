@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchReleaseException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -168,16 +167,18 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 			query.append(_SQL_SELECT_RELEASE_WHERE);
 
+			boolean bindServletContextName = false;
+
 			if (servletContextName == null) {
 				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1);
 			}
+			else if (servletContextName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
+			}
 			else {
-				if (servletContextName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
-				}
+				bindServletContextName = true;
+
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
 			}
 
 			String sql = query.toString();
@@ -191,7 +192,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (servletContextName != null) {
+				if (bindServletContextName) {
 					qPos.add(servletContextName);
 				}
 
@@ -270,16 +271,18 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 			query.append(_SQL_COUNT_RELEASE_WHERE);
 
+			boolean bindServletContextName = false;
+
 			if (servletContextName == null) {
 				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1);
 			}
+			else if (servletContextName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
+			}
 			else {
-				if (servletContextName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
-				}
+				bindServletContextName = true;
+
+				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2);
 			}
 
 			String sql = query.toString();
@@ -293,7 +296,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (servletContextName != null) {
+				if (bindServletContextName) {
 					qPos.add(servletContextName);
 				}
 
@@ -319,7 +322,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2 =
 		"lower(release.servletContextName) = lower(CAST_TEXT(?))";
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3 =
-		"(release.servletContextName IS NULL OR lower(release.servletContextName) = lower(CAST_TEXT(?)))";
+		"(release.servletContextName IS NULL OR release.servletContextName = '')";
 
 	/**
 	 * Caches the release in the entity cache if it is enabled.
@@ -475,7 +478,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	 */
 	public Release remove(long releaseId)
 		throws NoSuchReleaseException, SystemException {
-		return remove(Long.valueOf(releaseId));
+		return remove((Serializable)releaseId);
 	}
 
 	/**
@@ -621,13 +624,24 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	 *
 	 * @param primaryKey the primary key of the release
 	 * @return the release
-	 * @throws com.liferay.portal.NoSuchModelException if a release with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchReleaseException if a release with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Release findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchReleaseException, SystemException {
+		Release release = fetchByPrimaryKey(primaryKey);
+
+		if (release == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchReleaseException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return release;
 	}
 
 	/**
@@ -640,18 +654,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	 */
 	public Release findByPrimaryKey(long releaseId)
 		throws NoSuchReleaseException, SystemException {
-		Release release = fetchByPrimaryKey(releaseId);
-
-		if (release == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + releaseId);
-			}
-
-			throw new NoSuchReleaseException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				releaseId);
-		}
-
-		return release;
+		return findByPrimaryKey((Serializable)releaseId);
 	}
 
 	/**
@@ -664,19 +667,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	@Override
 	public Release fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the release with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param releaseId the primary key of the release
-	 * @return the release, or <code>null</code> if a release with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Release fetchByPrimaryKey(long releaseId) throws SystemException {
 		Release release = (Release)EntityCacheUtil.getResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-				ReleaseImpl.class, releaseId);
+				ReleaseImpl.class, primaryKey);
 
 		if (release == _nullRelease) {
 			return null;
@@ -688,20 +680,19 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 			try {
 				session = openSession();
 
-				release = (Release)session.get(ReleaseImpl.class,
-						Long.valueOf(releaseId));
+				release = (Release)session.get(ReleaseImpl.class, primaryKey);
 
 				if (release != null) {
 					cacheResult(release);
 				}
 				else {
 					EntityCacheUtil.putResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-						ReleaseImpl.class, releaseId, _nullRelease);
+						ReleaseImpl.class, primaryKey, _nullRelease);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-					ReleaseImpl.class, releaseId);
+					ReleaseImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -711,6 +702,17 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		}
 
 		return release;
+	}
+
+	/**
+	 * Returns the release with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param releaseId the primary key of the release
+	 * @return the release, or <code>null</code> if a release with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Release fetchByPrimaryKey(long releaseId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)releaseId);
 	}
 
 	/**

@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserNotificationEventException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -193,16 +192,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -225,7 +226,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -419,16 +420,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -499,7 +502,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -554,16 +557,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_COUNT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -577,7 +582,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -600,7 +605,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "userNotificationEvent.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "userNotificationEvent.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
 			UserNotificationEventModelImpl.FINDER_CACHE_ENABLED,
 			UserNotificationEventImpl.class,
@@ -722,16 +727,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -756,7 +763,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -965,16 +972,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		query.append(_SQL_SELECT_USERNOTIFICATIONEVENT_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1047,7 +1056,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1108,16 +1117,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			query.append(_SQL_COUNT_USERNOTIFICATIONEVENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1133,7 +1144,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1158,7 +1169,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "userNotificationEvent.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "userNotificationEvent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "userNotificationEvent.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
 			UserNotificationEventModelImpl.FINDER_CACHE_ENABLED,
@@ -2270,7 +2281,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	 */
 	public UserNotificationEvent remove(long userNotificationEventId)
 		throws NoSuchUserNotificationEventException, SystemException {
-		return remove(Long.valueOf(userNotificationEventId));
+		return remove((Serializable)userNotificationEventId);
 	}
 
 	/**
@@ -2412,7 +2423,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						userNotificationEventModelImpl.getOriginalUuid(),
-						Long.valueOf(userNotificationEventModelImpl.getOriginalCompanyId())
+						userNotificationEventModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2421,7 +2432,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 				args = new Object[] {
 						userNotificationEventModelImpl.getUuid(),
-						Long.valueOf(userNotificationEventModelImpl.getCompanyId())
+						userNotificationEventModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2432,16 +2443,14 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			if ((userNotificationEventModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getOriginalUserId())
+						userNotificationEventModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getUserId())
-					};
+				args = new Object[] { userNotificationEventModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2451,8 +2460,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			if ((userNotificationEventModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_A.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getOriginalUserId()),
-						Boolean.valueOf(userNotificationEventModelImpl.getOriginalArchived())
+						userNotificationEventModelImpl.getOriginalUserId(),
+						userNotificationEventModelImpl.getOriginalArchived()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_A, args);
@@ -2460,8 +2469,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userNotificationEventModelImpl.getUserId()),
-						Boolean.valueOf(userNotificationEventModelImpl.getArchived())
+						userNotificationEventModelImpl.getUserId(),
+						userNotificationEventModelImpl.getArchived()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_A, args);
@@ -2506,13 +2515,24 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	 *
 	 * @param primaryKey the primary key of the user notification event
 	 * @return the user notification event
-	 * @throws com.liferay.portal.NoSuchModelException if a user notification event with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserNotificationEventException if a user notification event with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserNotificationEvent findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserNotificationEventException, SystemException {
+		UserNotificationEvent userNotificationEvent = fetchByPrimaryKey(primaryKey);
+
+		if (userNotificationEvent == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserNotificationEventException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userNotificationEvent;
 	}
 
 	/**
@@ -2525,19 +2545,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	 */
 	public UserNotificationEvent findByPrimaryKey(long userNotificationEventId)
 		throws NoSuchUserNotificationEventException, SystemException {
-		UserNotificationEvent userNotificationEvent = fetchByPrimaryKey(userNotificationEventId);
-
-		if (userNotificationEvent == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					userNotificationEventId);
-			}
-
-			throw new NoSuchUserNotificationEventException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userNotificationEventId);
-		}
-
-		return userNotificationEvent;
+		return findByPrimaryKey((Serializable)userNotificationEventId);
 	}
 
 	/**
@@ -2550,20 +2558,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	@Override
 	public UserNotificationEvent fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user notification event with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userNotificationEventId the primary key of the user notification event
-	 * @return the user notification event, or <code>null</code> if a user notification event with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserNotificationEvent fetchByPrimaryKey(long userNotificationEventId)
-		throws SystemException {
 		UserNotificationEvent userNotificationEvent = (UserNotificationEvent)EntityCacheUtil.getResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-				UserNotificationEventImpl.class, userNotificationEventId);
+				UserNotificationEventImpl.class, primaryKey);
 
 		if (userNotificationEvent == _nullUserNotificationEvent) {
 			return null;
@@ -2576,20 +2572,20 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 				session = openSession();
 
 				userNotificationEvent = (UserNotificationEvent)session.get(UserNotificationEventImpl.class,
-						Long.valueOf(userNotificationEventId));
+						primaryKey);
 
 				if (userNotificationEvent != null) {
 					cacheResult(userNotificationEvent);
 				}
 				else {
 					EntityCacheUtil.putResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-						UserNotificationEventImpl.class,
-						userNotificationEventId, _nullUserNotificationEvent);
+						UserNotificationEventImpl.class, primaryKey,
+						_nullUserNotificationEvent);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-					UserNotificationEventImpl.class, userNotificationEventId);
+					UserNotificationEventImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2599,6 +2595,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		}
 
 		return userNotificationEvent;
+	}
+
+	/**
+	 * Returns the user notification event with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userNotificationEventId the primary key of the user notification event
+	 * @return the user notification event, or <code>null</code> if a user notification event with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserNotificationEvent fetchByPrimaryKey(long userNotificationEventId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userNotificationEventId);
 	}
 
 	/**

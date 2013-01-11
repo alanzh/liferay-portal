@@ -24,8 +24,11 @@ public class AddRecordSpreadsheetViewTest extends BaseTestCase {
 	public void testAddRecordSpreadsheetView() throws Exception {
 		selenium.selectWindow("null");
 		selenium.selectFrame("relative=top");
-		selenium.selectFrame("relative=top");
 		selenium.open("/web/guest/home/");
+		selenium.clickAt("//div[@id='dockbar']",
+			RuntimeVariables.replace("Dockbar"));
+		selenium.waitForElementPresent(
+			"//script[contains(@src,'/aui/aui-editable/aui-editable-min.js')]");
 		assertEquals(RuntimeVariables.replace("Go to"),
 			selenium.getText("//li[@id='_145_mySites']/a/span"));
 		selenium.mouseOver("//li[@id='_145_mySites']/a/span");
@@ -150,7 +153,7 @@ public class AddRecordSpreadsheetViewTest extends BaseTestCase {
 				"//div[contains(@class,'aui-fileupload-cell-editor-focused')]/form/div[2]/span/span/button[1]"));
 		selenium.clickAt("//div[contains(@class,'aui-fileupload-cell-editor-focused')]/form/div[2]/span/span/button[1]",
 			RuntimeVariables.replace("Save"));
-		Thread.sleep(5000);
+		Thread.sleep(1000);
 		assertEquals(RuntimeVariables.replace("Integer"),
 			selenium.getText(
 				"//thead[@class='yui3-datatable-columns']/tr/th[6]/div/a"));

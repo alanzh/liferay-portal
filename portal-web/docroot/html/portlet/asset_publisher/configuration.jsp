@@ -82,7 +82,7 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 			for (long groupId : groupIds) {
 				Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-				scopesLeftList.add(new KeyValuePair(_getKey(group, scopeGroupId), _getName(group, locale)));
+				scopesLeftList.add(new KeyValuePair(_getScopeId(group, scopeGroupId), _getName(group, locale)));
 			}
 
 			// Right list
@@ -100,11 +100,11 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 					<%
 					for (Group group : groups) {
 						if (Arrays.binarySearch(groupIds, group.getGroupId()) < 0) {
-							scopesRightList.add(new KeyValuePair(_getKey(group, scopeGroupId), _getName(group, locale)));
+							scopesRightList.add(new KeyValuePair(_getScopeId(group, scopeGroupId), _getName(group, locale)));
 						}
 					%>
 
-						<aui:option label="<%= _getName(group, locale) %>" selected="<%= (groupIds.length == 1) && (group.getGroupId() == groupIds[0]) %>" value="<%= _getKey(group, scopeGroupId) %>" />
+						<aui:option label="<%= _getName(group, locale) %>" selected="<%= (groupIds.length == 1) && (group.getGroupId() == groupIds[0]) %>" value="<%= _getScopeId(group, scopeGroupId) %>" />
 
 					<%
 					}
@@ -255,24 +255,6 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 </aui:script>
 
 <%!
-private String _getKey(Group group, long scopeGroupId) throws Exception {
-	String key = null;
-
-	if (group.isLayout()) {
-		Layout layout = LayoutLocalServiceUtil.getLayout(group.getClassPK());
-
-		key = "Layout" + StringPool.UNDERLINE + layout.getLayoutId();
-	}
-	else if (group.isLayoutPrototype() || (group.getGroupId() == scopeGroupId)) {
-		key = "Group" + StringPool.UNDERLINE + GroupConstants.DEFAULT;
-	}
-	else {
-		key = "Group" + StringPool.UNDERLINE + group.getGroupId();
-	}
-
-	return key;
-}
-
 private String _getName(Group group, Locale locale) throws Exception {
 	String name = null;
 
@@ -284,5 +266,23 @@ private String _getName(Group group, Locale locale) throws Exception {
 	}
 
 	return name;
+}
+
+private String _getScopeId(Group group, long scopeGroupId) throws Exception {
+	String key = null;
+
+	if (group.isLayout()) {
+		Layout layout = LayoutLocalServiceUtil.getLayout(group.getClassPK());
+
+		key = AssetPublisherUtil.SCOPE_ID_LAYOUT_PREFIX + layout.getLayoutId();
+	}
+	else if (group.isLayoutPrototype() || (group.getGroupId() == scopeGroupId)) {
+		key = AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX + GroupConstants.DEFAULT;
+	}
+	else {
+		key = AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX + group.getGroupId();
+	}
+
+	return key;
 }
 %>

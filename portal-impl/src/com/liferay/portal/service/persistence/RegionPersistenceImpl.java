@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchRegionException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -1124,16 +1123,18 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			query.append(_FINDER_COLUMN_C_R_COUNTRYID_2);
 
+			boolean bindRegionCode = false;
+
 			if (regionCode == null) {
 				query.append(_FINDER_COLUMN_C_R_REGIONCODE_1);
 			}
+			else if (regionCode.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_REGIONCODE_3);
+			}
 			else {
-				if (regionCode.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_REGIONCODE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_REGIONCODE_2);
-				}
+				bindRegionCode = true;
+
+				query.append(_FINDER_COLUMN_C_R_REGIONCODE_2);
 			}
 
 			String sql = query.toString();
@@ -1149,7 +1150,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 				qPos.add(countryId);
 
-				if (regionCode != null) {
+				if (bindRegionCode) {
 					qPos.add(regionCode);
 				}
 
@@ -1232,16 +1233,18 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			query.append(_FINDER_COLUMN_C_R_COUNTRYID_2);
 
+			boolean bindRegionCode = false;
+
 			if (regionCode == null) {
 				query.append(_FINDER_COLUMN_C_R_REGIONCODE_1);
 			}
+			else if (regionCode.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_REGIONCODE_3);
+			}
 			else {
-				if (regionCode.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_REGIONCODE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_REGIONCODE_2);
-				}
+				bindRegionCode = true;
+
+				query.append(_FINDER_COLUMN_C_R_REGIONCODE_2);
 			}
 
 			String sql = query.toString();
@@ -1257,7 +1260,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 				qPos.add(countryId);
 
-				if (regionCode != null) {
+				if (bindRegionCode) {
 					qPos.add(regionCode);
 				}
 
@@ -1281,7 +1284,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	private static final String _FINDER_COLUMN_C_R_COUNTRYID_2 = "region.countryId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_REGIONCODE_1 = "region.regionCode IS NULL";
 	private static final String _FINDER_COLUMN_C_R_REGIONCODE_2 = "region.regionCode = ?";
-	private static final String _FINDER_COLUMN_C_R_REGIONCODE_3 = "(region.regionCode IS NULL OR region.regionCode = ?)";
+	private static final String _FINDER_COLUMN_C_R_REGIONCODE_3 = "(region.regionCode IS NULL OR region.regionCode = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_A = new FinderPath(RegionModelImpl.ENTITY_CACHE_ENABLED,
 			RegionModelImpl.FINDER_CACHE_ENABLED, RegionImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_A",
@@ -1804,11 +1807,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			RegionImpl.class, region.getPrimaryKey(), region);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_R,
-			new Object[] {
-				Long.valueOf(region.getCountryId()),
-				
-			region.getRegionCode()
-			}, region);
+			new Object[] { region.getCountryId(), region.getRegionCode() },
+			region);
 
 		region.resetOriginalValues();
 	}
@@ -1885,9 +1885,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	protected void cacheUniqueFindersCache(Region region) {
 		if (region.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(region.getCountryId()),
-					
-					region.getRegionCode()
+					region.getCountryId(), region.getRegionCode()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_R, args,
@@ -1900,9 +1898,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			if ((regionModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(region.getCountryId()),
-						
-						region.getRegionCode()
+						region.getCountryId(), region.getRegionCode()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_R, args,
@@ -1916,9 +1912,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		RegionModelImpl regionModelImpl = (RegionModelImpl)region;
 
 		Object[] args = new Object[] {
-				Long.valueOf(region.getCountryId()),
-				
-				region.getRegionCode()
+				region.getCountryId(), region.getRegionCode()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
@@ -1927,8 +1921,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		if ((regionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(regionModelImpl.getOriginalCountryId()),
-					
+					regionModelImpl.getOriginalCountryId(),
 					regionModelImpl.getOriginalRegionCode()
 				};
 
@@ -1962,7 +1955,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	 */
 	public Region remove(long regionId)
 		throws NoSuchRegionException, SystemException {
-		return remove(Long.valueOf(regionId));
+		return remove((Serializable)regionId);
 	}
 
 	/**
@@ -2077,7 +2070,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			if ((regionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COUNTRYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(regionModelImpl.getOriginalCountryId())
+						regionModelImpl.getOriginalCountryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COUNTRYID,
@@ -2085,7 +2078,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COUNTRYID,
 					args);
 
-				args = new Object[] { Long.valueOf(regionModelImpl.getCountryId()) };
+				args = new Object[] { regionModelImpl.getCountryId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COUNTRYID,
 					args);
@@ -2095,15 +2088,13 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			if ((regionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Boolean.valueOf(regionModelImpl.getOriginalActive())
-					};
+				Object[] args = new Object[] { regionModelImpl.getOriginalActive() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
 					args);
 
-				args = new Object[] { Boolean.valueOf(regionModelImpl.getActive()) };
+				args = new Object[] { regionModelImpl.getActive() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
@@ -2113,8 +2104,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			if ((regionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_A.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(regionModelImpl.getOriginalCountryId()),
-						Boolean.valueOf(regionModelImpl.getOriginalActive())
+						regionModelImpl.getOriginalCountryId(),
+						regionModelImpl.getOriginalActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_A, args);
@@ -2122,8 +2113,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(regionModelImpl.getCountryId()),
-						Boolean.valueOf(regionModelImpl.getActive())
+						regionModelImpl.getCountryId(),
+						regionModelImpl.getActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_A, args);
@@ -2165,13 +2156,24 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	 *
 	 * @param primaryKey the primary key of the region
 	 * @return the region
-	 * @throws com.liferay.portal.NoSuchModelException if a region with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchRegionException if a region with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Region findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchRegionException, SystemException {
+		Region region = fetchByPrimaryKey(primaryKey);
+
+		if (region == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchRegionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return region;
 	}
 
 	/**
@@ -2184,18 +2186,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	 */
 	public Region findByPrimaryKey(long regionId)
 		throws NoSuchRegionException, SystemException {
-		Region region = fetchByPrimaryKey(regionId);
-
-		if (region == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + regionId);
-			}
-
-			throw new NoSuchRegionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				regionId);
-		}
-
-		return region;
+		return findByPrimaryKey((Serializable)regionId);
 	}
 
 	/**
@@ -2208,19 +2199,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	@Override
 	public Region fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the region with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param regionId the primary key of the region
-	 * @return the region, or <code>null</code> if a region with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Region fetchByPrimaryKey(long regionId) throws SystemException {
 		Region region = (Region)EntityCacheUtil.getResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
-				RegionImpl.class, regionId);
+				RegionImpl.class, primaryKey);
 
 		if (region == _nullRegion) {
 			return null;
@@ -2232,20 +2212,19 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				region = (Region)session.get(RegionImpl.class,
-						Long.valueOf(regionId));
+				region = (Region)session.get(RegionImpl.class, primaryKey);
 
 				if (region != null) {
 					cacheResult(region);
 				}
 				else {
 					EntityCacheUtil.putResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
-						RegionImpl.class, regionId, _nullRegion);
+						RegionImpl.class, primaryKey, _nullRegion);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
-					RegionImpl.class, regionId);
+					RegionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2255,6 +2234,17 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		}
 
 		return region;
+	}
+
+	/**
+	 * Returns the region with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param regionId the primary key of the region
+	 * @return the region, or <code>null</code> if a region with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Region fetchByPrimaryKey(long regionId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)regionId);
 	}
 
 	/**

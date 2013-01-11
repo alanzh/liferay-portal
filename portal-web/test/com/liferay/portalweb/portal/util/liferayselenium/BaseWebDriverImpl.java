@@ -23,8 +23,6 @@ import com.liferay.portalweb.portal.BaseTestCase;
 import com.liferay.portalweb.portal.util.TestPropsValues;
 
 import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -224,18 +222,7 @@ public abstract class BaseWebDriverImpl
 	}
 
 	public boolean isElementNotPresent(String locator) {
-		WebDriver.Options options = manage();
-
-		Timeouts timeouts = options.timeouts();
-
-		timeouts.implicitlyWait(1, TimeUnit.SECONDS);
-
-		List<WebElement> webElements = getWebElements(locator);
-
-		timeouts.implicitlyWait(
-			TestPropsValues.TIMEOUT_IMPLICIT_WAIT, TimeUnit.SECONDS);
-
-		return webElements.isEmpty();
+		return !isElementPresent(locator);
 	}
 
 	public boolean isPartialText(String locator, String value) {
@@ -244,6 +231,10 @@ public abstract class BaseWebDriverImpl
 		String text = webElement.getText();
 
 		return text.contains(value);
+	}
+
+	public boolean isText(String locator, String value) {
+		return LiferaySeleniumHelper.isText(this, locator, value);
 	}
 
 	public void keyDownAndWait(String locator, String keySequence) {
@@ -332,24 +323,7 @@ public abstract class BaseWebDriverImpl
 	}
 
 	public void waitForElementPresent(String locator) throws Exception {
-		WebDriver.Options options = manage();
-
-		Timeouts timeouts = options.timeouts();
-
-		timeouts.implicitlyWait(
-			TestPropsValues.TIMEOUT_EXPLICIT_WAIT, TimeUnit.SECONDS);
-
-		try {
-			getWebElement(locator);
-		}
-		catch (Exception e) {
-			BaseTestCase.fail(
-				"Timeout: unable to find the locator \"" + locator + "\"");
-		}
-		finally {
-			timeouts.implicitlyWait(
-				TestPropsValues.TIMEOUT_IMPLICIT_WAIT, TimeUnit.SECONDS);
-		}
+		LiferaySeleniumHelper.waitForElementPresent(this, locator);
 	}
 
 	public void waitForNotPartialText(String locator, String value)

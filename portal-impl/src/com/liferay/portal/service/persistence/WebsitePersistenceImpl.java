@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchWebsiteException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -2789,7 +2788,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 */
 	public Website remove(long websiteId)
 		throws NoSuchWebsiteException, SystemException {
-		return remove(Long.valueOf(websiteId));
+		return remove((Serializable)websiteId);
 	}
 
 	/**
@@ -2904,7 +2903,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId())
+						websiteModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2912,9 +2911,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId())
-					};
+				args = new Object[] { websiteModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2925,14 +2922,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalUserId())
+						websiteModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(websiteModelImpl.getUserId()) };
+				args = new Object[] { websiteModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2942,8 +2939,8 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassNameId())
+						websiteModelImpl.getOriginalCompanyId(),
+						websiteModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2951,8 +2948,8 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId()),
-						Long.valueOf(websiteModelImpl.getClassNameId())
+						websiteModelImpl.getCompanyId(),
+						websiteModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2963,9 +2960,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassNameId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassPK())
+						websiteModelImpl.getOriginalCompanyId(),
+						websiteModelImpl.getOriginalClassNameId(),
+						websiteModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2973,9 +2970,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId()),
-						Long.valueOf(websiteModelImpl.getClassNameId()),
-						Long.valueOf(websiteModelImpl.getClassPK())
+						websiteModelImpl.getCompanyId(),
+						websiteModelImpl.getClassNameId(),
+						websiteModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2986,10 +2983,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			if ((websiteModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(websiteModelImpl.getOriginalCompanyId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassNameId()),
-						Long.valueOf(websiteModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(websiteModelImpl.getOriginalPrimary())
+						websiteModelImpl.getOriginalCompanyId(),
+						websiteModelImpl.getOriginalClassNameId(),
+						websiteModelImpl.getOriginalClassPK(),
+						websiteModelImpl.getOriginalPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -2997,10 +2994,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(websiteModelImpl.getCompanyId()),
-						Long.valueOf(websiteModelImpl.getClassNameId()),
-						Long.valueOf(websiteModelImpl.getClassPK()),
-						Boolean.valueOf(websiteModelImpl.getPrimary())
+						websiteModelImpl.getCompanyId(),
+						websiteModelImpl.getClassNameId(),
+						websiteModelImpl.getClassPK(),
+						websiteModelImpl.getPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3045,13 +3042,24 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param primaryKey the primary key of the website
 	 * @return the website
-	 * @throws com.liferay.portal.NoSuchModelException if a website with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchWebsiteException if a website with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Website findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchWebsiteException, SystemException {
+		Website website = fetchByPrimaryKey(primaryKey);
+
+		if (website == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchWebsiteException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return website;
 	}
 
 	/**
@@ -3064,18 +3072,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 */
 	public Website findByPrimaryKey(long websiteId)
 		throws NoSuchWebsiteException, SystemException {
-		Website website = fetchByPrimaryKey(websiteId);
-
-		if (website == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + websiteId);
-			}
-
-			throw new NoSuchWebsiteException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				websiteId);
-		}
-
-		return website;
+		return findByPrimaryKey((Serializable)websiteId);
 	}
 
 	/**
@@ -3088,19 +3085,8 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	@Override
 	public Website fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the website with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param websiteId the primary key of the website
-	 * @return the website, or <code>null</code> if a website with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Website fetchByPrimaryKey(long websiteId) throws SystemException {
 		Website website = (Website)EntityCacheUtil.getResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-				WebsiteImpl.class, websiteId);
+				WebsiteImpl.class, primaryKey);
 
 		if (website == _nullWebsite) {
 			return null;
@@ -3112,20 +3098,19 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				website = (Website)session.get(WebsiteImpl.class,
-						Long.valueOf(websiteId));
+				website = (Website)session.get(WebsiteImpl.class, primaryKey);
 
 				if (website != null) {
 					cacheResult(website);
 				}
 				else {
 					EntityCacheUtil.putResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-						WebsiteImpl.class, websiteId, _nullWebsite);
+						WebsiteImpl.class, primaryKey, _nullWebsite);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-					WebsiteImpl.class, websiteId);
+					WebsiteImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3135,6 +3120,17 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 		}
 
 		return website;
+	}
+
+	/**
+	 * Returns the website with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param websiteId the primary key of the website
+	 * @return the website, or <code>null</code> if a website with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Website fetchByPrimaryKey(long websiteId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)websiteId);
 	}
 
 	/**

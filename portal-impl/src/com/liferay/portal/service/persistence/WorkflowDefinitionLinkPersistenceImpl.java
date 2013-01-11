@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchWorkflowDefinitionLinkException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -707,16 +706,18 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 			query.append(_FINDER_COLUMN_C_W_W_COMPANYID_2);
 
+			boolean bindWorkflowDefinitionName = false;
+
 			if (workflowDefinitionName == null) {
 				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_1);
 			}
+			else if (workflowDefinitionName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3);
+			}
 			else {
-				if (workflowDefinitionName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2);
-				}
+				bindWorkflowDefinitionName = true;
+
+				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONVERSION_2);
@@ -743,7 +744,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 				qPos.add(companyId);
 
-				if (workflowDefinitionName != null) {
+				if (bindWorkflowDefinitionName) {
 					qPos.add(workflowDefinitionName);
 				}
 
@@ -976,16 +977,18 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 		query.append(_FINDER_COLUMN_C_W_W_COMPANYID_2);
 
+		boolean bindWorkflowDefinitionName = false;
+
 		if (workflowDefinitionName == null) {
 			query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_1);
 		}
+		else if (workflowDefinitionName.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3);
+		}
 		else {
-			if (workflowDefinitionName.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2);
-			}
+			bindWorkflowDefinitionName = true;
+
+			query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2);
 		}
 
 		query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONVERSION_2);
@@ -1060,7 +1063,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 		qPos.add(companyId);
 
-		if (workflowDefinitionName != null) {
+		if (bindWorkflowDefinitionName) {
 			qPos.add(workflowDefinitionName);
 		}
 
@@ -1128,16 +1131,18 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 			query.append(_FINDER_COLUMN_C_W_W_COMPANYID_2);
 
+			boolean bindWorkflowDefinitionName = false;
+
 			if (workflowDefinitionName == null) {
 				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_1);
 			}
+			else if (workflowDefinitionName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3);
+			}
 			else {
-				if (workflowDefinitionName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2);
-				}
+				bindWorkflowDefinitionName = true;
+
+				query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2);
 			}
 
 			query.append(_FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONVERSION_2);
@@ -1155,7 +1160,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 				qPos.add(companyId);
 
-				if (workflowDefinitionName != null) {
+				if (bindWorkflowDefinitionName) {
 					qPos.add(workflowDefinitionName);
 				}
 
@@ -1181,7 +1186,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 	private static final String _FINDER_COLUMN_C_W_W_COMPANYID_2 = "workflowDefinitionLink.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_1 = "workflowDefinitionLink.workflowDefinitionName IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_2 = "workflowDefinitionLink.workflowDefinitionName = ? AND ";
-	private static final String _FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3 = "(workflowDefinitionLink.workflowDefinitionName IS NULL OR workflowDefinitionLink.workflowDefinitionName = ?) AND ";
+	private static final String _FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONNAME_3 = "(workflowDefinitionLink.workflowDefinitionName IS NULL OR workflowDefinitionLink.workflowDefinitionName = '') AND ";
 	private static final String _FINDER_COLUMN_C_W_W_WORKFLOWDEFINITIONVERSION_2 =
 		"workflowDefinitionLink.workflowDefinitionVersion = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_C_C_C_T = new FinderPath(WorkflowDefinitionLinkModelImpl.ENTITY_CACHE_ENABLED,
@@ -1509,11 +1514,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_C_T,
 			new Object[] {
-				Long.valueOf(workflowDefinitionLink.getGroupId()),
-				Long.valueOf(workflowDefinitionLink.getCompanyId()),
-				Long.valueOf(workflowDefinitionLink.getClassNameId()),
-				Long.valueOf(workflowDefinitionLink.getClassPK()),
-				Long.valueOf(workflowDefinitionLink.getTypePK())
+				workflowDefinitionLink.getGroupId(),
+				workflowDefinitionLink.getCompanyId(),
+				workflowDefinitionLink.getClassNameId(),
+				workflowDefinitionLink.getClassPK(),
+				workflowDefinitionLink.getTypePK()
 			}, workflowDefinitionLink);
 
 		workflowDefinitionLink.resetOriginalValues();
@@ -1596,11 +1601,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		WorkflowDefinitionLink workflowDefinitionLink) {
 		if (workflowDefinitionLink.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(workflowDefinitionLink.getGroupId()),
-					Long.valueOf(workflowDefinitionLink.getCompanyId()),
-					Long.valueOf(workflowDefinitionLink.getClassNameId()),
-					Long.valueOf(workflowDefinitionLink.getClassPK()),
-					Long.valueOf(workflowDefinitionLink.getTypePK())
+					workflowDefinitionLink.getGroupId(),
+					workflowDefinitionLink.getCompanyId(),
+					workflowDefinitionLink.getClassNameId(),
+					workflowDefinitionLink.getClassPK(),
+					workflowDefinitionLink.getTypePK()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_C_T, args,
@@ -1614,11 +1619,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			if ((workflowDefinitionLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_C_C_C_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(workflowDefinitionLink.getGroupId()),
-						Long.valueOf(workflowDefinitionLink.getCompanyId()),
-						Long.valueOf(workflowDefinitionLink.getClassNameId()),
-						Long.valueOf(workflowDefinitionLink.getClassPK()),
-						Long.valueOf(workflowDefinitionLink.getTypePK())
+						workflowDefinitionLink.getGroupId(),
+						workflowDefinitionLink.getCompanyId(),
+						workflowDefinitionLink.getClassNameId(),
+						workflowDefinitionLink.getClassPK(),
+						workflowDefinitionLink.getTypePK()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_C_T, args,
@@ -1634,11 +1639,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		WorkflowDefinitionLinkModelImpl workflowDefinitionLinkModelImpl = (WorkflowDefinitionLinkModelImpl)workflowDefinitionLink;
 
 		Object[] args = new Object[] {
-				Long.valueOf(workflowDefinitionLink.getGroupId()),
-				Long.valueOf(workflowDefinitionLink.getCompanyId()),
-				Long.valueOf(workflowDefinitionLink.getClassNameId()),
-				Long.valueOf(workflowDefinitionLink.getClassPK()),
-				Long.valueOf(workflowDefinitionLink.getTypePK())
+				workflowDefinitionLink.getGroupId(),
+				workflowDefinitionLink.getCompanyId(),
+				workflowDefinitionLink.getClassNameId(),
+				workflowDefinitionLink.getClassPK(),
+				workflowDefinitionLink.getTypePK()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_C_T, args);
@@ -1647,11 +1652,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		if ((workflowDefinitionLinkModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_C_C_C_T.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalGroupId()),
-					Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalCompanyId()),
-					Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalClassNameId()),
-					Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalClassPK()),
-					Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalTypePK())
+					workflowDefinitionLinkModelImpl.getOriginalGroupId(),
+					workflowDefinitionLinkModelImpl.getOriginalCompanyId(),
+					workflowDefinitionLinkModelImpl.getOriginalClassNameId(),
+					workflowDefinitionLinkModelImpl.getOriginalClassPK(),
+					workflowDefinitionLinkModelImpl.getOriginalTypePK()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_C_T, args);
@@ -1684,7 +1689,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 	 */
 	public WorkflowDefinitionLink remove(long workflowDefinitionLinkId)
 		throws NoSuchWorkflowDefinitionLinkException, SystemException {
-		return remove(Long.valueOf(workflowDefinitionLinkId));
+		return remove((Serializable)workflowDefinitionLinkId);
 	}
 
 	/**
@@ -1803,7 +1808,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			if ((workflowDefinitionLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalCompanyId())
+						workflowDefinitionLinkModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -1812,7 +1817,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 					args);
 
 				args = new Object[] {
-						Long.valueOf(workflowDefinitionLinkModelImpl.getCompanyId())
+						workflowDefinitionLinkModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -1824,10 +1829,9 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			if ((workflowDefinitionLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_W_W.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(workflowDefinitionLinkModelImpl.getOriginalCompanyId()),
-						
+						workflowDefinitionLinkModelImpl.getOriginalCompanyId(),
 						workflowDefinitionLinkModelImpl.getOriginalWorkflowDefinitionName(),
-						Integer.valueOf(workflowDefinitionLinkModelImpl.getOriginalWorkflowDefinitionVersion())
+						workflowDefinitionLinkModelImpl.getOriginalWorkflowDefinitionVersion()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_W_W, args);
@@ -1835,10 +1839,9 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 					args);
 
 				args = new Object[] {
-						Long.valueOf(workflowDefinitionLinkModelImpl.getCompanyId()),
-						
+						workflowDefinitionLinkModelImpl.getCompanyId(),
 						workflowDefinitionLinkModelImpl.getWorkflowDefinitionName(),
-						Integer.valueOf(workflowDefinitionLinkModelImpl.getWorkflowDefinitionVersion())
+						workflowDefinitionLinkModelImpl.getWorkflowDefinitionVersion()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_W_W, args);
@@ -1889,13 +1892,24 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 	 *
 	 * @param primaryKey the primary key of the workflow definition link
 	 * @return the workflow definition link
-	 * @throws com.liferay.portal.NoSuchModelException if a workflow definition link with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchWorkflowDefinitionLinkException if a workflow definition link with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public WorkflowDefinitionLink findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchWorkflowDefinitionLinkException, SystemException {
+		WorkflowDefinitionLink workflowDefinitionLink = fetchByPrimaryKey(primaryKey);
+
+		if (workflowDefinitionLink == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchWorkflowDefinitionLinkException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return workflowDefinitionLink;
 	}
 
 	/**
@@ -1909,19 +1923,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 	public WorkflowDefinitionLink findByPrimaryKey(
 		long workflowDefinitionLinkId)
 		throws NoSuchWorkflowDefinitionLinkException, SystemException {
-		WorkflowDefinitionLink workflowDefinitionLink = fetchByPrimaryKey(workflowDefinitionLinkId);
-
-		if (workflowDefinitionLink == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					workflowDefinitionLinkId);
-			}
-
-			throw new NoSuchWorkflowDefinitionLinkException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				workflowDefinitionLinkId);
-		}
-
-		return workflowDefinitionLink;
+		return findByPrimaryKey((Serializable)workflowDefinitionLinkId);
 	}
 
 	/**
@@ -1934,20 +1936,8 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 	@Override
 	public WorkflowDefinitionLink fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the workflow definition link with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param workflowDefinitionLinkId the primary key of the workflow definition link
-	 * @return the workflow definition link, or <code>null</code> if a workflow definition link with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public WorkflowDefinitionLink fetchByPrimaryKey(
-		long workflowDefinitionLinkId) throws SystemException {
 		WorkflowDefinitionLink workflowDefinitionLink = (WorkflowDefinitionLink)EntityCacheUtil.getResult(WorkflowDefinitionLinkModelImpl.ENTITY_CACHE_ENABLED,
-				WorkflowDefinitionLinkImpl.class, workflowDefinitionLinkId);
+				WorkflowDefinitionLinkImpl.class, primaryKey);
 
 		if (workflowDefinitionLink == _nullWorkflowDefinitionLink) {
 			return null;
@@ -1960,20 +1950,20 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 				session = openSession();
 
 				workflowDefinitionLink = (WorkflowDefinitionLink)session.get(WorkflowDefinitionLinkImpl.class,
-						Long.valueOf(workflowDefinitionLinkId));
+						primaryKey);
 
 				if (workflowDefinitionLink != null) {
 					cacheResult(workflowDefinitionLink);
 				}
 				else {
 					EntityCacheUtil.putResult(WorkflowDefinitionLinkModelImpl.ENTITY_CACHE_ENABLED,
-						WorkflowDefinitionLinkImpl.class,
-						workflowDefinitionLinkId, _nullWorkflowDefinitionLink);
+						WorkflowDefinitionLinkImpl.class, primaryKey,
+						_nullWorkflowDefinitionLink);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(WorkflowDefinitionLinkModelImpl.ENTITY_CACHE_ENABLED,
-					WorkflowDefinitionLinkImpl.class, workflowDefinitionLinkId);
+					WorkflowDefinitionLinkImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1983,6 +1973,18 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		}
 
 		return workflowDefinitionLink;
+	}
+
+	/**
+	 * Returns the workflow definition link with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param workflowDefinitionLinkId the primary key of the workflow definition link
+	 * @return the workflow definition link, or <code>null</code> if a workflow definition link with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WorkflowDefinitionLink fetchByPrimaryKey(
+		long workflowDefinitionLinkId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)workflowDefinitionLinkId);
 	}
 
 	/**

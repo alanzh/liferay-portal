@@ -50,13 +50,17 @@ public class LiferaySeleniumHelper {
 	public static void assertElementNotPresent(
 		LiferaySelenium liferaySelenium, String locator) {
 
-		BaseTestCase.assertFalse(liferaySelenium.isElementPresent(locator));
+		if (liferaySelenium.isElementPresent(locator)) {
+			BaseTestCase.fail("Element is present at " + locator);
+		}
 	}
 
 	public static void assertElementPresent(
 		LiferaySelenium liferaySelenium, String locator) {
 
-		BaseTestCase.assertTrue(liferaySelenium.isElementPresent(locator));
+		if (liferaySelenium.isElementNotPresent(locator)) {
+			BaseTestCase.fail("Element is not present at " + locator);
+		}
 	}
 
 	public static void assertLocation(
@@ -199,6 +203,12 @@ public class LiferaySeleniumHelper {
 		return StringUtil.valueOf(GetterUtil.getInteger(value) + 1);
 	}
 
+	public static boolean isText(
+		LiferaySelenium liferaySelenium, String locator, String value) {
+
+		return value.equals(liferaySelenium.getText(locator));
+	}
+
 	public static void pause(String waitTime) throws Exception {
 		Thread.sleep(GetterUtil.getInteger(waitTime));
 	}
@@ -235,12 +245,32 @@ public class LiferaySeleniumHelper {
 
 		for (int second = 0;; second++) {
 			if (second >= TestPropsValues.TIMEOUT_EXPLICIT_WAIT) {
-				BaseTestCase.fail(
-					"Timeout: unable to find the locator \"" + locator + "\"");
+				liferaySelenium.assertElementNotPresent(locator);
 			}
 
 			try {
-				if (!liferaySelenium.isElementPresent(locator)) {
+				if (liferaySelenium.isElementNotPresent(locator)) {
+					break;
+				}
+			}
+			catch (Exception e) {
+			}
+
+			Thread.sleep(1000);
+		}
+	}
+
+	public static void waitForElementPresent(
+			LiferaySelenium liferaySelenium, String locator)
+		throws Exception {
+
+		for (int second = 0;; second++) {
+			if (second >= TestPropsValues.TIMEOUT_EXPLICIT_WAIT) {
+				liferaySelenium.assertElementPresent(locator);
+			}
+
+			try {
+				if (liferaySelenium.isElementPresent(locator)) {
 					break;
 				}
 			}

@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -193,16 +192,18 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 			query.append(_SQL_SELECT_DLFILEENTRYMETADATA_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -225,7 +226,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -419,16 +420,18 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 		query.append(_SQL_SELECT_DLFILEENTRYMETADATA_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -499,7 +502,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -554,16 +557,18 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 			query.append(_SQL_COUNT_DLFILEENTRYMETADATA_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -577,7 +582,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -600,7 +605,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileEntryMetadata.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileEntryMetadata.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileEntryMetadata.uuid IS NULL OR dlFileEntryMetadata.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileEntryMetadata.uuid IS NULL OR dlFileEntryMetadata.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_FILEENTRYTYPEID =
 		new FinderPath(DLFileEntryMetadataModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryMetadataModelImpl.FINDER_CACHE_ENABLED,
@@ -2311,8 +2316,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_D_F,
 			new Object[] {
-				Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
-				Long.valueOf(dlFileEntryMetadata.getFileVersionId())
+				dlFileEntryMetadata.getDDMStructureId(),
+				dlFileEntryMetadata.getFileVersionId()
 			}, dlFileEntryMetadata);
 
 		dlFileEntryMetadata.resetOriginalValues();
@@ -2393,8 +2398,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 		DLFileEntryMetadata dlFileEntryMetadata) {
 		if (dlFileEntryMetadata.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
-					Long.valueOf(dlFileEntryMetadata.getFileVersionId())
+					dlFileEntryMetadata.getDDMStructureId(),
+					dlFileEntryMetadata.getFileVersionId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_D_F, args,
@@ -2408,8 +2413,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 			if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_D_F.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
-						Long.valueOf(dlFileEntryMetadata.getFileVersionId())
+						dlFileEntryMetadata.getDDMStructureId(),
+						dlFileEntryMetadata.getFileVersionId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_D_F, args,
@@ -2425,8 +2430,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 		DLFileEntryMetadataModelImpl dlFileEntryMetadataModelImpl = (DLFileEntryMetadataModelImpl)dlFileEntryMetadata;
 
 		Object[] args = new Object[] {
-				Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
-				Long.valueOf(dlFileEntryMetadata.getFileVersionId())
+				dlFileEntryMetadata.getDDMStructureId(),
+				dlFileEntryMetadata.getFileVersionId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_D_F, args);
@@ -2435,8 +2440,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 		if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_D_F.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalDDMStructureId()),
-					Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalFileVersionId())
+					dlFileEntryMetadataModelImpl.getOriginalDDMStructureId(),
+					dlFileEntryMetadataModelImpl.getOriginalFileVersionId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_D_F, args);
@@ -2473,7 +2478,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 	 */
 	public DLFileEntryMetadata remove(long fileEntryMetadataId)
 		throws NoSuchFileEntryMetadataException, SystemException {
-		return remove(Long.valueOf(fileEntryMetadataId));
+		return remove((Serializable)fileEntryMetadataId);
 	}
 
 	/**
@@ -2614,7 +2619,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 			if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FILEENTRYTYPEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalFileEntryTypeId())
+						dlFileEntryMetadataModelImpl.getOriginalFileEntryTypeId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEENTRYTYPEID,
@@ -2623,7 +2628,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getFileEntryTypeId())
+						dlFileEntryMetadataModelImpl.getFileEntryTypeId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEENTRYTYPEID,
@@ -2635,7 +2640,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 			if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FILEENTRYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalFileEntryId())
+						dlFileEntryMetadataModelImpl.getOriginalFileEntryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEENTRYID,
@@ -2644,7 +2649,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getFileEntryId())
+						dlFileEntryMetadataModelImpl.getFileEntryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEENTRYID,
@@ -2656,7 +2661,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 			if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FILEVERSIONID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalFileVersionId())
+						dlFileEntryMetadataModelImpl.getOriginalFileVersionId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEVERSIONID,
@@ -2665,7 +2670,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getFileVersionId())
+						dlFileEntryMetadataModelImpl.getFileVersionId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEVERSIONID,
@@ -2712,13 +2717,24 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 	 *
 	 * @param primaryKey the primary key of the document library file entry metadata
 	 * @return the document library file entry metadata
-	 * @throws com.liferay.portal.NoSuchModelException if a document library file entry metadata with the primary key could not be found
+	 * @throws com.liferay.portlet.documentlibrary.NoSuchFileEntryMetadataException if a document library file entry metadata with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public DLFileEntryMetadata findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchFileEntryMetadataException, SystemException {
+		DLFileEntryMetadata dlFileEntryMetadata = fetchByPrimaryKey(primaryKey);
+
+		if (dlFileEntryMetadata == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchFileEntryMetadataException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return dlFileEntryMetadata;
 	}
 
 	/**
@@ -2731,19 +2747,7 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 	 */
 	public DLFileEntryMetadata findByPrimaryKey(long fileEntryMetadataId)
 		throws NoSuchFileEntryMetadataException, SystemException {
-		DLFileEntryMetadata dlFileEntryMetadata = fetchByPrimaryKey(fileEntryMetadataId);
-
-		if (dlFileEntryMetadata == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					fileEntryMetadataId);
-			}
-
-			throw new NoSuchFileEntryMetadataException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				fileEntryMetadataId);
-		}
-
-		return dlFileEntryMetadata;
+		return findByPrimaryKey((Serializable)fileEntryMetadataId);
 	}
 
 	/**
@@ -2756,20 +2760,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 	@Override
 	public DLFileEntryMetadata fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the document library file entry metadata with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param fileEntryMetadataId the primary key of the document library file entry metadata
-	 * @return the document library file entry metadata, or <code>null</code> if a document library file entry metadata with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public DLFileEntryMetadata fetchByPrimaryKey(long fileEntryMetadataId)
-		throws SystemException {
 		DLFileEntryMetadata dlFileEntryMetadata = (DLFileEntryMetadata)EntityCacheUtil.getResult(DLFileEntryMetadataModelImpl.ENTITY_CACHE_ENABLED,
-				DLFileEntryMetadataImpl.class, fileEntryMetadataId);
+				DLFileEntryMetadataImpl.class, primaryKey);
 
 		if (dlFileEntryMetadata == _nullDLFileEntryMetadata) {
 			return null;
@@ -2782,20 +2774,20 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 				session = openSession();
 
 				dlFileEntryMetadata = (DLFileEntryMetadata)session.get(DLFileEntryMetadataImpl.class,
-						Long.valueOf(fileEntryMetadataId));
+						primaryKey);
 
 				if (dlFileEntryMetadata != null) {
 					cacheResult(dlFileEntryMetadata);
 				}
 				else {
 					EntityCacheUtil.putResult(DLFileEntryMetadataModelImpl.ENTITY_CACHE_ENABLED,
-						DLFileEntryMetadataImpl.class, fileEntryMetadataId,
+						DLFileEntryMetadataImpl.class, primaryKey,
 						_nullDLFileEntryMetadata);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(DLFileEntryMetadataModelImpl.ENTITY_CACHE_ENABLED,
-					DLFileEntryMetadataImpl.class, fileEntryMetadataId);
+					DLFileEntryMetadataImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2805,6 +2797,18 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 		}
 
 		return dlFileEntryMetadata;
+	}
+
+	/**
+	 * Returns the document library file entry metadata with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param fileEntryMetadataId the primary key of the document library file entry metadata
+	 * @return the document library file entry metadata, or <code>null</code> if a document library file entry metadata with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DLFileEntryMetadata fetchByPrimaryKey(long fileEntryMetadataId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)fileEntryMetadataId);
 	}
 
 	/**

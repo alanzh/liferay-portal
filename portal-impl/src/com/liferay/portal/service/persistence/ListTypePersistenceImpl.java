@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchListTypeException;
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -187,16 +186,18 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 			query.append(_SQL_SELECT_LISTTYPE_WHERE);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_TYPE_TYPE_1);
 			}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_TYPE_TYPE_3);
+			}
 			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_TYPE_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_TYPE_TYPE_2);
-				}
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_TYPE_TYPE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -219,7 +220,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
@@ -409,16 +410,18 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 		query.append(_SQL_SELECT_LISTTYPE_WHERE);
 
+		boolean bindType = false;
+
 		if (type == null) {
 			query.append(_FINDER_COLUMN_TYPE_TYPE_1);
 		}
+		else if (type.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_TYPE_TYPE_3);
+		}
 		else {
-			if (type.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_TYPE_TYPE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_TYPE_TYPE_2);
-			}
+			bindType = true;
+
+			query.append(_FINDER_COLUMN_TYPE_TYPE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -489,7 +492,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (type != null) {
+		if (bindType) {
 			qPos.add(type);
 		}
 
@@ -544,16 +547,18 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 			query.append(_SQL_COUNT_LISTTYPE_WHERE);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_TYPE_TYPE_1);
 			}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_TYPE_TYPE_3);
+			}
 			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_TYPE_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_TYPE_TYPE_2);
-				}
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_TYPE_TYPE_2);
 			}
 
 			String sql = query.toString();
@@ -567,7 +572,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
@@ -590,7 +595,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 	private static final String _FINDER_COLUMN_TYPE_TYPE_1 = "listType.type IS NULL";
 	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "listType.type = ?";
-	private static final String _FINDER_COLUMN_TYPE_TYPE_3 = "(listType.type IS NULL OR listType.type = ?)";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_3 = "(listType.type IS NULL OR listType.type = '')";
 
 	/**
 	 * Caches the list type in the entity cache if it is enabled.
@@ -694,7 +699,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	 */
 	public ListType remove(int listTypeId)
 		throws NoSuchListTypeException, SystemException {
-		return remove(Integer.valueOf(listTypeId));
+		return remove((Serializable)listTypeId);
 	}
 
 	/**
@@ -851,13 +856,24 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	 *
 	 * @param primaryKey the primary key of the list type
 	 * @return the list type
-	 * @throws com.liferay.portal.NoSuchModelException if a list type with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchListTypeException if a list type with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ListType findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Integer)primaryKey).intValue());
+		throws NoSuchListTypeException, SystemException {
+		ListType listType = fetchByPrimaryKey(primaryKey);
+
+		if (listType == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchListTypeException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return listType;
 	}
 
 	/**
@@ -870,18 +886,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	 */
 	public ListType findByPrimaryKey(int listTypeId)
 		throws NoSuchListTypeException, SystemException {
-		ListType listType = fetchByPrimaryKey(listTypeId);
-
-		if (listType == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + listTypeId);
-			}
-
-			throw new NoSuchListTypeException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				listTypeId);
-		}
-
-		return listType;
+		return findByPrimaryKey((Serializable)listTypeId);
 	}
 
 	/**
@@ -894,19 +899,8 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	@Override
 	public ListType fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Integer)primaryKey).intValue());
-	}
-
-	/**
-	 * Returns the list type with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param listTypeId the primary key of the list type
-	 * @return the list type, or <code>null</code> if a list type with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ListType fetchByPrimaryKey(int listTypeId) throws SystemException {
 		ListType listType = (ListType)EntityCacheUtil.getResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
-				ListTypeImpl.class, listTypeId);
+				ListTypeImpl.class, primaryKey);
 
 		if (listType == _nullListType) {
 			return null;
@@ -918,20 +912,19 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			try {
 				session = openSession();
 
-				listType = (ListType)session.get(ListTypeImpl.class,
-						Integer.valueOf(listTypeId));
+				listType = (ListType)session.get(ListTypeImpl.class, primaryKey);
 
 				if (listType != null) {
 					cacheResult(listType);
 				}
 				else {
 					EntityCacheUtil.putResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
-						ListTypeImpl.class, listTypeId, _nullListType);
+						ListTypeImpl.class, primaryKey, _nullListType);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
-					ListTypeImpl.class, listTypeId);
+					ListTypeImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -941,6 +934,17 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		}
 
 		return listType;
+	}
+
+	/**
+	 * Returns the list type with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param listTypeId the primary key of the list type
+	 * @return the list type, or <code>null</code> if a list type with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ListType fetchByPrimaryKey(int listTypeId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)listTypeId);
 	}
 
 	/**

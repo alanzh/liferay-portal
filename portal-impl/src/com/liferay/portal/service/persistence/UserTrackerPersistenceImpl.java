@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserTrackerException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -1141,16 +1140,18 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 			query.append(_SQL_SELECT_USERTRACKER_WHERE);
 
+			boolean bindSessionId = false;
+
 			if (sessionId == null) {
 				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_1);
 			}
+			else if (sessionId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
+			}
 			else {
-				if (sessionId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_2);
-				}
+				bindSessionId = true;
+
+				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -1173,7 +1174,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (sessionId != null) {
+				if (bindSessionId) {
 					qPos.add(sessionId);
 				}
 
@@ -1366,16 +1367,18 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 		query.append(_SQL_SELECT_USERTRACKER_WHERE);
 
+		boolean bindSessionId = false;
+
 		if (sessionId == null) {
 			query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_1);
 		}
+		else if (sessionId.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
+		}
 		else {
-			if (sessionId.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_2);
-			}
+			bindSessionId = true;
+
+			query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1446,7 +1449,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (sessionId != null) {
+		if (bindSessionId) {
 			qPos.add(sessionId);
 		}
 
@@ -1501,16 +1504,18 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 			query.append(_SQL_COUNT_USERTRACKER_WHERE);
 
+			boolean bindSessionId = false;
+
 			if (sessionId == null) {
 				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_1);
 			}
+			else if (sessionId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
+			}
 			else {
-				if (sessionId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_2);
-				}
+				bindSessionId = true;
+
+				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_2);
 			}
 
 			String sql = query.toString();
@@ -1524,7 +1529,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (sessionId != null) {
+				if (bindSessionId) {
 					qPos.add(sessionId);
 				}
 
@@ -1547,7 +1552,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_1 = "userTracker.sessionId IS NULL";
 	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_2 = "userTracker.sessionId = ?";
-	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_3 = "(userTracker.sessionId IS NULL OR userTracker.sessionId = ?)";
+	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_3 = "(userTracker.sessionId IS NULL OR userTracker.sessionId = '')";
 
 	/**
 	 * Caches the user tracker in the entity cache if it is enabled.
@@ -1651,7 +1656,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	 */
 	public UserTracker remove(long userTrackerId)
 		throws NoSuchUserTrackerException, SystemException {
-		return remove(Long.valueOf(userTrackerId));
+		return remove((Serializable)userTrackerId);
 	}
 
 	/**
@@ -1769,7 +1774,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			if ((userTrackerModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userTrackerModelImpl.getOriginalCompanyId())
+						userTrackerModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -1777,9 +1782,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userTrackerModelImpl.getCompanyId())
-					};
+				args = new Object[] { userTrackerModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -1790,16 +1793,14 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			if ((userTrackerModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userTrackerModelImpl.getOriginalUserId())
+						userTrackerModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userTrackerModelImpl.getUserId())
-					};
+				args = new Object[] { userTrackerModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -1859,13 +1860,24 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	 *
 	 * @param primaryKey the primary key of the user tracker
 	 * @return the user tracker
-	 * @throws com.liferay.portal.NoSuchModelException if a user tracker with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserTrackerException if a user tracker with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserTracker findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserTrackerException, SystemException {
+		UserTracker userTracker = fetchByPrimaryKey(primaryKey);
+
+		if (userTracker == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserTrackerException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userTracker;
 	}
 
 	/**
@@ -1878,18 +1890,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	 */
 	public UserTracker findByPrimaryKey(long userTrackerId)
 		throws NoSuchUserTrackerException, SystemException {
-		UserTracker userTracker = fetchByPrimaryKey(userTrackerId);
-
-		if (userTracker == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userTrackerId);
-			}
-
-			throw new NoSuchUserTrackerException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userTrackerId);
-		}
-
-		return userTracker;
+		return findByPrimaryKey((Serializable)userTrackerId);
 	}
 
 	/**
@@ -1902,20 +1903,8 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	@Override
 	public UserTracker fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user tracker with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userTrackerId the primary key of the user tracker
-	 * @return the user tracker, or <code>null</code> if a user tracker with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserTracker fetchByPrimaryKey(long userTrackerId)
-		throws SystemException {
 		UserTracker userTracker = (UserTracker)EntityCacheUtil.getResult(UserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-				UserTrackerImpl.class, userTrackerId);
+				UserTrackerImpl.class, primaryKey);
 
 		if (userTracker == _nullUserTracker) {
 			return null;
@@ -1928,19 +1917,19 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 				session = openSession();
 
 				userTracker = (UserTracker)session.get(UserTrackerImpl.class,
-						Long.valueOf(userTrackerId));
+						primaryKey);
 
 				if (userTracker != null) {
 					cacheResult(userTracker);
 				}
 				else {
 					EntityCacheUtil.putResult(UserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-						UserTrackerImpl.class, userTrackerId, _nullUserTracker);
+						UserTrackerImpl.class, primaryKey, _nullUserTracker);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-					UserTrackerImpl.class, userTrackerId);
+					UserTrackerImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1950,6 +1939,18 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 		}
 
 		return userTracker;
+	}
+
+	/**
+	 * Returns the user tracker with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userTrackerId the primary key of the user tracker
+	 * @return the user tracker, or <code>null</code> if a user tracker with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserTracker fetchByPrimaryKey(long userTrackerId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userTrackerId);
 	}
 
 	/**

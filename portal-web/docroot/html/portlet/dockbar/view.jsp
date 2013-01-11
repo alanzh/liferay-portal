@@ -133,7 +133,7 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 						<ul>
 							<c:if test="<%= themeDisplay.isShowPageSettingsIcon() %>">
 								<li class="first manage-page use-dialog full-dialog">
-									<aui:a href="<%= themeDisplay.getURLPageSettings().toString() %>" label="page" title="manage-page" />
+									<aui:a href='<%= themeDisplay.getURLPageSettings().toString() + "#details" %>' label="page" title="manage-page" />
 								</li>
 							</c:if>
 
@@ -489,6 +489,8 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 			window,
 			'<portlet:namespace />toggleCustomizedView',
 			function(event) {
+				var A = AUI();
+
 				A.io.request(
 					themeDisplay.getPathMain() + '/portal/update_layout',
 					{

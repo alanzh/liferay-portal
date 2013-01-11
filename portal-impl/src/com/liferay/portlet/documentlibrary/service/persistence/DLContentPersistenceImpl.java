@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -731,16 +730,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			query.append(_FINDER_COLUMN_C_R_P_REPOSITORYID_2);
 
+			boolean bindPath = false;
+
 			if (path == null) {
 				query.append(_FINDER_COLUMN_C_R_P_PATH_1);
 			}
+			else if (path.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_P_PATH_3);
+			}
 			else {
-				if (path.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_P_PATH_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_P_PATH_2);
-				}
+				bindPath = true;
+
+				query.append(_FINDER_COLUMN_C_R_P_PATH_2);
 			}
 
 			if (orderByComparator != null) {
@@ -767,7 +768,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 				qPos.add(repositoryId);
 
-				if (path != null) {
+				if (bindPath) {
 					qPos.add(path);
 				}
 
@@ -988,16 +989,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 		query.append(_FINDER_COLUMN_C_R_P_REPOSITORYID_2);
 
+		boolean bindPath = false;
+
 		if (path == null) {
 			query.append(_FINDER_COLUMN_C_R_P_PATH_1);
 		}
+		else if (path.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_C_R_P_PATH_3);
+		}
 		else {
-			if (path.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_C_R_P_PATH_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_C_R_P_PATH_2);
-			}
+			bindPath = true;
+
+			query.append(_FINDER_COLUMN_C_R_P_PATH_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1072,7 +1075,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 		qPos.add(repositoryId);
 
-		if (path != null) {
+		if (bindPath) {
 			qPos.add(path);
 		}
 
@@ -1137,16 +1140,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			query.append(_FINDER_COLUMN_C_R_P_REPOSITORYID_2);
 
+			boolean bindPath = false;
+
 			if (path == null) {
 				query.append(_FINDER_COLUMN_C_R_P_PATH_1);
 			}
+			else if (path.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_P_PATH_3);
+			}
 			else {
-				if (path.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_P_PATH_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_P_PATH_2);
-				}
+				bindPath = true;
+
+				query.append(_FINDER_COLUMN_C_R_P_PATH_2);
 			}
 
 			String sql = query.toString();
@@ -1164,7 +1169,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 				qPos.add(repositoryId);
 
-				if (path != null) {
+				if (bindPath) {
 					qPos.add(path);
 				}
 
@@ -1189,7 +1194,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	private static final String _FINDER_COLUMN_C_R_P_REPOSITORYID_2 = "dlContent.repositoryId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_P_PATH_1 = "dlContent.path IS NULL";
 	private static final String _FINDER_COLUMN_C_R_P_PATH_2 = "dlContent.path = ?";
-	private static final String _FINDER_COLUMN_C_R_P_PATH_3 = "(dlContent.path IS NULL OR dlContent.path = ?)";
+	private static final String _FINDER_COLUMN_C_R_P_PATH_3 = "(dlContent.path IS NULL OR dlContent.path = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_R_LIKEP =
 		new FinderPath(DLContentModelImpl.ENTITY_CACHE_ENABLED,
 			DLContentModelImpl.FINDER_CACHE_ENABLED, DLContentImpl.class,
@@ -1307,16 +1312,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			query.append(_FINDER_COLUMN_C_R_LIKEP_REPOSITORYID_2);
 
+			boolean bindPath = false;
+
 			if (path == null) {
 				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_1);
 			}
+			else if (path.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_3);
+			}
 			else {
-				if (path.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_2);
-				}
+				bindPath = true;
+
+				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_2);
 			}
 
 			if (orderByComparator != null) {
@@ -1343,7 +1350,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 				qPos.add(repositoryId);
 
-				if (path != null) {
+				if (bindPath) {
 					qPos.add(path);
 				}
 
@@ -1565,16 +1572,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 		query.append(_FINDER_COLUMN_C_R_LIKEP_REPOSITORYID_2);
 
+		boolean bindPath = false;
+
 		if (path == null) {
 			query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_1);
 		}
+		else if (path.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_3);
+		}
 		else {
-			if (path.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_2);
-			}
+			bindPath = true;
+
+			query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1649,7 +1658,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 		qPos.add(repositoryId);
 
-		if (path != null) {
+		if (bindPath) {
 			qPos.add(path);
 		}
 
@@ -1714,16 +1723,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			query.append(_FINDER_COLUMN_C_R_LIKEP_REPOSITORYID_2);
 
+			boolean bindPath = false;
+
 			if (path == null) {
 				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_1);
 			}
+			else if (path.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_3);
+			}
 			else {
-				if (path.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_2);
-				}
+				bindPath = true;
+
+				query.append(_FINDER_COLUMN_C_R_LIKEP_PATH_2);
 			}
 
 			String sql = query.toString();
@@ -1741,7 +1752,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 				qPos.add(repositoryId);
 
-				if (path != null) {
+				if (bindPath) {
 					qPos.add(path);
 				}
 
@@ -1766,7 +1777,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	private static final String _FINDER_COLUMN_C_R_LIKEP_REPOSITORYID_2 = "dlContent.repositoryId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_1 = "dlContent.path LIKE NULL";
 	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_2 = "dlContent.path LIKE ?";
-	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_3 = "(dlContent.path IS NULL OR dlContent.path LIKE ?)";
+	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_3 = "(dlContent.path IS NULL OR dlContent.path LIKE '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_R_P_V = new FinderPath(DLContentModelImpl.ENTITY_CACHE_ENABLED,
 			DLContentModelImpl.FINDER_CACHE_ENABLED, DLContentImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_R_P_V",
@@ -1892,28 +1903,32 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			query.append(_FINDER_COLUMN_C_R_P_V_REPOSITORYID_2);
 
+			boolean bindPath = false;
+
 			if (path == null) {
 				query.append(_FINDER_COLUMN_C_R_P_V_PATH_1);
 			}
-			else {
-				if (path.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_P_V_PATH_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_P_V_PATH_2);
-				}
+			else if (path.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_P_V_PATH_3);
 			}
+			else {
+				bindPath = true;
+
+				query.append(_FINDER_COLUMN_C_R_P_V_PATH_2);
+			}
+
+			boolean bindVersion = false;
 
 			if (version == null) {
 				query.append(_FINDER_COLUMN_C_R_P_V_VERSION_1);
 			}
+			else if (version.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_P_V_VERSION_3);
+			}
 			else {
-				if (version.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_P_V_VERSION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_P_V_VERSION_2);
-				}
+				bindVersion = true;
+
+				query.append(_FINDER_COLUMN_C_R_P_V_VERSION_2);
 			}
 
 			String sql = query.toString();
@@ -1931,11 +1946,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 				qPos.add(repositoryId);
 
-				if (path != null) {
+				if (bindPath) {
 					qPos.add(path);
 				}
 
-				if (version != null) {
+				if (bindVersion) {
 					qPos.add(version);
 				}
 
@@ -2031,28 +2046,32 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			query.append(_FINDER_COLUMN_C_R_P_V_REPOSITORYID_2);
 
+			boolean bindPath = false;
+
 			if (path == null) {
 				query.append(_FINDER_COLUMN_C_R_P_V_PATH_1);
 			}
-			else {
-				if (path.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_P_V_PATH_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_P_V_PATH_2);
-				}
+			else if (path.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_P_V_PATH_3);
 			}
+			else {
+				bindPath = true;
+
+				query.append(_FINDER_COLUMN_C_R_P_V_PATH_2);
+			}
+
+			boolean bindVersion = false;
 
 			if (version == null) {
 				query.append(_FINDER_COLUMN_C_R_P_V_VERSION_1);
 			}
+			else if (version.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_R_P_V_VERSION_3);
+			}
 			else {
-				if (version.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_R_P_V_VERSION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_R_P_V_VERSION_2);
-				}
+				bindVersion = true;
+
+				query.append(_FINDER_COLUMN_C_R_P_V_VERSION_2);
 			}
 
 			String sql = query.toString();
@@ -2070,11 +2089,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 				qPos.add(repositoryId);
 
-				if (path != null) {
+				if (bindPath) {
 					qPos.add(path);
 				}
 
-				if (version != null) {
+				if (bindVersion) {
 					qPos.add(version);
 				}
 
@@ -2099,10 +2118,10 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	private static final String _FINDER_COLUMN_C_R_P_V_REPOSITORYID_2 = "dlContent.repositoryId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_P_V_PATH_1 = "dlContent.path IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_R_P_V_PATH_2 = "dlContent.path = ? AND ";
-	private static final String _FINDER_COLUMN_C_R_P_V_PATH_3 = "(dlContent.path IS NULL OR dlContent.path = ?) AND ";
+	private static final String _FINDER_COLUMN_C_R_P_V_PATH_3 = "(dlContent.path IS NULL OR dlContent.path = '') AND ";
 	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_1 = "dlContent.version IS NULL";
 	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_2 = "dlContent.version = ?";
-	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_3 = "(dlContent.version IS NULL OR dlContent.version = ?)";
+	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_3 = "(dlContent.version IS NULL OR dlContent.version = '')";
 
 	/**
 	 * Caches the document library content in the entity cache if it is enabled.
@@ -2115,12 +2134,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_R_P_V,
 			new Object[] {
-				Long.valueOf(dlContent.getCompanyId()),
-				Long.valueOf(dlContent.getRepositoryId()),
-				
-			dlContent.getPath(),
-				
-			dlContent.getVersion()
+				dlContent.getCompanyId(), dlContent.getRepositoryId(),
+				dlContent.getPath(), dlContent.getVersion()
 			}, dlContent);
 
 		dlContent.resetOriginalValues();
@@ -2198,12 +2213,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	protected void cacheUniqueFindersCache(DLContent dlContent) {
 		if (dlContent.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(dlContent.getCompanyId()),
-					Long.valueOf(dlContent.getRepositoryId()),
-					
-					dlContent.getPath(),
-					
-					dlContent.getVersion()
+					dlContent.getCompanyId(), dlContent.getRepositoryId(),
+					dlContent.getPath(), dlContent.getVersion()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_R_P_V, args,
@@ -2217,12 +2228,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			if ((dlContentModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_R_P_V.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlContent.getCompanyId()),
-						Long.valueOf(dlContent.getRepositoryId()),
-						
-						dlContent.getPath(),
-						
-						dlContent.getVersion()
+						dlContent.getCompanyId(), dlContent.getRepositoryId(),
+						dlContent.getPath(), dlContent.getVersion()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_R_P_V, args,
@@ -2237,12 +2244,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		DLContentModelImpl dlContentModelImpl = (DLContentModelImpl)dlContent;
 
 		Object[] args = new Object[] {
-				Long.valueOf(dlContent.getCompanyId()),
-				Long.valueOf(dlContent.getRepositoryId()),
-				
-				dlContent.getPath(),
-				
-				dlContent.getVersion()
+				dlContent.getCompanyId(), dlContent.getRepositoryId(),
+				dlContent.getPath(), dlContent.getVersion()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R_P_V, args);
@@ -2251,11 +2254,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		if ((dlContentModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_R_P_V.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(dlContentModelImpl.getOriginalCompanyId()),
-					Long.valueOf(dlContentModelImpl.getOriginalRepositoryId()),
-					
+					dlContentModelImpl.getOriginalCompanyId(),
+					dlContentModelImpl.getOriginalRepositoryId(),
 					dlContentModelImpl.getOriginalPath(),
-					
 					dlContentModelImpl.getOriginalVersion()
 				};
 
@@ -2289,7 +2290,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	 */
 	public DLContent remove(long contentId)
 		throws NoSuchContentException, SystemException {
-		return remove(Long.valueOf(contentId));
+		return remove((Serializable)contentId);
 	}
 
 	/**
@@ -2411,8 +2412,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			if ((dlContentModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlContentModelImpl.getOriginalCompanyId()),
-						Long.valueOf(dlContentModelImpl.getOriginalRepositoryId())
+						dlContentModelImpl.getOriginalCompanyId(),
+						dlContentModelImpl.getOriginalRepositoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
@@ -2420,8 +2421,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlContentModelImpl.getCompanyId()),
-						Long.valueOf(dlContentModelImpl.getRepositoryId())
+						dlContentModelImpl.getCompanyId(),
+						dlContentModelImpl.getRepositoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
@@ -2432,9 +2433,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			if ((dlContentModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_R_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(dlContentModelImpl.getOriginalCompanyId()),
-						Long.valueOf(dlContentModelImpl.getOriginalRepositoryId()),
-						
+						dlContentModelImpl.getOriginalCompanyId(),
+						dlContentModelImpl.getOriginalRepositoryId(),
 						dlContentModelImpl.getOriginalPath()
 					};
 
@@ -2443,9 +2443,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(dlContentModelImpl.getCompanyId()),
-						Long.valueOf(dlContentModelImpl.getRepositoryId()),
-						
+						dlContentModelImpl.getCompanyId(),
+						dlContentModelImpl.getRepositoryId(),
 						dlContentModelImpl.getPath()
 					};
 
@@ -2493,13 +2492,24 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	 *
 	 * @param primaryKey the primary key of the document library content
 	 * @return the document library content
-	 * @throws com.liferay.portal.NoSuchModelException if a document library content with the primary key could not be found
+	 * @throws com.liferay.portlet.documentlibrary.NoSuchContentException if a document library content with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public DLContent findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchContentException, SystemException {
+		DLContent dlContent = fetchByPrimaryKey(primaryKey);
+
+		if (dlContent == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchContentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return dlContent;
 	}
 
 	/**
@@ -2512,18 +2522,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	 */
 	public DLContent findByPrimaryKey(long contentId)
 		throws NoSuchContentException, SystemException {
-		DLContent dlContent = fetchByPrimaryKey(contentId);
-
-		if (dlContent == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + contentId);
-			}
-
-			throw new NoSuchContentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				contentId);
-		}
-
-		return dlContent;
+		return findByPrimaryKey((Serializable)contentId);
 	}
 
 	/**
@@ -2536,20 +2535,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	@Override
 	public DLContent fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the document library content with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param contentId the primary key of the document library content
-	 * @return the document library content, or <code>null</code> if a document library content with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public DLContent fetchByPrimaryKey(long contentId)
-		throws SystemException {
 		DLContent dlContent = (DLContent)EntityCacheUtil.getResult(DLContentModelImpl.ENTITY_CACHE_ENABLED,
-				DLContentImpl.class, contentId);
+				DLContentImpl.class, primaryKey);
 
 		if (dlContent == _nullDLContent) {
 			return null;
@@ -2562,19 +2549,19 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 				session = openSession();
 
 				dlContent = (DLContent)session.get(DLContentImpl.class,
-						Long.valueOf(contentId));
+						primaryKey);
 
 				if (dlContent != null) {
 					cacheResult(dlContent);
 				}
 				else {
 					EntityCacheUtil.putResult(DLContentModelImpl.ENTITY_CACHE_ENABLED,
-						DLContentImpl.class, contentId, _nullDLContent);
+						DLContentImpl.class, primaryKey, _nullDLContent);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(DLContentModelImpl.ENTITY_CACHE_ENABLED,
-					DLContentImpl.class, contentId);
+					DLContentImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2584,6 +2571,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		}
 
 		return dlContent;
+	}
+
+	/**
+	 * Returns the document library content with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param contentId the primary key of the document library content
+	 * @return the document library content, or <code>null</code> if a document library content with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DLContent fetchByPrimaryKey(long contentId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)contentId);
 	}
 
 	/**

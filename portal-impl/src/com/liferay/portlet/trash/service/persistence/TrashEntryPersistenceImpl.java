@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.trash.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.jdbc.MappingSqlQuery;
@@ -1147,10 +1146,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 			query.append(_FINDER_COLUMN_G_LTCD_GROUPID_2);
 
+			boolean bindCreateDate = false;
+
 			if (createDate == null) {
 				query.append(_FINDER_COLUMN_G_LTCD_CREATEDATE_1);
 			}
 			else {
+				bindCreateDate = true;
+
 				query.append(_FINDER_COLUMN_G_LTCD_CREATEDATE_2);
 			}
 
@@ -1176,7 +1179,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 				qPos.add(groupId);
 
-				if (createDate != null) {
+				if (bindCreateDate) {
 					qPos.add(CalendarUtil.getTimestamp(createDate));
 				}
 
@@ -1382,10 +1385,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 		query.append(_FINDER_COLUMN_G_LTCD_GROUPID_2);
 
+		boolean bindCreateDate = false;
+
 		if (createDate == null) {
 			query.append(_FINDER_COLUMN_G_LTCD_CREATEDATE_1);
 		}
 		else {
+			bindCreateDate = true;
+
 			query.append(_FINDER_COLUMN_G_LTCD_CREATEDATE_2);
 		}
 
@@ -1459,7 +1466,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 		qPos.add(groupId);
 
-		if (createDate != null) {
+		if (bindCreateDate) {
 			qPos.add(CalendarUtil.getTimestamp(createDate));
 		}
 
@@ -1520,10 +1527,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 			query.append(_FINDER_COLUMN_G_LTCD_GROUPID_2);
 
+			boolean bindCreateDate = false;
+
 			if (createDate == null) {
 				query.append(_FINDER_COLUMN_G_LTCD_CREATEDATE_1);
 			}
 			else {
+				bindCreateDate = true;
+
 				query.append(_FINDER_COLUMN_G_LTCD_CREATEDATE_2);
 			}
 
@@ -1540,7 +1551,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 				qPos.add(groupId);
 
-				if (createDate != null) {
+				if (bindCreateDate) {
 					qPos.add(CalendarUtil.getTimestamp(createDate));
 				}
 
@@ -1802,10 +1813,8 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			TrashEntryImpl.class, trashEntry.getPrimaryKey(), trashEntry);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
-				Long.valueOf(trashEntry.getClassNameId()),
-				Long.valueOf(trashEntry.getClassPK())
-			}, trashEntry);
+			new Object[] { trashEntry.getClassNameId(), trashEntry.getClassPK() },
+			trashEntry);
 
 		trashEntry.resetOriginalValues();
 	}
@@ -1882,8 +1891,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 	protected void cacheUniqueFindersCache(TrashEntry trashEntry) {
 		if (trashEntry.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(trashEntry.getClassNameId()),
-					Long.valueOf(trashEntry.getClassPK())
+					trashEntry.getClassNameId(), trashEntry.getClassPK()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -1896,8 +1904,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			if ((trashEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(trashEntry.getClassNameId()),
-						Long.valueOf(trashEntry.getClassPK())
+						trashEntry.getClassNameId(), trashEntry.getClassPK()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -1912,8 +1919,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		TrashEntryModelImpl trashEntryModelImpl = (TrashEntryModelImpl)trashEntry;
 
 		Object[] args = new Object[] {
-				Long.valueOf(trashEntry.getClassNameId()),
-				Long.valueOf(trashEntry.getClassPK())
+				trashEntry.getClassNameId(), trashEntry.getClassPK()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1922,8 +1928,8 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		if ((trashEntryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(trashEntryModelImpl.getOriginalClassNameId()),
-					Long.valueOf(trashEntryModelImpl.getOriginalClassPK())
+					trashEntryModelImpl.getOriginalClassNameId(),
+					trashEntryModelImpl.getOriginalClassPK()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1956,7 +1962,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 	 */
 	public TrashEntry remove(long entryId)
 		throws NoSuchEntryException, SystemException {
-		return remove(Long.valueOf(entryId));
+		return remove((Serializable)entryId);
 	}
 
 	/**
@@ -2074,16 +2080,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			if ((trashEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(trashEntryModelImpl.getOriginalGroupId())
+						trashEntryModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(trashEntryModelImpl.getGroupId())
-					};
+				args = new Object[] { trashEntryModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2093,7 +2097,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			if ((trashEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(trashEntryModelImpl.getOriginalCompanyId())
+						trashEntryModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2101,9 +2105,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(trashEntryModelImpl.getCompanyId())
-					};
+				args = new Object[] { trashEntryModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2150,13 +2152,24 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 	 *
 	 * @param primaryKey the primary key of the trash entry
 	 * @return the trash entry
-	 * @throws com.liferay.portal.NoSuchModelException if a trash entry with the primary key could not be found
+	 * @throws com.liferay.portlet.trash.NoSuchEntryException if a trash entry with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public TrashEntry findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchEntryException, SystemException {
+		TrashEntry trashEntry = fetchByPrimaryKey(primaryKey);
+
+		if (trashEntry == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return trashEntry;
 	}
 
 	/**
@@ -2169,18 +2182,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 	 */
 	public TrashEntry findByPrimaryKey(long entryId)
 		throws NoSuchEntryException, SystemException {
-		TrashEntry trashEntry = fetchByPrimaryKey(entryId);
-
-		if (trashEntry == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + entryId);
-			}
-
-			throw new NoSuchEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				entryId);
-		}
-
-		return trashEntry;
+		return findByPrimaryKey((Serializable)entryId);
 	}
 
 	/**
@@ -2193,19 +2195,8 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 	@Override
 	public TrashEntry fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the trash entry with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param entryId the primary key of the trash entry
-	 * @return the trash entry, or <code>null</code> if a trash entry with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public TrashEntry fetchByPrimaryKey(long entryId) throws SystemException {
 		TrashEntry trashEntry = (TrashEntry)EntityCacheUtil.getResult(TrashEntryModelImpl.ENTITY_CACHE_ENABLED,
-				TrashEntryImpl.class, entryId);
+				TrashEntryImpl.class, primaryKey);
 
 		if (trashEntry == _nullTrashEntry) {
 			return null;
@@ -2218,19 +2209,19 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 				session = openSession();
 
 				trashEntry = (TrashEntry)session.get(TrashEntryImpl.class,
-						Long.valueOf(entryId));
+						primaryKey);
 
 				if (trashEntry != null) {
 					cacheResult(trashEntry);
 				}
 				else {
 					EntityCacheUtil.putResult(TrashEntryModelImpl.ENTITY_CACHE_ENABLED,
-						TrashEntryImpl.class, entryId, _nullTrashEntry);
+						TrashEntryImpl.class, primaryKey, _nullTrashEntry);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(TrashEntryModelImpl.ENTITY_CACHE_ENABLED,
-					TrashEntryImpl.class, entryId);
+					TrashEntryImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2240,6 +2231,17 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		}
 
 		return trashEntry;
+	}
+
+	/**
+	 * Returns the trash entry with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param entryId the primary key of the trash entry
+	 * @return the trash entry, or <code>null</code> if a trash entry with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public TrashEntry fetchByPrimaryKey(long entryId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)entryId);
 	}
 
 	/**

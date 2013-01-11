@@ -15,6 +15,9 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.portal.ResourceBlocksNotSupportedException;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
+import com.liferay.portal.kernel.dao.jdbc.CurrentConnectionUtil;
 import com.liferay.portal.kernel.dao.orm.ORMException;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -46,10 +49,15 @@ import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
 import com.liferay.portal.service.base.ResourceBlockLocalServiceBaseImpl;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
+import javax.sql.DataSource;
 
 /**
  * Manages the creation and upkeep of resource blocks and the resources they
@@ -813,6 +821,25 @@ public class ResourceBlockLocalServiceImpl
 
 					session.clear();
 
+					DB db = DBFactoryUtil.getDB();
+
+					if (!db.isSupportsQueryingAfterException()) {
+						DataSource dataSource =
+							resourceBlockPersistence.getDataSource();
+
+						Connection connection =
+							CurrentConnectionUtil.getConnection(dataSource);
+
+						try {
+							connection.rollback();
+
+							connection.setAutoCommit(false);
+						}
+						catch (SQLException sqle) {
+							throw new SystemException(sqle);
+						}
+					}
+
 					continue;
 				}
 
@@ -890,8 +917,8 @@ public class ResourceBlockLocalServiceImpl
 			name, primKey);
 
 		ResourceBlock resourceBlock =
-				resourceBlockPersistence.fetchByPrimaryKey(
-			permissionedModel.getResourceBlockId());
+			resourceBlockPersistence.fetchByPrimaryKey(
+				permissionedModel.getResourceBlockId());
 
 		if (resourceBlock == null) {
 			if (_log.isWarnEnabled()) {

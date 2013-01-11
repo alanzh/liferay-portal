@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -188,16 +187,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 			query.append(_SQL_SELECT_DDMCONTENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -220,7 +221,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -410,16 +411,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 		query.append(_SQL_SELECT_DDMCONTENT_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -490,7 +493,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -545,16 +548,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 			query.append(_SQL_COUNT_DDMCONTENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -568,7 +573,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -591,7 +596,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmContent.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmContent.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
 			DDMContentModelImpl.FINDER_CACHE_ENABLED, DDMContentImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -686,16 +691,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 			query.append(_SQL_SELECT_DDMCONTENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -711,7 +718,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -794,16 +801,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 			query.append(_SQL_COUNT_DDMCONTENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -819,7 +828,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -844,7 +853,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmContent.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmContent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddmContent.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
 			DDMContentModelImpl.FINDER_CACHE_ENABLED, DDMContentImpl.class,
@@ -964,16 +973,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 			query.append(_SQL_SELECT_DDMCONTENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -998,7 +1009,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1204,16 +1215,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 		query.append(_SQL_SELECT_DDMCONTENT_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1286,7 +1299,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1347,16 +1360,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 			query.append(_SQL_COUNT_DDMCONTENT_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1372,7 +1387,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1397,7 +1412,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmContent.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmContent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddmContent.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
 			DDMContentModelImpl.FINDER_CACHE_ENABLED, DDMContentImpl.class,
@@ -2361,9 +2376,8 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			DDMContentImpl.class, ddmContent.getPrimaryKey(), ddmContent);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				ddmContent.getUuid(), Long.valueOf(ddmContent.getGroupId())
-			}, ddmContent);
+			new Object[] { ddmContent.getUuid(), ddmContent.getGroupId() },
+			ddmContent);
 
 		ddmContent.resetOriginalValues();
 	}
@@ -2440,7 +2454,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 	protected void cacheUniqueFindersCache(DDMContent ddmContent) {
 		if (ddmContent.isNew()) {
 			Object[] args = new Object[] {
-					ddmContent.getUuid(), Long.valueOf(ddmContent.getGroupId())
+					ddmContent.getUuid(), ddmContent.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -2454,8 +2468,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			if ((ddmContentModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						ddmContent.getUuid(),
-						Long.valueOf(ddmContent.getGroupId())
+						ddmContent.getUuid(), ddmContent.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -2470,7 +2483,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 		DDMContentModelImpl ddmContentModelImpl = (DDMContentModelImpl)ddmContent;
 
 		Object[] args = new Object[] {
-				ddmContent.getUuid(), Long.valueOf(ddmContent.getGroupId())
+				ddmContent.getUuid(), ddmContent.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -2480,7 +2493,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					ddmContentModelImpl.getOriginalUuid(),
-					Long.valueOf(ddmContentModelImpl.getOriginalGroupId())
+					ddmContentModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -2517,7 +2530,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 	 */
 	public DDMContent remove(long contentId)
 		throws NoSuchContentException, SystemException {
-		return remove(Long.valueOf(contentId));
+		return remove((Serializable)contentId);
 	}
 
 	/**
@@ -2659,7 +2672,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						ddmContentModelImpl.getOriginalUuid(),
-						Long.valueOf(ddmContentModelImpl.getOriginalCompanyId())
+						ddmContentModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2668,7 +2681,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				args = new Object[] {
 						ddmContentModelImpl.getUuid(),
-						Long.valueOf(ddmContentModelImpl.getCompanyId())
+						ddmContentModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -2679,16 +2692,14 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			if ((ddmContentModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmContentModelImpl.getOriginalGroupId())
+						ddmContentModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(ddmContentModelImpl.getGroupId())
-					};
+				args = new Object[] { ddmContentModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2698,7 +2709,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			if ((ddmContentModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmContentModelImpl.getOriginalCompanyId())
+						ddmContentModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2706,9 +2717,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(ddmContentModelImpl.getCompanyId())
-					};
+				args = new Object[] { ddmContentModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2756,13 +2765,24 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 	 *
 	 * @param primaryKey the primary key of the d d m content
 	 * @return the d d m content
-	 * @throws com.liferay.portal.NoSuchModelException if a d d m content with the primary key could not be found
+	 * @throws com.liferay.portlet.dynamicdatamapping.NoSuchContentException if a d d m content with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public DDMContent findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchContentException, SystemException {
+		DDMContent ddmContent = fetchByPrimaryKey(primaryKey);
+
+		if (ddmContent == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchContentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return ddmContent;
 	}
 
 	/**
@@ -2775,18 +2795,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 	 */
 	public DDMContent findByPrimaryKey(long contentId)
 		throws NoSuchContentException, SystemException {
-		DDMContent ddmContent = fetchByPrimaryKey(contentId);
-
-		if (ddmContent == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + contentId);
-			}
-
-			throw new NoSuchContentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				contentId);
-		}
-
-		return ddmContent;
+		return findByPrimaryKey((Serializable)contentId);
 	}
 
 	/**
@@ -2799,20 +2808,8 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 	@Override
 	public DDMContent fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the d d m content with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param contentId the primary key of the d d m content
-	 * @return the d d m content, or <code>null</code> if a d d m content with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public DDMContent fetchByPrimaryKey(long contentId)
-		throws SystemException {
 		DDMContent ddmContent = (DDMContent)EntityCacheUtil.getResult(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
-				DDMContentImpl.class, contentId);
+				DDMContentImpl.class, primaryKey);
 
 		if (ddmContent == _nullDDMContent) {
 			return null;
@@ -2825,19 +2822,19 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 				session = openSession();
 
 				ddmContent = (DDMContent)session.get(DDMContentImpl.class,
-						Long.valueOf(contentId));
+						primaryKey);
 
 				if (ddmContent != null) {
 					cacheResult(ddmContent);
 				}
 				else {
 					EntityCacheUtil.putResult(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
-						DDMContentImpl.class, contentId, _nullDDMContent);
+						DDMContentImpl.class, primaryKey, _nullDDMContent);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
-					DDMContentImpl.class, contentId);
+					DDMContentImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2847,6 +2844,18 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 		}
 
 		return ddmContent;
+	}
+
+	/**
+	 * Returns the d d m content with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param contentId the primary key of the d d m content
+	 * @return the d d m content, or <code>null</code> if a d d m content with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DDMContent fetchByPrimaryKey(long contentId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)contentId);
 	}
 
 	/**

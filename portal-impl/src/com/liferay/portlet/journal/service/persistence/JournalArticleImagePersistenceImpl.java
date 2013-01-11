@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1179,16 +1178,18 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 			query.append(_FINDER_COLUMN_G_A_V_GROUPID_2);
 
+			boolean bindArticleId = false;
+
 			if (articleId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_1);
 			}
+			else if (articleId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_3);
+			}
 			else {
-				if (articleId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_2);
-				}
+				bindArticleId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_A_V_VERSION_2);
@@ -1215,7 +1216,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 				qPos.add(groupId);
 
-				if (articleId != null) {
+				if (bindArticleId) {
 					qPos.add(articleId);
 				}
 
@@ -1438,16 +1439,18 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 		query.append(_FINDER_COLUMN_G_A_V_GROUPID_2);
 
+		boolean bindArticleId = false;
+
 		if (articleId == null) {
 			query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_1);
 		}
+		else if (articleId.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_3);
+		}
 		else {
-			if (articleId.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_2);
-			}
+			bindArticleId = true;
+
+			query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_2);
 		}
 
 		query.append(_FINDER_COLUMN_G_A_V_VERSION_2);
@@ -1522,7 +1525,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 		qPos.add(groupId);
 
-		if (articleId != null) {
+		if (bindArticleId) {
 			qPos.add(articleId);
 		}
 
@@ -1587,16 +1590,18 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 			query.append(_FINDER_COLUMN_G_A_V_GROUPID_2);
 
+			boolean bindArticleId = false;
+
 			if (articleId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_1);
 			}
+			else if (articleId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_3);
+			}
 			else {
-				if (articleId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_2);
-				}
+				bindArticleId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_ARTICLEID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_A_V_VERSION_2);
@@ -1614,7 +1619,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 				qPos.add(groupId);
 
-				if (articleId != null) {
+				if (bindArticleId) {
 					qPos.add(articleId);
 				}
 
@@ -1640,7 +1645,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 	private static final String _FINDER_COLUMN_G_A_V_GROUPID_2 = "journalArticleImage.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_A_V_ARTICLEID_1 = "journalArticleImage.articleId IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_A_V_ARTICLEID_2 = "journalArticleImage.articleId = ? AND ";
-	private static final String _FINDER_COLUMN_G_A_V_ARTICLEID_3 = "(journalArticleImage.articleId IS NULL OR journalArticleImage.articleId = ?) AND ";
+	private static final String _FINDER_COLUMN_G_A_V_ARTICLEID_3 = "(journalArticleImage.articleId IS NULL OR journalArticleImage.articleId = '') AND ";
 	private static final String _FINDER_COLUMN_G_A_V_VERSION_2 = "journalArticleImage.version = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_A_V_E_E_L = new FinderPath(JournalArticleImageModelImpl.ENTITY_CACHE_ENABLED,
 			JournalArticleImageModelImpl.FINDER_CACHE_ENABLED,
@@ -1789,54 +1794,62 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 			query.append(_FINDER_COLUMN_G_A_V_E_E_L_GROUPID_2);
 
+			boolean bindArticleId = false;
+
 			if (articleId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_1);
 			}
+			else if (articleId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_3);
+			}
 			else {
-				if (articleId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_2);
-				}
+				bindArticleId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_A_V_E_E_L_VERSION_2);
 
+			boolean bindElInstanceId = false;
+
 			if (elInstanceId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_1);
 			}
-			else {
-				if (elInstanceId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_2);
-				}
+			else if (elInstanceId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_3);
 			}
+			else {
+				bindElInstanceId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_2);
+			}
+
+			boolean bindElName = false;
 
 			if (elName == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_1);
 			}
-			else {
-				if (elName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_2);
-				}
+			else if (elName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_3);
 			}
+			else {
+				bindElName = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_2);
+			}
+
+			boolean bindLanguageId = false;
 
 			if (languageId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_1);
 			}
+			else if (languageId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_3);
+			}
 			else {
-				if (languageId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_2);
-				}
+				bindLanguageId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_2);
 			}
 
 			String sql = query.toString();
@@ -1852,21 +1865,21 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 				qPos.add(groupId);
 
-				if (articleId != null) {
+				if (bindArticleId) {
 					qPos.add(articleId);
 				}
 
 				qPos.add(version);
 
-				if (elInstanceId != null) {
+				if (bindElInstanceId) {
 					qPos.add(elInstanceId);
 				}
 
-				if (elName != null) {
+				if (bindElName) {
 					qPos.add(elName);
 				}
 
-				if (languageId != null) {
+				if (bindLanguageId) {
 					qPos.add(languageId);
 				}
 
@@ -1971,54 +1984,62 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 			query.append(_FINDER_COLUMN_G_A_V_E_E_L_GROUPID_2);
 
+			boolean bindArticleId = false;
+
 			if (articleId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_1);
 			}
+			else if (articleId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_3);
+			}
 			else {
-				if (articleId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_2);
-				}
+				bindArticleId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_2);
 			}
 
 			query.append(_FINDER_COLUMN_G_A_V_E_E_L_VERSION_2);
 
+			boolean bindElInstanceId = false;
+
 			if (elInstanceId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_1);
 			}
-			else {
-				if (elInstanceId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_2);
-				}
+			else if (elInstanceId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_3);
 			}
+			else {
+				bindElInstanceId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_2);
+			}
+
+			boolean bindElName = false;
 
 			if (elName == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_1);
 			}
-			else {
-				if (elName.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_2);
-				}
+			else if (elName.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_3);
 			}
+			else {
+				bindElName = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_ELNAME_2);
+			}
+
+			boolean bindLanguageId = false;
 
 			if (languageId == null) {
 				query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_1);
 			}
+			else if (languageId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_3);
+			}
 			else {
-				if (languageId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_2);
-				}
+				bindLanguageId = true;
+
+				query.append(_FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_2);
 			}
 
 			String sql = query.toString();
@@ -2034,21 +2055,21 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 				qPos.add(groupId);
 
-				if (articleId != null) {
+				if (bindArticleId) {
 					qPos.add(articleId);
 				}
 
 				qPos.add(version);
 
-				if (elInstanceId != null) {
+				if (bindElInstanceId) {
 					qPos.add(elInstanceId);
 				}
 
-				if (elName != null) {
+				if (bindElName) {
 					qPos.add(elName);
 				}
 
-				if (languageId != null) {
+				if (bindLanguageId) {
 					qPos.add(languageId);
 				}
 
@@ -2072,17 +2093,17 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_GROUPID_2 = "journalArticleImage.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_1 = "journalArticleImage.articleId IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_2 = "journalArticleImage.articleId = ? AND ";
-	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_3 = "(journalArticleImage.articleId IS NULL OR journalArticleImage.articleId = ?) AND ";
+	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ARTICLEID_3 = "(journalArticleImage.articleId IS NULL OR journalArticleImage.articleId = '') AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_VERSION_2 = "journalArticleImage.version = ? AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_1 = "journalArticleImage.elInstanceId IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_2 = "journalArticleImage.elInstanceId = ? AND ";
-	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_3 = "(journalArticleImage.elInstanceId IS NULL OR journalArticleImage.elInstanceId = ?) AND ";
+	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELINSTANCEID_3 = "(journalArticleImage.elInstanceId IS NULL OR journalArticleImage.elInstanceId = '') AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELNAME_1 = "journalArticleImage.elName IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELNAME_2 = "journalArticleImage.elName = ? AND ";
-	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELNAME_3 = "(journalArticleImage.elName IS NULL OR journalArticleImage.elName = ?) AND ";
+	private static final String _FINDER_COLUMN_G_A_V_E_E_L_ELNAME_3 = "(journalArticleImage.elName IS NULL OR journalArticleImage.elName = '') AND ";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_1 = "journalArticleImage.languageId IS NULL";
 	private static final String _FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_2 = "journalArticleImage.languageId = ?";
-	private static final String _FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_3 = "(journalArticleImage.languageId IS NULL OR journalArticleImage.languageId = ?)";
+	private static final String _FINDER_COLUMN_G_A_V_E_E_L_LANGUAGEID_3 = "(journalArticleImage.languageId IS NULL OR journalArticleImage.languageId = '')";
 
 	/**
 	 * Caches the journal article image in the entity cache if it is enabled.
@@ -2096,16 +2117,12 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_A_V_E_E_L,
 			new Object[] {
-				Long.valueOf(journalArticleImage.getGroupId()),
-				
-			journalArticleImage.getArticleId(),
-				Double.valueOf(journalArticleImage.getVersion()),
-				
-			journalArticleImage.getElInstanceId(),
-				
-			journalArticleImage.getElName(),
-				
-			journalArticleImage.getLanguageId()
+				journalArticleImage.getGroupId(),
+				journalArticleImage.getArticleId(),
+				journalArticleImage.getVersion(),
+				journalArticleImage.getElInstanceId(),
+				journalArticleImage.getElName(),
+				journalArticleImage.getLanguageId()
 			}, journalArticleImage);
 
 		journalArticleImage.resetOriginalValues();
@@ -2186,15 +2203,11 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 		JournalArticleImage journalArticleImage) {
 		if (journalArticleImage.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(journalArticleImage.getGroupId()),
-					
+					journalArticleImage.getGroupId(),
 					journalArticleImage.getArticleId(),
-					Double.valueOf(journalArticleImage.getVersion()),
-					
+					journalArticleImage.getVersion(),
 					journalArticleImage.getElInstanceId(),
-					
 					journalArticleImage.getElName(),
-					
 					journalArticleImage.getLanguageId()
 				};
 
@@ -2209,15 +2222,11 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			if ((journalArticleImageModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_A_V_E_E_L.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalArticleImage.getGroupId()),
-						
+						journalArticleImage.getGroupId(),
 						journalArticleImage.getArticleId(),
-						Double.valueOf(journalArticleImage.getVersion()),
-						
+						journalArticleImage.getVersion(),
 						journalArticleImage.getElInstanceId(),
-						
 						journalArticleImage.getElName(),
-						
 						journalArticleImage.getLanguageId()
 					};
 
@@ -2234,15 +2243,11 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 		JournalArticleImageModelImpl journalArticleImageModelImpl = (JournalArticleImageModelImpl)journalArticleImage;
 
 		Object[] args = new Object[] {
-				Long.valueOf(journalArticleImage.getGroupId()),
-				
+				journalArticleImage.getGroupId(),
 				journalArticleImage.getArticleId(),
-				Double.valueOf(journalArticleImage.getVersion()),
-				
+				journalArticleImage.getVersion(),
 				journalArticleImage.getElInstanceId(),
-				
 				journalArticleImage.getElName(),
-				
 				journalArticleImage.getLanguageId()
 			};
 
@@ -2252,15 +2257,11 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 		if ((journalArticleImageModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_A_V_E_E_L.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(journalArticleImageModelImpl.getOriginalGroupId()),
-					
+					journalArticleImageModelImpl.getOriginalGroupId(),
 					journalArticleImageModelImpl.getOriginalArticleId(),
-					Double.valueOf(journalArticleImageModelImpl.getOriginalVersion()),
-					
+					journalArticleImageModelImpl.getOriginalVersion(),
 					journalArticleImageModelImpl.getOriginalElInstanceId(),
-					
 					journalArticleImageModelImpl.getOriginalElName(),
-					
 					journalArticleImageModelImpl.getOriginalLanguageId()
 				};
 
@@ -2294,7 +2295,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 	 */
 	public JournalArticleImage remove(long articleImageId)
 		throws NoSuchArticleImageException, SystemException {
-		return remove(Long.valueOf(articleImageId));
+		return remove((Serializable)articleImageId);
 	}
 
 	/**
@@ -2412,16 +2413,14 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			if ((journalArticleImageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalArticleImageModelImpl.getOriginalGroupId())
+						journalArticleImageModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(journalArticleImageModelImpl.getGroupId())
-					};
+				args = new Object[] { journalArticleImageModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2431,7 +2430,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			if ((journalArticleImageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TEMPIMAGE.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(journalArticleImageModelImpl.getOriginalTempImage())
+						journalArticleImageModelImpl.getOriginalTempImage()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TEMPIMAGE,
@@ -2439,9 +2438,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TEMPIMAGE,
 					args);
 
-				args = new Object[] {
-						Boolean.valueOf(journalArticleImageModelImpl.getTempImage())
-					};
+				args = new Object[] { journalArticleImageModelImpl.getTempImage() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TEMPIMAGE,
 					args);
@@ -2452,10 +2449,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			if ((journalArticleImageModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A_V.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalArticleImageModelImpl.getOriginalGroupId()),
-						
+						journalArticleImageModelImpl.getOriginalGroupId(),
 						journalArticleImageModelImpl.getOriginalArticleId(),
-						Double.valueOf(journalArticleImageModelImpl.getOriginalVersion())
+						journalArticleImageModelImpl.getOriginalVersion()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_A_V, args);
@@ -2463,10 +2459,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 					args);
 
 				args = new Object[] {
-						Long.valueOf(journalArticleImageModelImpl.getGroupId()),
-						
+						journalArticleImageModelImpl.getGroupId(),
 						journalArticleImageModelImpl.getArticleId(),
-						Double.valueOf(journalArticleImageModelImpl.getVersion())
+						journalArticleImageModelImpl.getVersion()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_A_V, args);
@@ -2513,13 +2508,24 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 	 *
 	 * @param primaryKey the primary key of the journal article image
 	 * @return the journal article image
-	 * @throws com.liferay.portal.NoSuchModelException if a journal article image with the primary key could not be found
+	 * @throws com.liferay.portlet.journal.NoSuchArticleImageException if a journal article image with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public JournalArticleImage findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchArticleImageException, SystemException {
+		JournalArticleImage journalArticleImage = fetchByPrimaryKey(primaryKey);
+
+		if (journalArticleImage == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchArticleImageException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return journalArticleImage;
 	}
 
 	/**
@@ -2532,18 +2538,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 	 */
 	public JournalArticleImage findByPrimaryKey(long articleImageId)
 		throws NoSuchArticleImageException, SystemException {
-		JournalArticleImage journalArticleImage = fetchByPrimaryKey(articleImageId);
-
-		if (journalArticleImage == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + articleImageId);
-			}
-
-			throw new NoSuchArticleImageException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				articleImageId);
-		}
-
-		return journalArticleImage;
+		return findByPrimaryKey((Serializable)articleImageId);
 	}
 
 	/**
@@ -2556,20 +2551,8 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 	@Override
 	public JournalArticleImage fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the journal article image with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param articleImageId the primary key of the journal article image
-	 * @return the journal article image, or <code>null</code> if a journal article image with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public JournalArticleImage fetchByPrimaryKey(long articleImageId)
-		throws SystemException {
 		JournalArticleImage journalArticleImage = (JournalArticleImage)EntityCacheUtil.getResult(JournalArticleImageModelImpl.ENTITY_CACHE_ENABLED,
-				JournalArticleImageImpl.class, articleImageId);
+				JournalArticleImageImpl.class, primaryKey);
 
 		if (journalArticleImage == _nullJournalArticleImage) {
 			return null;
@@ -2582,20 +2565,20 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 				session = openSession();
 
 				journalArticleImage = (JournalArticleImage)session.get(JournalArticleImageImpl.class,
-						Long.valueOf(articleImageId));
+						primaryKey);
 
 				if (journalArticleImage != null) {
 					cacheResult(journalArticleImage);
 				}
 				else {
 					EntityCacheUtil.putResult(JournalArticleImageModelImpl.ENTITY_CACHE_ENABLED,
-						JournalArticleImageImpl.class, articleImageId,
+						JournalArticleImageImpl.class, primaryKey,
 						_nullJournalArticleImage);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(JournalArticleImageModelImpl.ENTITY_CACHE_ENABLED,
-					JournalArticleImageImpl.class, articleImageId);
+					JournalArticleImageImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2605,6 +2588,18 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 		}
 
 		return journalArticleImage;
+	}
+
+	/**
+	 * Returns the journal article image with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param articleImageId the primary key of the journal article image
+	 * @return the journal article image, or <code>null</code> if a journal article image with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public JournalArticleImage fetchByPrimaryKey(long articleImageId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)articleImageId);
 	}
 
 	/**

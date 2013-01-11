@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1927,7 +1926,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 	 */
 	public ShoppingCategory remove(long categoryId)
 		throws NoSuchCategoryException, SystemException {
-		return remove(Long.valueOf(categoryId));
+		return remove((Serializable)categoryId);
 	}
 
 	/**
@@ -2045,16 +2044,14 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			if ((shoppingCategoryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingCategoryModelImpl.getOriginalGroupId())
+						shoppingCategoryModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(shoppingCategoryModelImpl.getGroupId())
-					};
+				args = new Object[] { shoppingCategoryModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2064,8 +2061,8 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			if ((shoppingCategoryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingCategoryModelImpl.getOriginalGroupId()),
-						Long.valueOf(shoppingCategoryModelImpl.getOriginalParentCategoryId())
+						shoppingCategoryModelImpl.getOriginalGroupId(),
+						shoppingCategoryModelImpl.getOriginalParentCategoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -2073,8 +2070,8 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 					args);
 
 				args = new Object[] {
-						Long.valueOf(shoppingCategoryModelImpl.getGroupId()),
-						Long.valueOf(shoppingCategoryModelImpl.getParentCategoryId())
+						shoppingCategoryModelImpl.getGroupId(),
+						shoppingCategoryModelImpl.getParentCategoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -2120,13 +2117,24 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 	 *
 	 * @param primaryKey the primary key of the shopping category
 	 * @return the shopping category
-	 * @throws com.liferay.portal.NoSuchModelException if a shopping category with the primary key could not be found
+	 * @throws com.liferay.portlet.shopping.NoSuchCategoryException if a shopping category with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ShoppingCategory findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchCategoryException, SystemException {
+		ShoppingCategory shoppingCategory = fetchByPrimaryKey(primaryKey);
+
+		if (shoppingCategory == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchCategoryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return shoppingCategory;
 	}
 
 	/**
@@ -2139,18 +2147,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 	 */
 	public ShoppingCategory findByPrimaryKey(long categoryId)
 		throws NoSuchCategoryException, SystemException {
-		ShoppingCategory shoppingCategory = fetchByPrimaryKey(categoryId);
-
-		if (shoppingCategory == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + categoryId);
-			}
-
-			throw new NoSuchCategoryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				categoryId);
-		}
-
-		return shoppingCategory;
+		return findByPrimaryKey((Serializable)categoryId);
 	}
 
 	/**
@@ -2163,20 +2160,8 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 	@Override
 	public ShoppingCategory fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the shopping category with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param categoryId the primary key of the shopping category
-	 * @return the shopping category, or <code>null</code> if a shopping category with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ShoppingCategory fetchByPrimaryKey(long categoryId)
-		throws SystemException {
 		ShoppingCategory shoppingCategory = (ShoppingCategory)EntityCacheUtil.getResult(ShoppingCategoryModelImpl.ENTITY_CACHE_ENABLED,
-				ShoppingCategoryImpl.class, categoryId);
+				ShoppingCategoryImpl.class, primaryKey);
 
 		if (shoppingCategory == _nullShoppingCategory) {
 			return null;
@@ -2189,20 +2174,20 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 				session = openSession();
 
 				shoppingCategory = (ShoppingCategory)session.get(ShoppingCategoryImpl.class,
-						Long.valueOf(categoryId));
+						primaryKey);
 
 				if (shoppingCategory != null) {
 					cacheResult(shoppingCategory);
 				}
 				else {
 					EntityCacheUtil.putResult(ShoppingCategoryModelImpl.ENTITY_CACHE_ENABLED,
-						ShoppingCategoryImpl.class, categoryId,
+						ShoppingCategoryImpl.class, primaryKey,
 						_nullShoppingCategory);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ShoppingCategoryModelImpl.ENTITY_CACHE_ENABLED,
-					ShoppingCategoryImpl.class, categoryId);
+					ShoppingCategoryImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2212,6 +2197,18 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		}
 
 		return shoppingCategory;
+	}
+
+	/**
+	 * Returns the shopping category with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param categoryId the primary key of the shopping category
+	 * @return the shopping category, or <code>null</code> if a shopping category with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ShoppingCategory fetchByPrimaryKey(long categoryId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)categoryId);
 	}
 
 	/**

@@ -767,10 +767,13 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 			else if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
 				value = StringPool.BLANK;
 			}
-			else {
+			else if (message.isFormatBBCode()) {
 				value = BBCodeTranslatorUtil.getHTML(message.getBody());
 
 				value = MBUtil.replaceMessageBodyPaths(themeDisplay, value);
+			}
+			else {
+				value = message.getBody();
 			}
 
 			syndContent.setValue(value);
@@ -800,9 +803,6 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 		selfSyndLink.setHref(feedURL);
 		selfSyndLink.setRel("self");
 
-		syndFeed.setPublishedDate(new Date());
-		syndFeed.setTitle(name);
-		syndFeed.setUri(feedURL);
 		syndFeed.setPublishedDate(new Date());
 		syndFeed.setTitle(name);
 		syndFeed.setUri(feedURL);

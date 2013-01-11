@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchLayoutSetException;
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -674,16 +673,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			query.append(_SQL_SELECT_LAYOUTSET_WHERE);
 
+			boolean bindLayoutSetPrototypeUuid = false;
+
 			if (layoutSetPrototypeUuid == null) {
 				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
 			}
+			else if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
+			}
 			else {
-				if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
-				}
+				bindLayoutSetPrototypeUuid = true;
+
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -706,7 +707,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (layoutSetPrototypeUuid != null) {
+				if (bindLayoutSetPrototypeUuid) {
 					qPos.add(layoutSetPrototypeUuid);
 				}
 
@@ -902,16 +903,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 		query.append(_SQL_SELECT_LAYOUTSET_WHERE);
 
+		boolean bindLayoutSetPrototypeUuid = false;
+
 		if (layoutSetPrototypeUuid == null) {
 			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
 		}
+		else if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
+		}
 		else {
-			if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
-			}
+			bindLayoutSetPrototypeUuid = true;
+
+			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -982,7 +985,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (layoutSetPrototypeUuid != null) {
+		if (bindLayoutSetPrototypeUuid) {
 			qPos.add(layoutSetPrototypeUuid);
 		}
 
@@ -1040,16 +1043,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			query.append(_SQL_COUNT_LAYOUTSET_WHERE);
 
+			boolean bindLayoutSetPrototypeUuid = false;
+
 			if (layoutSetPrototypeUuid == null) {
 				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
 			}
+			else if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
+			}
 			else {
-				if (layoutSetPrototypeUuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
-				}
+				bindLayoutSetPrototypeUuid = true;
+
+				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2);
 			}
 
 			String sql = query.toString();
@@ -1063,7 +1068,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (layoutSetPrototypeUuid != null) {
+				if (bindLayoutSetPrototypeUuid) {
 					qPos.add(layoutSetPrototypeUuid);
 				}
 
@@ -1089,7 +1094,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2 =
 		"layoutSet.layoutSetPrototypeUuid = ?";
 	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3 =
-		"(layoutSet.layoutSetPrototypeUuid IS NULL OR layoutSet.layoutSetPrototypeUuid = ?)";
+		"(layoutSet.layoutSetPrototypeUuid IS NULL OR layoutSet.layoutSetPrototypeUuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_P = new FinderPath(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutSetModelImpl.FINDER_CACHE_ENABLED, LayoutSetImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByG_P",
@@ -1328,10 +1333,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 			LayoutSetImpl.class, layoutSet.getPrimaryKey(), layoutSet);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P,
-			new Object[] {
-				Long.valueOf(layoutSet.getGroupId()),
-				Boolean.valueOf(layoutSet.getPrivateLayout())
-			}, layoutSet);
+			new Object[] { layoutSet.getGroupId(), layoutSet.getPrivateLayout() },
+			layoutSet);
 
 		layoutSet.resetOriginalValues();
 	}
@@ -1408,8 +1411,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	protected void cacheUniqueFindersCache(LayoutSet layoutSet) {
 		if (layoutSet.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(layoutSet.getGroupId()),
-					Boolean.valueOf(layoutSet.getPrivateLayout())
+					layoutSet.getGroupId(), layoutSet.getPrivateLayout()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_P, args,
@@ -1422,8 +1424,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 			if ((layoutSetModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutSet.getGroupId()),
-						Boolean.valueOf(layoutSet.getPrivateLayout())
+						layoutSet.getGroupId(), layoutSet.getPrivateLayout()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_P, args,
@@ -1438,8 +1439,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		LayoutSetModelImpl layoutSetModelImpl = (LayoutSetModelImpl)layoutSet;
 
 		Object[] args = new Object[] {
-				Long.valueOf(layoutSet.getGroupId()),
-				Boolean.valueOf(layoutSet.getPrivateLayout())
+				layoutSet.getGroupId(), layoutSet.getPrivateLayout()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -1448,8 +1448,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		if ((layoutSetModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_P.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(layoutSetModelImpl.getOriginalGroupId()),
-					Boolean.valueOf(layoutSetModelImpl.getOriginalPrivateLayout())
+					layoutSetModelImpl.getOriginalGroupId(),
+					layoutSetModelImpl.getOriginalPrivateLayout()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -1482,7 +1482,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	 */
 	public LayoutSet remove(long layoutSetId)
 		throws NoSuchLayoutSetException, SystemException {
-		return remove(Long.valueOf(layoutSetId));
+		return remove((Serializable)layoutSetId);
 	}
 
 	/**
@@ -1599,16 +1599,14 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 			if ((layoutSetModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutSetModelImpl.getOriginalGroupId())
+						layoutSetModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(layoutSetModelImpl.getGroupId())
-					};
+				args = new Object[] { layoutSetModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -1682,13 +1680,24 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	 *
 	 * @param primaryKey the primary key of the layout set
 	 * @return the layout set
-	 * @throws com.liferay.portal.NoSuchModelException if a layout set with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchLayoutSetException if a layout set with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public LayoutSet findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLayoutSetException, SystemException {
+		LayoutSet layoutSet = fetchByPrimaryKey(primaryKey);
+
+		if (layoutSet == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLayoutSetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return layoutSet;
 	}
 
 	/**
@@ -1701,18 +1710,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	 */
 	public LayoutSet findByPrimaryKey(long layoutSetId)
 		throws NoSuchLayoutSetException, SystemException {
-		LayoutSet layoutSet = fetchByPrimaryKey(layoutSetId);
-
-		if (layoutSet == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + layoutSetId);
-			}
-
-			throw new NoSuchLayoutSetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				layoutSetId);
-		}
-
-		return layoutSet;
+		return findByPrimaryKey((Serializable)layoutSetId);
 	}
 
 	/**
@@ -1725,20 +1723,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	@Override
 	public LayoutSet fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the layout set with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param layoutSetId the primary key of the layout set
-	 * @return the layout set, or <code>null</code> if a layout set with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public LayoutSet fetchByPrimaryKey(long layoutSetId)
-		throws SystemException {
 		LayoutSet layoutSet = (LayoutSet)EntityCacheUtil.getResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
-				LayoutSetImpl.class, layoutSetId);
+				LayoutSetImpl.class, primaryKey);
 
 		if (layoutSet == _nullLayoutSet) {
 			return null;
@@ -1751,19 +1737,19 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 				session = openSession();
 
 				layoutSet = (LayoutSet)session.get(LayoutSetImpl.class,
-						Long.valueOf(layoutSetId));
+						primaryKey);
 
 				if (layoutSet != null) {
 					cacheResult(layoutSet);
 				}
 				else {
 					EntityCacheUtil.putResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
-						LayoutSetImpl.class, layoutSetId, _nullLayoutSet);
+						LayoutSetImpl.class, primaryKey, _nullLayoutSet);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(LayoutSetModelImpl.ENTITY_CACHE_ENABLED,
-					LayoutSetImpl.class, layoutSetId);
+					LayoutSetImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1773,6 +1759,18 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		}
 
 		return layoutSet;
+	}
+
+	/**
+	 * Returns the layout set with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param layoutSetId the primary key of the layout set
+	 * @return the layout set, or <code>null</code> if a layout set with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSet fetchByPrimaryKey(long layoutSetId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)layoutSetId);
 	}
 
 	/**

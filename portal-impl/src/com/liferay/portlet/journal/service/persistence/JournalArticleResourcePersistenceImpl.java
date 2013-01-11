@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -193,16 +192,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			query.append(_SQL_SELECT_JOURNALARTICLERESOURCE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -225,7 +226,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -418,16 +419,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 		query.append(_SQL_SELECT_JOURNALARTICLERESOURCE_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -498,7 +501,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -553,16 +556,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			query.append(_SQL_COUNT_JOURNALARTICLERESOURCE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -576,7 +581,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -599,7 +604,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalArticleResource.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalArticleResource.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalArticleResource.uuid IS NULL OR journalArticleResource.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalArticleResource.uuid IS NULL OR journalArticleResource.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
 			JournalArticleResourceModelImpl.FINDER_CACHE_ENABLED,
 			JournalArticleResourceImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -696,16 +701,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			query.append(_SQL_SELECT_JOURNALARTICLERESOURCE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -721,7 +728,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -805,16 +812,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			query.append(_SQL_COUNT_JOURNALARTICLERESOURCE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -830,7 +839,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -855,7 +864,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalArticleResource.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalArticleResource.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalArticleResource.uuid IS NULL OR journalArticleResource.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalArticleResource.uuid IS NULL OR journalArticleResource.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "journalArticleResource.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
 			JournalArticleResourceModelImpl.FINDER_CACHE_ENABLED,
@@ -1434,16 +1443,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			query.append(_FINDER_COLUMN_G_A_GROUPID_2);
 
+			boolean bindArticleId = false;
+
 			if (articleId == null) {
 				query.append(_FINDER_COLUMN_G_A_ARTICLEID_1);
 			}
+			else if (articleId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_ARTICLEID_3);
+			}
 			else {
-				if (articleId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_ARTICLEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_ARTICLEID_2);
-				}
+				bindArticleId = true;
+
+				query.append(_FINDER_COLUMN_G_A_ARTICLEID_2);
 			}
 
 			String sql = query.toString();
@@ -1459,7 +1470,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				qPos.add(groupId);
 
-				if (articleId != null) {
+				if (bindArticleId) {
 					qPos.add(articleId);
 				}
 
@@ -1544,16 +1555,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			query.append(_FINDER_COLUMN_G_A_GROUPID_2);
 
+			boolean bindArticleId = false;
+
 			if (articleId == null) {
 				query.append(_FINDER_COLUMN_G_A_ARTICLEID_1);
 			}
+			else if (articleId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_A_ARTICLEID_3);
+			}
 			else {
-				if (articleId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_A_ARTICLEID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_A_ARTICLEID_2);
-				}
+				bindArticleId = true;
+
+				query.append(_FINDER_COLUMN_G_A_ARTICLEID_2);
 			}
 
 			String sql = query.toString();
@@ -1569,7 +1582,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				qPos.add(groupId);
 
-				if (articleId != null) {
+				if (bindArticleId) {
 					qPos.add(articleId);
 				}
 
@@ -1593,7 +1606,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	private static final String _FINDER_COLUMN_G_A_GROUPID_2 = "journalArticleResource.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_A_ARTICLEID_1 = "journalArticleResource.articleId IS NULL";
 	private static final String _FINDER_COLUMN_G_A_ARTICLEID_2 = "journalArticleResource.articleId = ?";
-	private static final String _FINDER_COLUMN_G_A_ARTICLEID_3 = "(journalArticleResource.articleId IS NULL OR journalArticleResource.articleId = ?)";
+	private static final String _FINDER_COLUMN_G_A_ARTICLEID_3 = "(journalArticleResource.articleId IS NULL OR journalArticleResource.articleId = '')";
 
 	/**
 	 * Caches the journal article resource in the entity cache if it is enabled.
@@ -1608,14 +1621,13 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				journalArticleResource.getUuid(),
-				Long.valueOf(journalArticleResource.getGroupId())
+				journalArticleResource.getGroupId()
 			}, journalArticleResource);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_A,
 			new Object[] {
-				Long.valueOf(journalArticleResource.getGroupId()),
-				
-			journalArticleResource.getArticleId()
+				journalArticleResource.getGroupId(),
+				journalArticleResource.getArticleId()
 			}, journalArticleResource);
 
 		journalArticleResource.resetOriginalValues();
@@ -1699,7 +1711,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		if (journalArticleResource.isNew()) {
 			Object[] args = new Object[] {
 					journalArticleResource.getUuid(),
-					Long.valueOf(journalArticleResource.getGroupId())
+					journalArticleResource.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -1708,8 +1720,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 				journalArticleResource);
 
 			args = new Object[] {
-					Long.valueOf(journalArticleResource.getGroupId()),
-					
+					journalArticleResource.getGroupId(),
 					journalArticleResource.getArticleId()
 				};
 
@@ -1725,7 +1736,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						journalArticleResource.getUuid(),
-						Long.valueOf(journalArticleResource.getGroupId())
+						journalArticleResource.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -1737,8 +1748,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			if ((journalArticleResourceModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_A.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalArticleResource.getGroupId()),
-						
+						journalArticleResource.getGroupId(),
 						journalArticleResource.getArticleId()
 					};
 
@@ -1756,7 +1766,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 		Object[] args = new Object[] {
 				journalArticleResource.getUuid(),
-				Long.valueOf(journalArticleResource.getGroupId())
+				journalArticleResource.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -1766,7 +1776,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					journalArticleResourceModelImpl.getOriginalUuid(),
-					Long.valueOf(journalArticleResourceModelImpl.getOriginalGroupId())
+					journalArticleResourceModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -1774,8 +1784,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		}
 
 		args = new Object[] {
-				Long.valueOf(journalArticleResource.getGroupId()),
-				
+				journalArticleResource.getGroupId(),
 				journalArticleResource.getArticleId()
 			};
 
@@ -1785,8 +1794,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		if ((journalArticleResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_A.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(journalArticleResourceModelImpl.getOriginalGroupId()),
-					
+					journalArticleResourceModelImpl.getOriginalGroupId(),
 					journalArticleResourceModelImpl.getOriginalArticleId()
 				};
 
@@ -1824,7 +1832,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	 */
 	public JournalArticleResource remove(long resourcePrimKey)
 		throws NoSuchArticleResourceException, SystemException {
-		return remove(Long.valueOf(resourcePrimKey));
+		return remove((Serializable)resourcePrimKey);
 	}
 
 	/**
@@ -1966,16 +1974,14 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			if ((journalArticleResourceModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalArticleResourceModelImpl.getOriginalGroupId())
+						journalArticleResourceModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(journalArticleResourceModelImpl.getGroupId())
-					};
+				args = new Object[] { journalArticleResourceModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2017,13 +2023,24 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	 *
 	 * @param primaryKey the primary key of the journal article resource
 	 * @return the journal article resource
-	 * @throws com.liferay.portal.NoSuchModelException if a journal article resource with the primary key could not be found
+	 * @throws com.liferay.portlet.journal.NoSuchArticleResourceException if a journal article resource with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public JournalArticleResource findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchArticleResourceException, SystemException {
+		JournalArticleResource journalArticleResource = fetchByPrimaryKey(primaryKey);
+
+		if (journalArticleResource == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchArticleResourceException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return journalArticleResource;
 	}
 
 	/**
@@ -2036,18 +2053,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	 */
 	public JournalArticleResource findByPrimaryKey(long resourcePrimKey)
 		throws NoSuchArticleResourceException, SystemException {
-		JournalArticleResource journalArticleResource = fetchByPrimaryKey(resourcePrimKey);
-
-		if (journalArticleResource == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + resourcePrimKey);
-			}
-
-			throw new NoSuchArticleResourceException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				resourcePrimKey);
-		}
-
-		return journalArticleResource;
+		return findByPrimaryKey((Serializable)resourcePrimKey);
 	}
 
 	/**
@@ -2060,20 +2066,8 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	@Override
 	public JournalArticleResource fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the journal article resource with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param resourcePrimKey the primary key of the journal article resource
-	 * @return the journal article resource, or <code>null</code> if a journal article resource with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public JournalArticleResource fetchByPrimaryKey(long resourcePrimKey)
-		throws SystemException {
 		JournalArticleResource journalArticleResource = (JournalArticleResource)EntityCacheUtil.getResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
-				JournalArticleResourceImpl.class, resourcePrimKey);
+				JournalArticleResourceImpl.class, primaryKey);
 
 		if (journalArticleResource == _nullJournalArticleResource) {
 			return null;
@@ -2086,20 +2080,20 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 				session = openSession();
 
 				journalArticleResource = (JournalArticleResource)session.get(JournalArticleResourceImpl.class,
-						Long.valueOf(resourcePrimKey));
+						primaryKey);
 
 				if (journalArticleResource != null) {
 					cacheResult(journalArticleResource);
 				}
 				else {
 					EntityCacheUtil.putResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
-						JournalArticleResourceImpl.class, resourcePrimKey,
+						JournalArticleResourceImpl.class, primaryKey,
 						_nullJournalArticleResource);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
-					JournalArticleResourceImpl.class, resourcePrimKey);
+					JournalArticleResourceImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2109,6 +2103,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		}
 
 		return journalArticleResource;
+	}
+
+	/**
+	 * Returns the journal article resource with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param resourcePrimKey the primary key of the journal article resource
+	 * @return the journal article resource, or <code>null</code> if a journal article resource with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public JournalArticleResource fetchByPrimaryKey(long resourcePrimKey)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)resourcePrimKey);
 	}
 
 	/**

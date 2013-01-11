@@ -124,6 +124,24 @@ public class AssetVocabularyLocalServiceImpl
 		return vocabulary;
 	}
 
+	public AssetVocabulary addVocabulary(
+			long userId, String title, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		Locale locale = LocaleUtil.getDefault();
+
+		titleMap.put(locale, title);
+
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(locale, StringPool.BLANK);
+
+		return addVocabulary(
+			userId, title, titleMap, descriptionMap, null, serviceContext);
+	}
+
 	public void addVocabularyResources(
 			AssetVocabulary vocabulary, boolean addGroupPermissions,
 			boolean addGuestPermissions)

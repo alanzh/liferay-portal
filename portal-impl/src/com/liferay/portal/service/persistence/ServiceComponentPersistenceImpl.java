@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchServiceComponentException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -201,16 +200,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_SELECT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
 			}
 
 			if (orderByComparator != null) {
@@ -233,7 +234,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -428,16 +429,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 		query.append(_SQL_SELECT_SERVICECOMPONENT_WHERE);
 
+		boolean bindBuildNamespace = false;
+
 		if (buildNamespace == null) {
 			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
 		}
+		else if (buildNamespace.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
+		}
 		else {
-			if (buildNamespace.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
-			}
+			bindBuildNamespace = true;
+
+			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -508,7 +511,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (buildNamespace != null) {
+		if (bindBuildNamespace) {
 			qPos.add(buildNamespace);
 		}
 
@@ -565,16 +568,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_COUNT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2);
 			}
 
 			String sql = query.toString();
@@ -588,7 +593,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -611,7 +616,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1 = "serviceComponent.buildNamespace IS NULL";
 	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2 = "serviceComponent.buildNamespace = ?";
-	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = ?)";
+	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_BNS_BNU = new FinderPath(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
 			ServiceComponentModelImpl.FINDER_CACHE_ENABLED,
 			ServiceComponentImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -710,16 +715,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_SELECT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
 			}
 
 			query.append(_FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2);
@@ -735,7 +742,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -821,16 +828,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			query.append(_SQL_COUNT_SERVICECOMPONENT_WHERE);
 
+			boolean bindBuildNamespace = false;
+
 			if (buildNamespace == null) {
 				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1);
 			}
+			else if (buildNamespace.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
+			}
 			else {
-				if (buildNamespace.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
-				}
+				bindBuildNamespace = true;
+
+				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2);
 			}
 
 			query.append(_FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2);
@@ -846,7 +855,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (buildNamespace != null) {
+				if (bindBuildNamespace) {
 					qPos.add(buildNamespace);
 				}
 
@@ -871,7 +880,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1 = "serviceComponent.buildNamespace IS NULL AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2 = "serviceComponent.buildNamespace = ? AND ";
-	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = ?) AND ";
+	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = '') AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2 = "serviceComponent.buildNumber = ?";
 
 	/**
@@ -887,7 +896,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BNS_BNU,
 			new Object[] {
 				serviceComponent.getBuildNamespace(),
-				Long.valueOf(serviceComponent.getBuildNumber())
+				serviceComponent.getBuildNumber()
 			}, serviceComponent);
 
 		serviceComponent.resetOriginalValues();
@@ -967,7 +976,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		if (serviceComponent.isNew()) {
 			Object[] args = new Object[] {
 					serviceComponent.getBuildNamespace(),
-					Long.valueOf(serviceComponent.getBuildNumber())
+					serviceComponent.getBuildNumber()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_BNS_BNU, args,
@@ -982,7 +991,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 					FINDER_PATH_FETCH_BY_BNS_BNU.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						serviceComponent.getBuildNamespace(),
-						Long.valueOf(serviceComponent.getBuildNumber())
+						serviceComponent.getBuildNumber()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_BNS_BNU, args,
@@ -998,7 +1007,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 		Object[] args = new Object[] {
 				serviceComponent.getBuildNamespace(),
-				Long.valueOf(serviceComponent.getBuildNumber())
+				serviceComponent.getBuildNumber()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BNS_BNU, args);
@@ -1008,7 +1017,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 				FINDER_PATH_FETCH_BY_BNS_BNU.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					serviceComponentModelImpl.getOriginalBuildNamespace(),
-					Long.valueOf(serviceComponentModelImpl.getOriginalBuildNumber())
+					serviceComponentModelImpl.getOriginalBuildNumber()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_BNS_BNU, args);
@@ -1041,7 +1050,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	 */
 	public ServiceComponent remove(long serviceComponentId)
 		throws NoSuchServiceComponentException, SystemException {
-		return remove(Long.valueOf(serviceComponentId));
+		return remove((Serializable)serviceComponentId);
 	}
 
 	/**
@@ -1213,13 +1222,24 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	 *
 	 * @param primaryKey the primary key of the service component
 	 * @return the service component
-	 * @throws com.liferay.portal.NoSuchModelException if a service component with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchServiceComponentException if a service component with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ServiceComponent findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchServiceComponentException, SystemException {
+		ServiceComponent serviceComponent = fetchByPrimaryKey(primaryKey);
+
+		if (serviceComponent == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchServiceComponentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return serviceComponent;
 	}
 
 	/**
@@ -1232,19 +1252,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	 */
 	public ServiceComponent findByPrimaryKey(long serviceComponentId)
 		throws NoSuchServiceComponentException, SystemException {
-		ServiceComponent serviceComponent = fetchByPrimaryKey(serviceComponentId);
-
-		if (serviceComponent == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-					serviceComponentId);
-			}
-
-			throw new NoSuchServiceComponentException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				serviceComponentId);
-		}
-
-		return serviceComponent;
+		return findByPrimaryKey((Serializable)serviceComponentId);
 	}
 
 	/**
@@ -1257,20 +1265,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	@Override
 	public ServiceComponent fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the service component with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param serviceComponentId the primary key of the service component
-	 * @return the service component, or <code>null</code> if a service component with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ServiceComponent fetchByPrimaryKey(long serviceComponentId)
-		throws SystemException {
 		ServiceComponent serviceComponent = (ServiceComponent)EntityCacheUtil.getResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-				ServiceComponentImpl.class, serviceComponentId);
+				ServiceComponentImpl.class, primaryKey);
 
 		if (serviceComponent == _nullServiceComponent) {
 			return null;
@@ -1283,20 +1279,20 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 				session = openSession();
 
 				serviceComponent = (ServiceComponent)session.get(ServiceComponentImpl.class,
-						Long.valueOf(serviceComponentId));
+						primaryKey);
 
 				if (serviceComponent != null) {
 					cacheResult(serviceComponent);
 				}
 				else {
 					EntityCacheUtil.putResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-						ServiceComponentImpl.class, serviceComponentId,
+						ServiceComponentImpl.class, primaryKey,
 						_nullServiceComponent);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-					ServiceComponentImpl.class, serviceComponentId);
+					ServiceComponentImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1306,6 +1302,18 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		}
 
 		return serviceComponent;
+	}
+
+	/**
+	 * Returns the service component with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param serviceComponentId the primary key of the service component
+	 * @return the service component, or <code>null</code> if a service component with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ServiceComponent fetchByPrimaryKey(long serviceComponentId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)serviceComponentId);
 	}
 
 	/**

@@ -125,6 +125,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 
 				Map<String, Object> dataView = new HashMap<String, Object>();
 
+				dataView.put("folder", Boolean.TRUE.toString());
 				dataView.put("folder-id", rootFolderId);
 				dataView.put("navigation", "home");
 				dataView.put("title", LanguageUtil.get(pageContext, "home"));
@@ -285,6 +286,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 
 							dataView = new HashMap<String, Object>();
 
+							dataView.put("folder", Boolean.TRUE.toString());
 							dataView.put("folder-id", mountFolder.getFolderId());
 							dataView.put("repository-id", mountFolder.getRepositoryId());
 							dataView.put("title", mountFolder.getName());
@@ -305,6 +307,9 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 					<%
 						}
 						catch (Exception e) {
+							if (_log.isWarnEnabled()) {
+								_log.warn("Unable to access repository", e);
+							}
 					%>
 
 							<li class="app-view-navigation-entry folder error" title="<%= LanguageUtil.get(pageContext, "an-unexpected-error-occurred-while-connecting-to-the-repository") %>">
@@ -439,3 +444,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 		);
 	</aui:script>
 </liferay-ui:app-view-navigation>
+
+<%!
+private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.document_library.view_folders_jsp");
+%>

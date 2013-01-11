@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchTeamException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
@@ -1014,16 +1013,18 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 			query.append(_FINDER_COLUMN_G_N_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1039,7 +1040,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1121,16 +1122,18 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 			query.append(_FINDER_COLUMN_G_N_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1146,7 +1149,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -1170,7 +1173,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "team.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_NAME_1 = "team.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "team.name = ?";
-	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(team.name IS NULL OR team.name = ?)";
+	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(team.name IS NULL OR team.name = '')";
 
 	/**
 	 * Caches the team in the entity cache if it is enabled.
@@ -1182,8 +1185,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			TeamImpl.class, team.getPrimaryKey(), team);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N,
-			new Object[] { Long.valueOf(team.getGroupId()), team.getName() },
-			team);
+			new Object[] { team.getGroupId(), team.getName() }, team);
 
 		team.resetOriginalValues();
 	}
@@ -1258,11 +1260,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 	protected void cacheUniqueFindersCache(Team team) {
 		if (team.isNew()) {
-			Object[] args = new Object[] {
-					Long.valueOf(team.getGroupId()),
-					
-					team.getName()
-				};
+			Object[] args = new Object[] { team.getGroupId(), team.getName() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N, args,
 				Long.valueOf(1));
@@ -1273,11 +1271,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 			if ((teamModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(team.getGroupId()),
-						
-						team.getName()
-					};
+				Object[] args = new Object[] { team.getGroupId(), team.getName() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N, args,
 					Long.valueOf(1));
@@ -1289,11 +1283,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	protected void clearUniqueFindersCache(Team team) {
 		TeamModelImpl teamModelImpl = (TeamModelImpl)team;
 
-		Object[] args = new Object[] {
-				Long.valueOf(team.getGroupId()),
-				
-				team.getName()
-			};
+		Object[] args = new Object[] { team.getGroupId(), team.getName() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
@@ -1301,8 +1291,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		if ((teamModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(teamModelImpl.getOriginalGroupId()),
-					
+					teamModelImpl.getOriginalGroupId(),
 					teamModelImpl.getOriginalName()
 				};
 
@@ -1335,7 +1324,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Team remove(long teamId) throws NoSuchTeamException, SystemException {
-		return remove(Long.valueOf(teamId));
+		return remove((Serializable)teamId);
 	}
 
 	/**
@@ -1468,15 +1457,13 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		else {
 			if ((teamModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(teamModelImpl.getOriginalGroupId())
-					};
+				Object[] args = new Object[] { teamModelImpl.getOriginalGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] { Long.valueOf(teamModelImpl.getGroupId()) };
+				args = new Object[] { teamModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -1521,13 +1508,24 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 *
 	 * @param primaryKey the primary key of the team
 	 * @return the team
-	 * @throws com.liferay.portal.NoSuchModelException if a team with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchTeamException if a team with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Team findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchTeamException, SystemException {
+		Team team = fetchByPrimaryKey(primaryKey);
+
+		if (team == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchTeamException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return team;
 	}
 
 	/**
@@ -1540,18 +1538,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 */
 	public Team findByPrimaryKey(long teamId)
 		throws NoSuchTeamException, SystemException {
-		Team team = fetchByPrimaryKey(teamId);
-
-		if (team == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + teamId);
-			}
-
-			throw new NoSuchTeamException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				teamId);
-		}
-
-		return team;
+		return findByPrimaryKey((Serializable)teamId);
 	}
 
 	/**
@@ -1564,19 +1551,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	@Override
 	public Team fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the team with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param teamId the primary key of the team
-	 * @return the team, or <code>null</code> if a team with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Team fetchByPrimaryKey(long teamId) throws SystemException {
 		Team team = (Team)EntityCacheUtil.getResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-				TeamImpl.class, teamId);
+				TeamImpl.class, primaryKey);
 
 		if (team == _nullTeam) {
 			return null;
@@ -1588,19 +1564,19 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				team = (Team)session.get(TeamImpl.class, Long.valueOf(teamId));
+				team = (Team)session.get(TeamImpl.class, primaryKey);
 
 				if (team != null) {
 					cacheResult(team);
 				}
 				else {
 					EntityCacheUtil.putResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-						TeamImpl.class, teamId, _nullTeam);
+						TeamImpl.class, primaryKey, _nullTeam);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-					TeamImpl.class, teamId);
+					TeamImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1610,6 +1586,17 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		}
 
 		return team;
+	}
+
+	/**
+	 * Returns the team with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param teamId the primary key of the team
+	 * @return the team, or <code>null</code> if a team with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Team fetchByPrimaryKey(long teamId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)teamId);
 	}
 
 	/**

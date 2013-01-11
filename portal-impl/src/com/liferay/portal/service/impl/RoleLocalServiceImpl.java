@@ -16,12 +16,14 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.portal.DuplicateRoleException;
 import com.liferay.portal.NoSuchRoleException;
+import com.liferay.portal.NoSuchShardException;
 import com.liferay.portal.RequiredRoleException;
 import com.liferay.portal.RoleNameException;
 import com.liferay.portal.kernel.cache.Lifecycle;
 import com.liferay.portal.kernel.cache.ThreadLocalCachable;
 import com.liferay.portal.kernel.cache.ThreadLocalCache;
 import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
+import com.liferay.portal.kernel.dao.shard.ShardUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
@@ -44,6 +46,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcePermission;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.model.Shard;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -244,8 +247,25 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	public void checkSystemRoles() throws PortalException, SystemException {
 		List<Company> companies = companyLocalService.getCompanies();
 
+		String currentShardName = ShardUtil.getCurrentShardName();
+
 		for (Company company : companies) {
-			checkSystemRoles(company.getCompanyId());
+			String shardName = null;
+
+			try {
+				shardName = company.getShardName();
+			}
+			catch (NoSuchShardException nsse) {
+				Shard shard = shardLocalService.addShard(
+					Company.class.getName(), company.getCompanyId(),
+					PropsValues.SHARD_DEFAULT_NAME);
+
+				shardName = shard.getName();
+			}
+
+			if (!ShardUtil.isEnabled() || shardName.equals(currentShardName)) {
+				checkSystemRoles(company.getCompanyId());
+			}
 		}
 	}
 
@@ -1278,6 +1298,14 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		for (String portletId : getDefaultControlPanelPortlets()) {
+			int count = resourcePermissionPersistence.countByC_N_S_P_R(
+				role.getCompanyId(), portletId, ResourceConstants.SCOPE_COMPANY,
+				String.valueOf(role.getCompanyId()), role.getRoleId());
+
+			if (count > 0) {
+				continue;
+			}
+
 			ResourceAction resourceAction =
 				resourceActionLocalService.fetchResourceAction(
 					portletId, ActionKeys.ACCESS_IN_CONTROL_PANEL);

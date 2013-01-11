@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserGroupRoleException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -2766,16 +2765,14 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalUserId())
+						userGroupRoleModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getUserId())
-					};
+				args = new Object[] { userGroupRoleModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2785,16 +2782,14 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalGroupId())
+						userGroupRoleModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getGroupId())
-					};
+				args = new Object[] { userGroupRoleModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2804,16 +2799,14 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalRoleId())
+						userGroupRoleModelImpl.getOriginalRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getRoleId())
-					};
+				args = new Object[] { userGroupRoleModelImpl.getRoleId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ROLEID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ROLEID,
@@ -2823,8 +2816,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalUserId()),
-						Long.valueOf(userGroupRoleModelImpl.getOriginalGroupId())
+						userGroupRoleModelImpl.getOriginalUserId(),
+						userGroupRoleModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G, args);
@@ -2832,8 +2825,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getUserId()),
-						Long.valueOf(userGroupRoleModelImpl.getGroupId())
+						userGroupRoleModelImpl.getUserId(),
+						userGroupRoleModelImpl.getGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G, args);
@@ -2844,8 +2837,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 			if ((userGroupRoleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getOriginalGroupId()),
-						Long.valueOf(userGroupRoleModelImpl.getOriginalRoleId())
+						userGroupRoleModelImpl.getOriginalGroupId(),
+						userGroupRoleModelImpl.getOriginalRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_R, args);
@@ -2853,8 +2846,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userGroupRoleModelImpl.getGroupId()),
-						Long.valueOf(userGroupRoleModelImpl.getRoleId())
+						userGroupRoleModelImpl.getGroupId(),
+						userGroupRoleModelImpl.getRoleId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_R, args);
@@ -2892,13 +2885,24 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 	 *
 	 * @param primaryKey the primary key of the user group role
 	 * @return the user group role
-	 * @throws com.liferay.portal.NoSuchModelException if a user group role with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserGroupRoleException if a user group role with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserGroupRole findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey((UserGroupRolePK)primaryKey);
+		throws NoSuchUserGroupRoleException, SystemException {
+		UserGroupRole userGroupRole = fetchByPrimaryKey(primaryKey);
+
+		if (userGroupRole == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserGroupRoleException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userGroupRole;
 	}
 
 	/**
@@ -2911,18 +2915,7 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 	 */
 	public UserGroupRole findByPrimaryKey(UserGroupRolePK userGroupRolePK)
 		throws NoSuchUserGroupRoleException, SystemException {
-		UserGroupRole userGroupRole = fetchByPrimaryKey(userGroupRolePK);
-
-		if (userGroupRole == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userGroupRolePK);
-			}
-
-			throw new NoSuchUserGroupRoleException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userGroupRolePK);
-		}
-
-		return userGroupRole;
+		return findByPrimaryKey((Serializable)userGroupRolePK);
 	}
 
 	/**
@@ -2935,20 +2928,8 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 	@Override
 	public UserGroupRole fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey((UserGroupRolePK)primaryKey);
-	}
-
-	/**
-	 * Returns the user group role with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userGroupRolePK the primary key of the user group role
-	 * @return the user group role, or <code>null</code> if a user group role with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserGroupRole fetchByPrimaryKey(UserGroupRolePK userGroupRolePK)
-		throws SystemException {
 		UserGroupRole userGroupRole = (UserGroupRole)EntityCacheUtil.getResult(UserGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-				UserGroupRoleImpl.class, userGroupRolePK);
+				UserGroupRoleImpl.class, primaryKey);
 
 		if (userGroupRole == _nullUserGroupRole) {
 			return null;
@@ -2961,20 +2942,19 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 				session = openSession();
 
 				userGroupRole = (UserGroupRole)session.get(UserGroupRoleImpl.class,
-						userGroupRolePK);
+						primaryKey);
 
 				if (userGroupRole != null) {
 					cacheResult(userGroupRole);
 				}
 				else {
 					EntityCacheUtil.putResult(UserGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-						UserGroupRoleImpl.class, userGroupRolePK,
-						_nullUserGroupRole);
+						UserGroupRoleImpl.class, primaryKey, _nullUserGroupRole);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-					UserGroupRoleImpl.class, userGroupRolePK);
+					UserGroupRoleImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2984,6 +2964,18 @@ public class UserGroupRolePersistenceImpl extends BasePersistenceImpl<UserGroupR
 		}
 
 		return userGroupRole;
+	}
+
+	/**
+	 * Returns the user group role with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userGroupRolePK the primary key of the user group role
+	 * @return the user group role, or <code>null</code> if a user group role with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserGroupRole fetchByPrimaryKey(UserGroupRolePK userGroupRolePK)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userGroupRolePK);
 	}
 
 	/**

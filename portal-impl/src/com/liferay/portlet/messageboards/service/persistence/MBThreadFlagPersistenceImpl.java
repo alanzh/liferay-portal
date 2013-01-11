@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1269,10 +1268,8 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			MBThreadFlagImpl.class, mbThreadFlag.getPrimaryKey(), mbThreadFlag);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(mbThreadFlag.getUserId()),
-				Long.valueOf(mbThreadFlag.getThreadId())
-			}, mbThreadFlag);
+			new Object[] { mbThreadFlag.getUserId(), mbThreadFlag.getThreadId() },
+			mbThreadFlag);
 
 		mbThreadFlag.resetOriginalValues();
 	}
@@ -1349,8 +1346,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	protected void cacheUniqueFindersCache(MBThreadFlag mbThreadFlag) {
 		if (mbThreadFlag.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(mbThreadFlag.getUserId()),
-					Long.valueOf(mbThreadFlag.getThreadId())
+					mbThreadFlag.getUserId(), mbThreadFlag.getThreadId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
@@ -1364,8 +1360,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			if ((mbThreadFlagModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbThreadFlag.getUserId()),
-						Long.valueOf(mbThreadFlag.getThreadId())
+						mbThreadFlag.getUserId(), mbThreadFlag.getThreadId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
@@ -1380,8 +1375,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		MBThreadFlagModelImpl mbThreadFlagModelImpl = (MBThreadFlagModelImpl)mbThreadFlag;
 
 		Object[] args = new Object[] {
-				Long.valueOf(mbThreadFlag.getUserId()),
-				Long.valueOf(mbThreadFlag.getThreadId())
+				mbThreadFlag.getUserId(), mbThreadFlag.getThreadId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
@@ -1390,8 +1384,8 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		if ((mbThreadFlagModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(mbThreadFlagModelImpl.getOriginalUserId()),
-					Long.valueOf(mbThreadFlagModelImpl.getOriginalThreadId())
+					mbThreadFlagModelImpl.getOriginalUserId(),
+					mbThreadFlagModelImpl.getOriginalThreadId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
@@ -1424,7 +1418,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	 */
 	public MBThreadFlag remove(long threadFlagId)
 		throws NoSuchThreadFlagException, SystemException {
-		return remove(Long.valueOf(threadFlagId));
+		return remove((Serializable)threadFlagId);
 	}
 
 	/**
@@ -1542,16 +1536,14 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			if ((mbThreadFlagModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbThreadFlagModelImpl.getOriginalUserId())
+						mbThreadFlagModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(mbThreadFlagModelImpl.getUserId())
-					};
+				args = new Object[] { mbThreadFlagModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -1561,16 +1553,14 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			if ((mbThreadFlagModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_THREADID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbThreadFlagModelImpl.getOriginalThreadId())
+						mbThreadFlagModelImpl.getOriginalThreadId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_THREADID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_THREADID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(mbThreadFlagModelImpl.getThreadId())
-					};
+				args = new Object[] { mbThreadFlagModelImpl.getThreadId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_THREADID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_THREADID,
@@ -1610,13 +1600,24 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	 *
 	 * @param primaryKey the primary key of the message boards thread flag
 	 * @return the message boards thread flag
-	 * @throws com.liferay.portal.NoSuchModelException if a message boards thread flag with the primary key could not be found
+	 * @throws com.liferay.portlet.messageboards.NoSuchThreadFlagException if a message boards thread flag with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public MBThreadFlag findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchThreadFlagException, SystemException {
+		MBThreadFlag mbThreadFlag = fetchByPrimaryKey(primaryKey);
+
+		if (mbThreadFlag == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchThreadFlagException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return mbThreadFlag;
 	}
 
 	/**
@@ -1629,18 +1630,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	 */
 	public MBThreadFlag findByPrimaryKey(long threadFlagId)
 		throws NoSuchThreadFlagException, SystemException {
-		MBThreadFlag mbThreadFlag = fetchByPrimaryKey(threadFlagId);
-
-		if (mbThreadFlag == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + threadFlagId);
-			}
-
-			throw new NoSuchThreadFlagException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				threadFlagId);
-		}
-
-		return mbThreadFlag;
+		return findByPrimaryKey((Serializable)threadFlagId);
 	}
 
 	/**
@@ -1653,20 +1643,8 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	@Override
 	public MBThreadFlag fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the message boards thread flag with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param threadFlagId the primary key of the message boards thread flag
-	 * @return the message boards thread flag, or <code>null</code> if a message boards thread flag with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public MBThreadFlag fetchByPrimaryKey(long threadFlagId)
-		throws SystemException {
 		MBThreadFlag mbThreadFlag = (MBThreadFlag)EntityCacheUtil.getResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
-				MBThreadFlagImpl.class, threadFlagId);
+				MBThreadFlagImpl.class, primaryKey);
 
 		if (mbThreadFlag == _nullMBThreadFlag) {
 			return null;
@@ -1679,19 +1657,19 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 				session = openSession();
 
 				mbThreadFlag = (MBThreadFlag)session.get(MBThreadFlagImpl.class,
-						Long.valueOf(threadFlagId));
+						primaryKey);
 
 				if (mbThreadFlag != null) {
 					cacheResult(mbThreadFlag);
 				}
 				else {
 					EntityCacheUtil.putResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
-						MBThreadFlagImpl.class, threadFlagId, _nullMBThreadFlag);
+						MBThreadFlagImpl.class, primaryKey, _nullMBThreadFlag);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
-					MBThreadFlagImpl.class, threadFlagId);
+					MBThreadFlagImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1701,6 +1679,18 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		}
 
 		return mbThreadFlag;
+	}
+
+	/**
+	 * Returns the message boards thread flag with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param threadFlagId the primary key of the message boards thread flag
+	 * @return the message boards thread flag, or <code>null</code> if a message boards thread flag with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MBThreadFlag fetchByPrimaryKey(long threadFlagId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)threadFlagId);
 	}
 
 	/**

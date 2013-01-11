@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.softwarecatalog.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.jdbc.MappingSqlQuery;
@@ -1911,7 +1910,7 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 	 */
 	public SCLicense remove(long licenseId)
 		throws NoSuchLicenseException, SystemException {
-		return remove(Long.valueOf(licenseId));
+		return remove((Serializable)licenseId);
 	}
 
 	/**
@@ -2039,16 +2038,14 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 			if ((scLicenseModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(scLicenseModelImpl.getOriginalActive())
+						scLicenseModelImpl.getOriginalActive()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
 					args);
 
-				args = new Object[] {
-						Boolean.valueOf(scLicenseModelImpl.getActive())
-					};
+				args = new Object[] { scLicenseModelImpl.getActive() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,
@@ -2058,8 +2055,8 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 			if ((scLicenseModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_A_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(scLicenseModelImpl.getOriginalActive()),
-						Boolean.valueOf(scLicenseModelImpl.getOriginalRecommended())
+						scLicenseModelImpl.getOriginalActive(),
+						scLicenseModelImpl.getOriginalRecommended()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_R, args);
@@ -2067,8 +2064,8 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 					args);
 
 				args = new Object[] {
-						Boolean.valueOf(scLicenseModelImpl.getActive()),
-						Boolean.valueOf(scLicenseModelImpl.getRecommended())
+						scLicenseModelImpl.getActive(),
+						scLicenseModelImpl.getRecommended()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_R, args);
@@ -2108,13 +2105,24 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 	 *
 	 * @param primaryKey the primary key of the s c license
 	 * @return the s c license
-	 * @throws com.liferay.portal.NoSuchModelException if a s c license with the primary key could not be found
+	 * @throws com.liferay.portlet.softwarecatalog.NoSuchLicenseException if a s c license with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SCLicense findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLicenseException, SystemException {
+		SCLicense scLicense = fetchByPrimaryKey(primaryKey);
+
+		if (scLicense == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLicenseException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return scLicense;
 	}
 
 	/**
@@ -2127,18 +2135,7 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 	 */
 	public SCLicense findByPrimaryKey(long licenseId)
 		throws NoSuchLicenseException, SystemException {
-		SCLicense scLicense = fetchByPrimaryKey(licenseId);
-
-		if (scLicense == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + licenseId);
-			}
-
-			throw new NoSuchLicenseException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				licenseId);
-		}
-
-		return scLicense;
+		return findByPrimaryKey((Serializable)licenseId);
 	}
 
 	/**
@@ -2151,20 +2148,8 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 	@Override
 	public SCLicense fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the s c license with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param licenseId the primary key of the s c license
-	 * @return the s c license, or <code>null</code> if a s c license with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SCLicense fetchByPrimaryKey(long licenseId)
-		throws SystemException {
 		SCLicense scLicense = (SCLicense)EntityCacheUtil.getResult(SCLicenseModelImpl.ENTITY_CACHE_ENABLED,
-				SCLicenseImpl.class, licenseId);
+				SCLicenseImpl.class, primaryKey);
 
 		if (scLicense == _nullSCLicense) {
 			return null;
@@ -2177,19 +2162,19 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 				session = openSession();
 
 				scLicense = (SCLicense)session.get(SCLicenseImpl.class,
-						Long.valueOf(licenseId));
+						primaryKey);
 
 				if (scLicense != null) {
 					cacheResult(scLicense);
 				}
 				else {
 					EntityCacheUtil.putResult(SCLicenseModelImpl.ENTITY_CACHE_ENABLED,
-						SCLicenseImpl.class, licenseId, _nullSCLicense);
+						SCLicenseImpl.class, primaryKey, _nullSCLicense);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(SCLicenseModelImpl.ENTITY_CACHE_ENABLED,
-					SCLicenseImpl.class, licenseId);
+					SCLicenseImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2199,6 +2184,18 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 		}
 
 		return scLicense;
+	}
+
+	/**
+	 * Returns the s c license with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param licenseId the primary key of the s c license
+	 * @return the s c license, or <code>null</code> if a s c license with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SCLicense fetchByPrimaryKey(long licenseId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)licenseId);
 	}
 
 	/**

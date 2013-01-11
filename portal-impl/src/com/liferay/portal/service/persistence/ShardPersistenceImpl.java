@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchShardException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -166,16 +165,18 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 
 			query.append(_SQL_SELECT_SHARD_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_NAME_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NAME_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NAME_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -189,7 +190,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -273,16 +274,18 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 
 			query.append(_SQL_COUNT_SHARD_WHERE);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_NAME_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NAME_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NAME_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -296,7 +299,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -319,7 +322,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 
 	private static final String _FINDER_COLUMN_NAME_NAME_1 = "shard.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "shard.name = ?";
-	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(shard.name IS NULL OR shard.name = ?)";
+	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(shard.name IS NULL OR shard.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_C = new FinderPath(ShardModelImpl.ENTITY_CACHE_ENABLED,
 			ShardModelImpl.FINDER_CACHE_ENABLED, ShardImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_C",
@@ -568,10 +571,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			new Object[] { shard.getName() }, shard);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
-				Long.valueOf(shard.getClassNameId()),
-				Long.valueOf(shard.getClassPK())
-			}, shard);
+			new Object[] { shard.getClassNameId(), shard.getClassPK() }, shard);
 
 		shard.resetOriginalValues();
 	}
@@ -652,10 +652,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 				Long.valueOf(1));
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME, args, shard);
 
-			args = new Object[] {
-					Long.valueOf(shard.getClassNameId()),
-					Long.valueOf(shard.getClassPK())
-				};
+			args = new Object[] { shard.getClassNameId(), shard.getClassPK() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
 				Long.valueOf(1));
@@ -676,8 +673,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			if ((shardModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shard.getClassNameId()),
-						Long.valueOf(shard.getClassPK())
+						shard.getClassNameId(), shard.getClassPK()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -703,10 +699,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
 		}
 
-		args = new Object[] {
-				Long.valueOf(shard.getClassNameId()),
-				Long.valueOf(shard.getClassPK())
-			};
+		args = new Object[] { shard.getClassNameId(), shard.getClassPK() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
@@ -714,8 +707,8 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 		if ((shardModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(shardModelImpl.getOriginalClassNameId()),
-					Long.valueOf(shardModelImpl.getOriginalClassPK())
+					shardModelImpl.getOriginalClassNameId(),
+					shardModelImpl.getOriginalClassPK()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -748,7 +741,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 	 */
 	public Shard remove(long shardId)
 		throws NoSuchShardException, SystemException {
-		return remove(Long.valueOf(shardId));
+		return remove((Serializable)shardId);
 	}
 
 	/**
@@ -889,13 +882,24 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 	 *
 	 * @param primaryKey the primary key of the shard
 	 * @return the shard
-	 * @throws com.liferay.portal.NoSuchModelException if a shard with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchShardException if a shard with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Shard findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchShardException, SystemException {
+		Shard shard = fetchByPrimaryKey(primaryKey);
+
+		if (shard == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchShardException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return shard;
 	}
 
 	/**
@@ -908,18 +912,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 	 */
 	public Shard findByPrimaryKey(long shardId)
 		throws NoSuchShardException, SystemException {
-		Shard shard = fetchByPrimaryKey(shardId);
-
-		if (shard == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + shardId);
-			}
-
-			throw new NoSuchShardException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				shardId);
-		}
-
-		return shard;
+		return findByPrimaryKey((Serializable)shardId);
 	}
 
 	/**
@@ -932,19 +925,8 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 	@Override
 	public Shard fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the shard with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param shardId the primary key of the shard
-	 * @return the shard, or <code>null</code> if a shard with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Shard fetchByPrimaryKey(long shardId) throws SystemException {
 		Shard shard = (Shard)EntityCacheUtil.getResult(ShardModelImpl.ENTITY_CACHE_ENABLED,
-				ShardImpl.class, shardId);
+				ShardImpl.class, primaryKey);
 
 		if (shard == _nullShard) {
 			return null;
@@ -956,20 +938,19 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				shard = (Shard)session.get(ShardImpl.class,
-						Long.valueOf(shardId));
+				shard = (Shard)session.get(ShardImpl.class, primaryKey);
 
 				if (shard != null) {
 					cacheResult(shard);
 				}
 				else {
 					EntityCacheUtil.putResult(ShardModelImpl.ENTITY_CACHE_ENABLED,
-						ShardImpl.class, shardId, _nullShard);
+						ShardImpl.class, primaryKey, _nullShard);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ShardModelImpl.ENTITY_CACHE_ENABLED,
-					ShardImpl.class, shardId);
+					ShardImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -979,6 +960,17 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 		}
 
 		return shard;
+	}
+
+	/**
+	 * Returns the shard with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param shardId the primary key of the shard
+	 * @return the shard, or <code>null</code> if a shard with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Shard fetchByPrimaryKey(long shardId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)shardId);
 	}
 
 	/**

@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -66,6 +65,10 @@ import javax.servlet.http.HttpSession;
  * @author Raymond Augé
  */
 public class AssetPublisherUtil {
+
+	public static final String SCOPE_ID_GROUP_PREFIX = "Group_";
+
+	public static final String SCOPE_ID_LAYOUT_PREFIX = "Layout_";
 
 	public static void addAndStoreSelection(
 			PortletRequest portletRequest, String className, long classPK,
@@ -420,7 +423,7 @@ public class AssetPublisherUtil {
 
 			String[] scopeIds = portletPreferences.getValues(
 				"scopeIds",
-				new String[] {"group" + StringPool.UNDERLINE + scopeGroupId});
+				new String[] {SCOPE_ID_GROUP_PREFIX + scopeGroupId});
 
 			long[] groupIds = new long[scopeIds.length];
 
@@ -544,10 +547,21 @@ public class AssetPublisherUtil {
 			String scopeId, long scopeGroupId, boolean privateLayout)
 		throws Exception {
 
-		String[] scopeIdParts = StringUtil.split(scopeId, CharPool.UNDERLINE);
+		if (scopeId.startsWith(SCOPE_ID_GROUP_PREFIX)) {
+			String scopeIdSuffix = scopeId.substring(
+				SCOPE_ID_GROUP_PREFIX.length());
 
-		if (scopeIdParts[0].equals("Layout")) {
-			long scopeIdLayoutId = GetterUtil.getLong(scopeIdParts[1]);
+			if (scopeIdSuffix.equals(GroupConstants.DEFAULT)) {
+				return scopeGroupId;
+			}
+
+			return GetterUtil.getLong(scopeIdSuffix);
+		}
+		else if (scopeId.startsWith(SCOPE_ID_LAYOUT_PREFIX)) {
+			String scopeIdSuffix = scopeId.substring(
+				SCOPE_ID_LAYOUT_PREFIX.length());
+
+			long scopeIdLayoutId = GetterUtil.getLong(scopeIdSuffix);
 
 			Layout scopeIdLayout = LayoutLocalServiceUtil.getLayout(
 				scopeGroupId, privateLayout, scopeIdLayoutId);
@@ -556,12 +570,9 @@ public class AssetPublisherUtil {
 
 			return scopeIdGroup.getGroupId();
 		}
-
-		if (scopeIdParts[1].equals(GroupConstants.DEFAULT)) {
-			return scopeGroupId;
+		else {
+			throw new IllegalArgumentException("Invalid scope ID " + scopeId);
 		}
-
-		return GetterUtil.getLong(scopeIdParts[1]);
 	}
 
 	private static Map<String, Long> _getRecentFolderIds(

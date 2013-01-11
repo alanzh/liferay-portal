@@ -1,5 +1,29 @@
 update BlogsEntry set status = 2 where status = 9;
 
+alter table BookmarksEntry add status INTEGER;
+alter table BookmarksEntry add statusByUserId LONG;
+alter table BookmarksEntry add statusByUserName VARCHAR(75) null;
+alter table BookmarksEntry add statusDate DATE null;
+
+COMMIT_TRANSACTION;
+
+update BookmarksEntry set status = 0;
+update BookmarksEntry set statusByUserId = userId;
+update BookmarksEntry set statusByUserName = userName;
+update BookmarksEntry set statusDate = modifiedDate;
+
+alter table BookmarksFolder add status INTEGER;
+alter table BookmarksFolder add statusByUserId LONG;
+alter table BookmarksFolder add statusByUserName VARCHAR(75) null;
+alter table BookmarksFolder add statusDate DATE null;
+
+COMMIT_TRANSACTION;
+
+update BookmarksFolder set status = 0;
+update BookmarksFolder set statusByUserId = userId;
+update BookmarksFolder set statusByUserName = userName;
+update BookmarksFolder set statusDate = modifiedDate;
+
 alter table Contact_ add classNameId LONG;
 alter table Contact_ add classPK LONG;
 alter table Contact_ add emailAddress VARCHAR(75) null;
@@ -325,6 +349,9 @@ create table JournalFolder (
 	description STRING null
 );
 
+drop index IX_228562AD on Lock_;
+drop index IX_DD635956 on Lock_;
+
 alter table MBCategory add status INTEGER;
 alter table MBCategory add statusByUserId LONG;
 alter table MBCategory add statusByUserName VARCHAR(75) null;
@@ -343,6 +370,9 @@ alter table MBMessage drop column attachments;
 
 drop table OrgGroupPermission;
 
+drop index IX_C3A17327 on PasswordPolicyRel;
+drop index IX_ED7CF243 on PasswordPolicyRel;
+
 drop table Permission_;
 
 alter table RepositoryEntry add manualCheckInRequired BOOLEAN;
@@ -350,6 +380,11 @@ alter table RepositoryEntry add manualCheckInRequired BOOLEAN;
 drop table Resource_;
 
 drop table ResourceCode;
+
+drop index IX_88705859 on ResourcePermission;
+drop index IX_C94C7708 on ResourcePermission;
+drop index IX_4A1F4402 on ResourcePermission;
+drop index IX_8DB864A9 on ResourcePermission;
 
 drop table Roles_Permissions;
 

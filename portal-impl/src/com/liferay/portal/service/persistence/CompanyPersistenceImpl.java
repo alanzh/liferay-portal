@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchCompanyException;
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -166,16 +165,18 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			query.append(_SQL_SELECT_COMPANY_WHERE);
 
+			boolean bindWebId = false;
+
 			if (webId == null) {
 				query.append(_FINDER_COLUMN_WEBID_WEBID_1);
 			}
+			else if (webId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_WEBID_WEBID_3);
+			}
 			else {
-				if (webId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_WEBID_WEBID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_WEBID_WEBID_2);
-				}
+				bindWebId = true;
+
+				query.append(_FINDER_COLUMN_WEBID_WEBID_2);
 			}
 
 			String sql = query.toString();
@@ -189,7 +190,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (webId != null) {
+				if (bindWebId) {
 					qPos.add(webId);
 				}
 
@@ -266,16 +267,18 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			query.append(_SQL_COUNT_COMPANY_WHERE);
 
+			boolean bindWebId = false;
+
 			if (webId == null) {
 				query.append(_FINDER_COLUMN_WEBID_WEBID_1);
 			}
+			else if (webId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_WEBID_WEBID_3);
+			}
 			else {
-				if (webId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_WEBID_WEBID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_WEBID_WEBID_2);
-				}
+				bindWebId = true;
+
+				query.append(_FINDER_COLUMN_WEBID_WEBID_2);
 			}
 
 			String sql = query.toString();
@@ -289,7 +292,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (webId != null) {
+				if (bindWebId) {
 					qPos.add(webId);
 				}
 
@@ -312,7 +315,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 	private static final String _FINDER_COLUMN_WEBID_WEBID_1 = "company.webId IS NULL";
 	private static final String _FINDER_COLUMN_WEBID_WEBID_2 = "company.webId = ?";
-	private static final String _FINDER_COLUMN_WEBID_WEBID_3 = "(company.webId IS NULL OR company.webId = ?)";
+	private static final String _FINDER_COLUMN_WEBID_WEBID_3 = "(company.webId IS NULL OR company.webId = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_MX = new FinderPath(CompanyModelImpl.ENTITY_CACHE_ENABLED,
 			CompanyModelImpl.FINDER_CACHE_ENABLED, CompanyImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByMx",
@@ -398,16 +401,18 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			query.append(_SQL_SELECT_COMPANY_WHERE);
 
+			boolean bindMx = false;
+
 			if (mx == null) {
 				query.append(_FINDER_COLUMN_MX_MX_1);
 			}
+			else if (mx.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_MX_MX_3);
+			}
 			else {
-				if (mx.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_MX_MX_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_MX_MX_2);
-				}
+				bindMx = true;
+
+				query.append(_FINDER_COLUMN_MX_MX_2);
 			}
 
 			String sql = query.toString();
@@ -421,7 +426,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (mx != null) {
+				if (bindMx) {
 					qPos.add(mx);
 				}
 
@@ -504,16 +509,18 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			query.append(_SQL_COUNT_COMPANY_WHERE);
 
+			boolean bindMx = false;
+
 			if (mx == null) {
 				query.append(_FINDER_COLUMN_MX_MX_1);
 			}
+			else if (mx.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_MX_MX_3);
+			}
 			else {
-				if (mx.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_MX_MX_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_MX_MX_2);
-				}
+				bindMx = true;
+
+				query.append(_FINDER_COLUMN_MX_MX_2);
 			}
 
 			String sql = query.toString();
@@ -527,7 +534,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (mx != null) {
+				if (bindMx) {
 					qPos.add(mx);
 				}
 
@@ -550,7 +557,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 	private static final String _FINDER_COLUMN_MX_MX_1 = "company.mx IS NULL";
 	private static final String _FINDER_COLUMN_MX_MX_2 = "company.mx = ?";
-	private static final String _FINDER_COLUMN_MX_MX_3 = "(company.mx IS NULL OR company.mx = ?)";
+	private static final String _FINDER_COLUMN_MX_MX_3 = "(company.mx IS NULL OR company.mx = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_LOGOID = new FinderPath(CompanyModelImpl.ENTITY_CACHE_ENABLED,
 			CompanyModelImpl.FINDER_CACHE_ENABLED, CompanyImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByLogoId",
@@ -1251,7 +1258,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			new Object[] { company.getMx() }, company);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LOGOID,
-			new Object[] { Long.valueOf(company.getLogoId()) }, company);
+			new Object[] { company.getLogoId() }, company);
 
 		company.resetOriginalValues();
 	}
@@ -1339,7 +1346,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 				Long.valueOf(1));
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MX, args, company);
 
-			args = new Object[] { Long.valueOf(company.getLogoId()) };
+			args = new Object[] { company.getLogoId() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_LOGOID, args,
 				Long.valueOf(1));
@@ -1369,7 +1376,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			if ((companyModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_LOGOID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { Long.valueOf(company.getLogoId()) };
+				Object[] args = new Object[] { company.getLogoId() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_LOGOID, args,
 					Long.valueOf(1));
@@ -1408,16 +1415,14 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MX, args);
 		}
 
-		args = new Object[] { Long.valueOf(company.getLogoId()) };
+		args = new Object[] { company.getLogoId() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LOGOID, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LOGOID, args);
 
 		if ((companyModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_LOGOID.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					Long.valueOf(companyModelImpl.getOriginalLogoId())
-				};
+			args = new Object[] { companyModelImpl.getOriginalLogoId() };
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LOGOID, args);
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LOGOID, args);
@@ -1449,7 +1454,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	 */
 	public Company remove(long companyId)
 		throws NoSuchCompanyException, SystemException {
-		return remove(Long.valueOf(companyId));
+		return remove((Serializable)companyId);
 	}
 
 	/**
@@ -1564,16 +1569,14 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			if ((companyModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SYSTEM.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Boolean.valueOf(companyModelImpl.getOriginalSystem())
+						companyModelImpl.getOriginalSystem()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SYSTEM, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SYSTEM,
 					args);
 
-				args = new Object[] {
-						Boolean.valueOf(companyModelImpl.getSystem())
-					};
+				args = new Object[] { companyModelImpl.getSystem() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SYSTEM, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SYSTEM,
@@ -1619,13 +1622,24 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	 *
 	 * @param primaryKey the primary key of the company
 	 * @return the company
-	 * @throws com.liferay.portal.NoSuchModelException if a company with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchCompanyException if a company with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Company findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchCompanyException, SystemException {
+		Company company = fetchByPrimaryKey(primaryKey);
+
+		if (company == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchCompanyException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return company;
 	}
 
 	/**
@@ -1638,18 +1652,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	 */
 	public Company findByPrimaryKey(long companyId)
 		throws NoSuchCompanyException, SystemException {
-		Company company = fetchByPrimaryKey(companyId);
-
-		if (company == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + companyId);
-			}
-
-			throw new NoSuchCompanyException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				companyId);
-		}
-
-		return company;
+		return findByPrimaryKey((Serializable)companyId);
 	}
 
 	/**
@@ -1662,19 +1665,8 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	@Override
 	public Company fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the company with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param companyId the primary key of the company
-	 * @return the company, or <code>null</code> if a company with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Company fetchByPrimaryKey(long companyId) throws SystemException {
 		Company company = (Company)EntityCacheUtil.getResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
-				CompanyImpl.class, companyId);
+				CompanyImpl.class, primaryKey);
 
 		if (company == _nullCompany) {
 			return null;
@@ -1686,20 +1678,19 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				company = (Company)session.get(CompanyImpl.class,
-						Long.valueOf(companyId));
+				company = (Company)session.get(CompanyImpl.class, primaryKey);
 
 				if (company != null) {
 					cacheResult(company);
 				}
 				else {
 					EntityCacheUtil.putResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
-						CompanyImpl.class, companyId, _nullCompany);
+						CompanyImpl.class, primaryKey, _nullCompany);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
-					CompanyImpl.class, companyId);
+					CompanyImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1709,6 +1700,17 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		}
 
 		return company;
+	}
+
+	/**
+	 * Returns the company with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param companyId the primary key of the company
+	 * @return the company, or <code>null</code> if a company with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Company fetchByPrimaryKey(long companyId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)companyId);
 	}
 
 	/**

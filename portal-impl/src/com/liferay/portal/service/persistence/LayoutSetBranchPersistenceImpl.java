@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchLayoutSetBranchException;
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1936,16 +1935,18 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 			query.append(_FINDER_COLUMN_G_P_N_PRIVATELAYOUT_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_P_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_P_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_P_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1963,7 +1964,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 				qPos.add(privateLayout);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -2052,16 +2053,18 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 			query.append(_FINDER_COLUMN_G_P_N_PRIVATELAYOUT_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_P_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_P_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_P_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -2079,7 +2082,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 				qPos.add(privateLayout);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -2104,7 +2107,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	private static final String _FINDER_COLUMN_G_P_N_PRIVATELAYOUT_2 = "layoutSetBranch.privateLayout = ? AND ";
 	private static final String _FINDER_COLUMN_G_P_N_NAME_1 = "layoutSetBranch.name IS NULL";
 	private static final String _FINDER_COLUMN_G_P_N_NAME_2 = "layoutSetBranch.name = ?";
-	private static final String _FINDER_COLUMN_G_P_N_NAME_3 = "(layoutSetBranch.name IS NULL OR layoutSetBranch.name = ?)";
+	private static final String _FINDER_COLUMN_G_P_N_NAME_3 = "(layoutSetBranch.name IS NULL OR layoutSetBranch.name = '')";
 
 	/**
 	 * Caches the layout set branch in the entity cache if it is enabled.
@@ -2118,10 +2121,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P_N,
 			new Object[] {
-				Long.valueOf(layoutSetBranch.getGroupId()),
-				Boolean.valueOf(layoutSetBranch.getPrivateLayout()),
-				
-			layoutSetBranch.getName()
+				layoutSetBranch.getGroupId(), layoutSetBranch.getPrivateLayout(),
+				layoutSetBranch.getName()
 			}, layoutSetBranch);
 
 		layoutSetBranch.resetOriginalValues();
@@ -2200,9 +2201,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	protected void cacheUniqueFindersCache(LayoutSetBranch layoutSetBranch) {
 		if (layoutSetBranch.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(layoutSetBranch.getGroupId()),
-					Boolean.valueOf(layoutSetBranch.getPrivateLayout()),
-					
+					layoutSetBranch.getGroupId(),
+					layoutSetBranch.getPrivateLayout(),
 					layoutSetBranch.getName()
 				};
 
@@ -2217,9 +2217,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			if ((layoutSetBranchModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_P_N.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutSetBranch.getGroupId()),
-						Boolean.valueOf(layoutSetBranch.getPrivateLayout()),
-						
+						layoutSetBranch.getGroupId(),
+						layoutSetBranch.getPrivateLayout(),
 						layoutSetBranch.getName()
 					};
 
@@ -2235,9 +2234,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		LayoutSetBranchModelImpl layoutSetBranchModelImpl = (LayoutSetBranchModelImpl)layoutSetBranch;
 
 		Object[] args = new Object[] {
-				Long.valueOf(layoutSetBranch.getGroupId()),
-				Boolean.valueOf(layoutSetBranch.getPrivateLayout()),
-				
+				layoutSetBranch.getGroupId(), layoutSetBranch.getPrivateLayout(),
 				layoutSetBranch.getName()
 			};
 
@@ -2247,9 +2244,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		if ((layoutSetBranchModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_P_N.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(layoutSetBranchModelImpl.getOriginalGroupId()),
-					Boolean.valueOf(layoutSetBranchModelImpl.getOriginalPrivateLayout()),
-					
+					layoutSetBranchModelImpl.getOriginalGroupId(),
+					layoutSetBranchModelImpl.getOriginalPrivateLayout(),
 					layoutSetBranchModelImpl.getOriginalName()
 				};
 
@@ -2283,7 +2279,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	 */
 	public LayoutSetBranch remove(long layoutSetBranchId)
 		throws NoSuchLayoutSetBranchException, SystemException {
-		return remove(Long.valueOf(layoutSetBranchId));
+		return remove((Serializable)layoutSetBranchId);
 	}
 
 	/**
@@ -2401,16 +2397,14 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			if ((layoutSetBranchModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutSetBranchModelImpl.getOriginalGroupId())
+						layoutSetBranchModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(layoutSetBranchModelImpl.getGroupId())
-					};
+				args = new Object[] { layoutSetBranchModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2420,8 +2414,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			if ((layoutSetBranchModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(layoutSetBranchModelImpl.getOriginalGroupId()),
-						Boolean.valueOf(layoutSetBranchModelImpl.getOriginalPrivateLayout())
+						layoutSetBranchModelImpl.getOriginalGroupId(),
+						layoutSetBranchModelImpl.getOriginalPrivateLayout()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -2429,8 +2423,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 					args);
 
 				args = new Object[] {
-						Long.valueOf(layoutSetBranchModelImpl.getGroupId()),
-						Boolean.valueOf(layoutSetBranchModelImpl.getPrivateLayout())
+						layoutSetBranchModelImpl.getGroupId(),
+						layoutSetBranchModelImpl.getPrivateLayout()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -2489,13 +2483,24 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	 *
 	 * @param primaryKey the primary key of the layout set branch
 	 * @return the layout set branch
-	 * @throws com.liferay.portal.NoSuchModelException if a layout set branch with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchLayoutSetBranchException if a layout set branch with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public LayoutSetBranch findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLayoutSetBranchException, SystemException {
+		LayoutSetBranch layoutSetBranch = fetchByPrimaryKey(primaryKey);
+
+		if (layoutSetBranch == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLayoutSetBranchException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return layoutSetBranch;
 	}
 
 	/**
@@ -2508,18 +2513,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	 */
 	public LayoutSetBranch findByPrimaryKey(long layoutSetBranchId)
 		throws NoSuchLayoutSetBranchException, SystemException {
-		LayoutSetBranch layoutSetBranch = fetchByPrimaryKey(layoutSetBranchId);
-
-		if (layoutSetBranch == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + layoutSetBranchId);
-			}
-
-			throw new NoSuchLayoutSetBranchException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				layoutSetBranchId);
-		}
-
-		return layoutSetBranch;
+		return findByPrimaryKey((Serializable)layoutSetBranchId);
 	}
 
 	/**
@@ -2532,20 +2526,8 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	@Override
 	public LayoutSetBranch fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the layout set branch with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param layoutSetBranchId the primary key of the layout set branch
-	 * @return the layout set branch, or <code>null</code> if a layout set branch with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public LayoutSetBranch fetchByPrimaryKey(long layoutSetBranchId)
-		throws SystemException {
 		LayoutSetBranch layoutSetBranch = (LayoutSetBranch)EntityCacheUtil.getResult(LayoutSetBranchModelImpl.ENTITY_CACHE_ENABLED,
-				LayoutSetBranchImpl.class, layoutSetBranchId);
+				LayoutSetBranchImpl.class, primaryKey);
 
 		if (layoutSetBranch == _nullLayoutSetBranch) {
 			return null;
@@ -2558,20 +2540,20 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 				session = openSession();
 
 				layoutSetBranch = (LayoutSetBranch)session.get(LayoutSetBranchImpl.class,
-						Long.valueOf(layoutSetBranchId));
+						primaryKey);
 
 				if (layoutSetBranch != null) {
 					cacheResult(layoutSetBranch);
 				}
 				else {
 					EntityCacheUtil.putResult(LayoutSetBranchModelImpl.ENTITY_CACHE_ENABLED,
-						LayoutSetBranchImpl.class, layoutSetBranchId,
+						LayoutSetBranchImpl.class, primaryKey,
 						_nullLayoutSetBranch);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(LayoutSetBranchModelImpl.ENTITY_CACHE_ENABLED,
-					LayoutSetBranchImpl.class, layoutSetBranchId);
+					LayoutSetBranchImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2581,6 +2563,18 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		}
 
 		return layoutSetBranch;
+	}
+
+	/**
+	 * Returns the layout set branch with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param layoutSetBranchId the primary key of the layout set branch
+	 * @return the layout set branch, or <code>null</code> if a layout set branch with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public LayoutSetBranch fetchByPrimaryKey(long layoutSetBranchId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)layoutSetBranchId);
 	}
 
 	/**

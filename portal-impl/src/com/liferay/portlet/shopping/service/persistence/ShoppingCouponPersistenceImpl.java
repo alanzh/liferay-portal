@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -648,16 +647,18 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 
 			query.append(_SQL_SELECT_SHOPPINGCOUPON_WHERE);
 
+			boolean bindCode = false;
+
 			if (code == null) {
 				query.append(_FINDER_COLUMN_CODE_CODE_1);
 			}
+			else if (code.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CODE_CODE_3);
+			}
 			else {
-				if (code.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_CODE_CODE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_CODE_CODE_2);
-				}
+				bindCode = true;
+
+				query.append(_FINDER_COLUMN_CODE_CODE_2);
 			}
 
 			String sql = query.toString();
@@ -671,7 +672,7 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (code != null) {
+				if (bindCode) {
 					qPos.add(code);
 				}
 
@@ -748,16 +749,18 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 
 			query.append(_SQL_COUNT_SHOPPINGCOUPON_WHERE);
 
+			boolean bindCode = false;
+
 			if (code == null) {
 				query.append(_FINDER_COLUMN_CODE_CODE_1);
 			}
+			else if (code.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CODE_CODE_3);
+			}
 			else {
-				if (code.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_CODE_CODE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_CODE_CODE_2);
-				}
+				bindCode = true;
+
+				query.append(_FINDER_COLUMN_CODE_CODE_2);
 			}
 
 			String sql = query.toString();
@@ -771,7 +774,7 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (code != null) {
+				if (bindCode) {
 					qPos.add(code);
 				}
 
@@ -794,7 +797,7 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 
 	private static final String _FINDER_COLUMN_CODE_CODE_1 = "shoppingCoupon.code IS NULL";
 	private static final String _FINDER_COLUMN_CODE_CODE_2 = "shoppingCoupon.code = ?";
-	private static final String _FINDER_COLUMN_CODE_CODE_3 = "(shoppingCoupon.code IS NULL OR shoppingCoupon.code = ?)";
+	private static final String _FINDER_COLUMN_CODE_CODE_3 = "(shoppingCoupon.code IS NULL OR shoppingCoupon.code = '')";
 
 	/**
 	 * Caches the shopping coupon in the entity cache if it is enabled.
@@ -947,7 +950,7 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 	 */
 	public ShoppingCoupon remove(long couponId)
 		throws NoSuchCouponException, SystemException {
-		return remove(Long.valueOf(couponId));
+		return remove((Serializable)couponId);
 	}
 
 	/**
@@ -1065,16 +1068,14 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 			if ((shoppingCouponModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingCouponModelImpl.getOriginalGroupId())
+						shoppingCouponModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(shoppingCouponModelImpl.getGroupId())
-					};
+				args = new Object[] { shoppingCouponModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -1129,13 +1130,24 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 	 *
 	 * @param primaryKey the primary key of the shopping coupon
 	 * @return the shopping coupon
-	 * @throws com.liferay.portal.NoSuchModelException if a shopping coupon with the primary key could not be found
+	 * @throws com.liferay.portlet.shopping.NoSuchCouponException if a shopping coupon with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ShoppingCoupon findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchCouponException, SystemException {
+		ShoppingCoupon shoppingCoupon = fetchByPrimaryKey(primaryKey);
+
+		if (shoppingCoupon == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchCouponException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return shoppingCoupon;
 	}
 
 	/**
@@ -1148,18 +1160,7 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 	 */
 	public ShoppingCoupon findByPrimaryKey(long couponId)
 		throws NoSuchCouponException, SystemException {
-		ShoppingCoupon shoppingCoupon = fetchByPrimaryKey(couponId);
-
-		if (shoppingCoupon == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + couponId);
-			}
-
-			throw new NoSuchCouponException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				couponId);
-		}
-
-		return shoppingCoupon;
+		return findByPrimaryKey((Serializable)couponId);
 	}
 
 	/**
@@ -1172,20 +1173,8 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 	@Override
 	public ShoppingCoupon fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the shopping coupon with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param couponId the primary key of the shopping coupon
-	 * @return the shopping coupon, or <code>null</code> if a shopping coupon with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ShoppingCoupon fetchByPrimaryKey(long couponId)
-		throws SystemException {
 		ShoppingCoupon shoppingCoupon = (ShoppingCoupon)EntityCacheUtil.getResult(ShoppingCouponModelImpl.ENTITY_CACHE_ENABLED,
-				ShoppingCouponImpl.class, couponId);
+				ShoppingCouponImpl.class, primaryKey);
 
 		if (shoppingCoupon == _nullShoppingCoupon) {
 			return null;
@@ -1198,19 +1187,20 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 				session = openSession();
 
 				shoppingCoupon = (ShoppingCoupon)session.get(ShoppingCouponImpl.class,
-						Long.valueOf(couponId));
+						primaryKey);
 
 				if (shoppingCoupon != null) {
 					cacheResult(shoppingCoupon);
 				}
 				else {
 					EntityCacheUtil.putResult(ShoppingCouponModelImpl.ENTITY_CACHE_ENABLED,
-						ShoppingCouponImpl.class, couponId, _nullShoppingCoupon);
+						ShoppingCouponImpl.class, primaryKey,
+						_nullShoppingCoupon);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ShoppingCouponModelImpl.ENTITY_CACHE_ENABLED,
-					ShoppingCouponImpl.class, couponId);
+					ShoppingCouponImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1220,6 +1210,18 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 		}
 
 		return shoppingCoupon;
+	}
+
+	/**
+	 * Returns the shopping coupon with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param couponId the primary key of the shopping coupon
+	 * @return the shopping coupon, or <code>null</code> if a shopping coupon with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ShoppingCoupon fetchByPrimaryKey(long couponId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)couponId);
 	}
 
 	/**

@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.social.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -193,16 +192,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 			query.append(_SQL_SELECT_SOCIALRELATION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -225,7 +226,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -416,16 +417,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 		query.append(_SQL_SELECT_SOCIALRELATION_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -496,7 +499,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -551,16 +554,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 			query.append(_SQL_COUNT_SOCIALRELATION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -574,7 +579,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -597,7 +602,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "socialRelation.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "socialRelation.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRelation.uuid IS NULL OR socialRelation.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRelation.uuid IS NULL OR socialRelation.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRelationModelImpl.FINDER_CACHE_ENABLED,
 			SocialRelationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -718,16 +723,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 			query.append(_SQL_SELECT_SOCIALRELATION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -752,7 +759,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -958,16 +965,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 		query.append(_SQL_SELECT_SOCIALRELATION_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1040,7 +1049,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1101,16 +1110,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 			query.append(_SQL_COUNT_SOCIALRELATION_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1126,7 +1137,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1151,7 +1162,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "socialRelation.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "socialRelation.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRelation.uuid IS NULL OR socialRelation.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRelation.uuid IS NULL OR socialRelation.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "socialRelation.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
@@ -5385,9 +5396,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U1_U2_T,
 			new Object[] {
-				Long.valueOf(socialRelation.getUserId1()),
-				Long.valueOf(socialRelation.getUserId2()),
-				Integer.valueOf(socialRelation.getType())
+				socialRelation.getUserId1(), socialRelation.getUserId2(),
+				socialRelation.getType()
 			}, socialRelation);
 
 		socialRelation.resetOriginalValues();
@@ -5465,9 +5475,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	protected void cacheUniqueFindersCache(SocialRelation socialRelation) {
 		if (socialRelation.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(socialRelation.getUserId1()),
-					Long.valueOf(socialRelation.getUserId2()),
-					Integer.valueOf(socialRelation.getType())
+					socialRelation.getUserId1(), socialRelation.getUserId2(),
+					socialRelation.getType()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U1_U2_T, args,
@@ -5481,9 +5490,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_U1_U2_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelation.getUserId1()),
-						Long.valueOf(socialRelation.getUserId2()),
-						Integer.valueOf(socialRelation.getType())
+						socialRelation.getUserId1(), socialRelation.getUserId2(),
+						socialRelation.getType()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U1_U2_T, args,
@@ -5498,9 +5506,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		SocialRelationModelImpl socialRelationModelImpl = (SocialRelationModelImpl)socialRelation;
 
 		Object[] args = new Object[] {
-				Long.valueOf(socialRelation.getUserId1()),
-				Long.valueOf(socialRelation.getUserId2()),
-				Integer.valueOf(socialRelation.getType())
+				socialRelation.getUserId1(), socialRelation.getUserId2(),
+				socialRelation.getType()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2_T, args);
@@ -5509,9 +5516,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		if ((socialRelationModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U1_U2_T.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(socialRelationModelImpl.getOriginalUserId1()),
-					Long.valueOf(socialRelationModelImpl.getOriginalUserId2()),
-					Integer.valueOf(socialRelationModelImpl.getOriginalType())
+					socialRelationModelImpl.getOriginalUserId1(),
+					socialRelationModelImpl.getOriginalUserId2(),
+					socialRelationModelImpl.getOriginalType()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2_T, args);
@@ -5548,7 +5555,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	 */
 	public SocialRelation remove(long relationId)
 		throws NoSuchRelationException, SystemException {
-		return remove(Long.valueOf(relationId));
+		return remove((Serializable)relationId);
 	}
 
 	/**
@@ -5690,7 +5697,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						socialRelationModelImpl.getOriginalUuid(),
-						Long.valueOf(socialRelationModelImpl.getOriginalCompanyId())
+						socialRelationModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -5699,7 +5706,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 				args = new Object[] {
 						socialRelationModelImpl.getUuid(),
-						Long.valueOf(socialRelationModelImpl.getCompanyId())
+						socialRelationModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -5710,7 +5717,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalCompanyId())
+						socialRelationModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -5718,9 +5725,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getCompanyId())
-					};
+				args = new Object[] { socialRelationModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -5731,16 +5736,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID1.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId1())
+						socialRelationModelImpl.getOriginalUserId1()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID1, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID1,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getUserId1())
-					};
+				args = new Object[] { socialRelationModelImpl.getUserId1() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID1, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID1,
@@ -5750,16 +5753,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID2.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId2())
+						socialRelationModelImpl.getOriginalUserId2()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID2, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID2,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getUserId2())
-					};
+				args = new Object[] { socialRelationModelImpl.getUserId2() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID2, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID2,
@@ -5769,16 +5770,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Integer.valueOf(socialRelationModelImpl.getOriginalType())
+						socialRelationModelImpl.getOriginalType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TYPE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE,
 					args);
 
-				args = new Object[] {
-						Integer.valueOf(socialRelationModelImpl.getType())
-					};
+				args = new Object[] { socialRelationModelImpl.getType() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TYPE, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE,
@@ -5788,8 +5787,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalCompanyId()),
-						Integer.valueOf(socialRelationModelImpl.getOriginalType())
+						socialRelationModelImpl.getOriginalCompanyId(),
+						socialRelationModelImpl.getOriginalType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_T, args);
@@ -5797,8 +5796,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getCompanyId()),
-						Integer.valueOf(socialRelationModelImpl.getType())
+						socialRelationModelImpl.getCompanyId(),
+						socialRelationModelImpl.getType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_T, args);
@@ -5809,8 +5808,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U1_U2.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId1()),
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId2())
+						socialRelationModelImpl.getOriginalUserId1(),
+						socialRelationModelImpl.getOriginalUserId2()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2, args);
@@ -5818,8 +5817,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getUserId1()),
-						Long.valueOf(socialRelationModelImpl.getUserId2())
+						socialRelationModelImpl.getUserId1(),
+						socialRelationModelImpl.getUserId2()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2, args);
@@ -5830,8 +5829,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U1_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId1()),
-						Integer.valueOf(socialRelationModelImpl.getOriginalType())
+						socialRelationModelImpl.getOriginalUserId1(),
+						socialRelationModelImpl.getOriginalType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_T, args);
@@ -5839,8 +5838,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getUserId1()),
-						Integer.valueOf(socialRelationModelImpl.getType())
+						socialRelationModelImpl.getUserId1(),
+						socialRelationModelImpl.getType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_T, args);
@@ -5851,8 +5850,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			if ((socialRelationModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U2_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId2()),
-						Integer.valueOf(socialRelationModelImpl.getOriginalType())
+						socialRelationModelImpl.getOriginalUserId2(),
+						socialRelationModelImpl.getOriginalType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U2_T, args);
@@ -5860,8 +5859,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getUserId2()),
-						Integer.valueOf(socialRelationModelImpl.getType())
+						socialRelationModelImpl.getUserId2(),
+						socialRelationModelImpl.getType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U2_T, args);
@@ -5906,13 +5905,24 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	 *
 	 * @param primaryKey the primary key of the social relation
 	 * @return the social relation
-	 * @throws com.liferay.portal.NoSuchModelException if a social relation with the primary key could not be found
+	 * @throws com.liferay.portlet.social.NoSuchRelationException if a social relation with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SocialRelation findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchRelationException, SystemException {
+		SocialRelation socialRelation = fetchByPrimaryKey(primaryKey);
+
+		if (socialRelation == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchRelationException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return socialRelation;
 	}
 
 	/**
@@ -5925,18 +5935,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	 */
 	public SocialRelation findByPrimaryKey(long relationId)
 		throws NoSuchRelationException, SystemException {
-		SocialRelation socialRelation = fetchByPrimaryKey(relationId);
-
-		if (socialRelation == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + relationId);
-			}
-
-			throw new NoSuchRelationException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				relationId);
-		}
-
-		return socialRelation;
+		return findByPrimaryKey((Serializable)relationId);
 	}
 
 	/**
@@ -5949,20 +5948,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	@Override
 	public SocialRelation fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the social relation with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param relationId the primary key of the social relation
-	 * @return the social relation, or <code>null</code> if a social relation with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SocialRelation fetchByPrimaryKey(long relationId)
-		throws SystemException {
 		SocialRelation socialRelation = (SocialRelation)EntityCacheUtil.getResult(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
-				SocialRelationImpl.class, relationId);
+				SocialRelationImpl.class, primaryKey);
 
 		if (socialRelation == _nullSocialRelation) {
 			return null;
@@ -5975,20 +5962,20 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 				session = openSession();
 
 				socialRelation = (SocialRelation)session.get(SocialRelationImpl.class,
-						Long.valueOf(relationId));
+						primaryKey);
 
 				if (socialRelation != null) {
 					cacheResult(socialRelation);
 				}
 				else {
 					EntityCacheUtil.putResult(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
-						SocialRelationImpl.class, relationId,
+						SocialRelationImpl.class, primaryKey,
 						_nullSocialRelation);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
-					SocialRelationImpl.class, relationId);
+					SocialRelationImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -5998,6 +5985,18 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		}
 
 		return socialRelation;
+	}
+
+	/**
+	 * Returns the social relation with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param relationId the primary key of the social relation
+	 * @return the social relation, or <code>null</code> if a social relation with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SocialRelation fetchByPrimaryKey(long relationId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)relationId);
 	}
 
 	/**

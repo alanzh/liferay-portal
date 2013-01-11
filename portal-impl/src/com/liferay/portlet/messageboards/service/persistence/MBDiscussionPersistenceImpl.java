@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1003,13 +1002,11 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			MBDiscussionImpl.class, mbDiscussion.getPrimaryKey(), mbDiscussion);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_THREADID,
-			new Object[] { Long.valueOf(mbDiscussion.getThreadId()) },
-			mbDiscussion);
+			new Object[] { mbDiscussion.getThreadId() }, mbDiscussion);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
 			new Object[] {
-				Long.valueOf(mbDiscussion.getClassNameId()),
-				Long.valueOf(mbDiscussion.getClassPK())
+				mbDiscussion.getClassNameId(), mbDiscussion.getClassPK()
 			}, mbDiscussion);
 
 		mbDiscussion.resetOriginalValues();
@@ -1086,9 +1083,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 
 	protected void cacheUniqueFindersCache(MBDiscussion mbDiscussion) {
 		if (mbDiscussion.isNew()) {
-			Object[] args = new Object[] {
-					Long.valueOf(mbDiscussion.getThreadId())
-				};
+			Object[] args = new Object[] { mbDiscussion.getThreadId() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_THREADID, args,
 				Long.valueOf(1));
@@ -1096,8 +1091,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 				mbDiscussion);
 
 			args = new Object[] {
-					Long.valueOf(mbDiscussion.getClassNameId()),
-					Long.valueOf(mbDiscussion.getClassPK())
+					mbDiscussion.getClassNameId(), mbDiscussion.getClassPK()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -1110,9 +1104,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 
 			if ((mbDiscussionModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_THREADID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbDiscussion.getThreadId())
-					};
+				Object[] args = new Object[] { mbDiscussion.getThreadId() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_THREADID, args,
 					Long.valueOf(1));
@@ -1123,8 +1115,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			if ((mbDiscussionModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbDiscussion.getClassNameId()),
-						Long.valueOf(mbDiscussion.getClassPK())
+						mbDiscussion.getClassNameId(), mbDiscussion.getClassPK()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -1138,24 +1129,21 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 	protected void clearUniqueFindersCache(MBDiscussion mbDiscussion) {
 		MBDiscussionModelImpl mbDiscussionModelImpl = (MBDiscussionModelImpl)mbDiscussion;
 
-		Object[] args = new Object[] { Long.valueOf(mbDiscussion.getThreadId()) };
+		Object[] args = new Object[] { mbDiscussion.getThreadId() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_THREADID, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_THREADID, args);
 
 		if ((mbDiscussionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_THREADID.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					Long.valueOf(mbDiscussionModelImpl.getOriginalThreadId())
-				};
+			args = new Object[] { mbDiscussionModelImpl.getOriginalThreadId() };
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_THREADID, args);
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_THREADID, args);
 		}
 
 		args = new Object[] {
-				Long.valueOf(mbDiscussion.getClassNameId()),
-				Long.valueOf(mbDiscussion.getClassPK())
+				mbDiscussion.getClassNameId(), mbDiscussion.getClassPK()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1164,8 +1152,8 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 		if ((mbDiscussionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(mbDiscussionModelImpl.getOriginalClassNameId()),
-					Long.valueOf(mbDiscussionModelImpl.getOriginalClassPK())
+					mbDiscussionModelImpl.getOriginalClassNameId(),
+					mbDiscussionModelImpl.getOriginalClassPK()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -1198,7 +1186,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 	 */
 	public MBDiscussion remove(long discussionId)
 		throws NoSuchDiscussionException, SystemException {
-		return remove(Long.valueOf(discussionId));
+		return remove((Serializable)discussionId);
 	}
 
 	/**
@@ -1316,7 +1304,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			if ((mbDiscussionModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbDiscussionModelImpl.getOriginalClassNameId())
+						mbDiscussionModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
@@ -1324,9 +1312,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(mbDiscussionModelImpl.getClassNameId())
-					};
+				args = new Object[] { mbDiscussionModelImpl.getClassNameId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
 					args);
@@ -1367,13 +1353,24 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 	 *
 	 * @param primaryKey the primary key of the message boards discussion
 	 * @return the message boards discussion
-	 * @throws com.liferay.portal.NoSuchModelException if a message boards discussion with the primary key could not be found
+	 * @throws com.liferay.portlet.messageboards.NoSuchDiscussionException if a message boards discussion with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public MBDiscussion findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchDiscussionException, SystemException {
+		MBDiscussion mbDiscussion = fetchByPrimaryKey(primaryKey);
+
+		if (mbDiscussion == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchDiscussionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return mbDiscussion;
 	}
 
 	/**
@@ -1386,18 +1383,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 	 */
 	public MBDiscussion findByPrimaryKey(long discussionId)
 		throws NoSuchDiscussionException, SystemException {
-		MBDiscussion mbDiscussion = fetchByPrimaryKey(discussionId);
-
-		if (mbDiscussion == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + discussionId);
-			}
-
-			throw new NoSuchDiscussionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				discussionId);
-		}
-
-		return mbDiscussion;
+		return findByPrimaryKey((Serializable)discussionId);
 	}
 
 	/**
@@ -1410,20 +1396,8 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 	@Override
 	public MBDiscussion fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the message boards discussion with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param discussionId the primary key of the message boards discussion
-	 * @return the message boards discussion, or <code>null</code> if a message boards discussion with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public MBDiscussion fetchByPrimaryKey(long discussionId)
-		throws SystemException {
 		MBDiscussion mbDiscussion = (MBDiscussion)EntityCacheUtil.getResult(MBDiscussionModelImpl.ENTITY_CACHE_ENABLED,
-				MBDiscussionImpl.class, discussionId);
+				MBDiscussionImpl.class, primaryKey);
 
 		if (mbDiscussion == _nullMBDiscussion) {
 			return null;
@@ -1436,19 +1410,19 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 				session = openSession();
 
 				mbDiscussion = (MBDiscussion)session.get(MBDiscussionImpl.class,
-						Long.valueOf(discussionId));
+						primaryKey);
 
 				if (mbDiscussion != null) {
 					cacheResult(mbDiscussion);
 				}
 				else {
 					EntityCacheUtil.putResult(MBDiscussionModelImpl.ENTITY_CACHE_ENABLED,
-						MBDiscussionImpl.class, discussionId, _nullMBDiscussion);
+						MBDiscussionImpl.class, primaryKey, _nullMBDiscussion);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(MBDiscussionModelImpl.ENTITY_CACHE_ENABLED,
-					MBDiscussionImpl.class, discussionId);
+					MBDiscussionImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1458,6 +1432,18 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 		}
 
 		return mbDiscussion;
+	}
+
+	/**
+	 * Returns the message boards discussion with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param discussionId the primary key of the message boards discussion
+	 * @return the message boards discussion, or <code>null</code> if a message boards discussion with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MBDiscussion fetchByPrimaryKey(long discussionId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)discussionId);
 	}
 
 	/**

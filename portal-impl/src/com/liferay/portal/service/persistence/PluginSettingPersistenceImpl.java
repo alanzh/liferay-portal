@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPluginSettingException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -673,28 +672,32 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 			query.append(_FINDER_COLUMN_C_I_T_COMPANYID_2);
 
+			boolean bindPluginId = false;
+
 			if (pluginId == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_1);
 			}
-			else {
-				if (pluginId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
-				}
+			else if (pluginId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
 			}
+			else {
+				bindPluginId = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
+			}
+
+			boolean bindPluginType = false;
 
 			if (pluginType == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_1);
 			}
+			else if (pluginType.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
+			}
 			else {
-				if (pluginType.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
-				}
+				bindPluginType = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
 			}
 
 			String sql = query.toString();
@@ -710,11 +713,11 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 				qPos.add(companyId);
 
-				if (pluginId != null) {
+				if (bindPluginId) {
 					qPos.add(pluginId);
 				}
 
-				if (pluginType != null) {
+				if (bindPluginType) {
 					qPos.add(pluginType);
 				}
 
@@ -802,28 +805,32 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 			query.append(_FINDER_COLUMN_C_I_T_COMPANYID_2);
 
+			boolean bindPluginId = false;
+
 			if (pluginId == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_1);
 			}
-			else {
-				if (pluginId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
-				}
+			else if (pluginId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_3);
 			}
+			else {
+				bindPluginId = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINID_2);
+			}
+
+			boolean bindPluginType = false;
 
 			if (pluginType == null) {
 				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_1);
 			}
+			else if (pluginType.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
+			}
 			else {
-				if (pluginType.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
-				}
+				bindPluginType = true;
+
+				query.append(_FINDER_COLUMN_C_I_T_PLUGINTYPE_2);
 			}
 
 			String sql = query.toString();
@@ -839,11 +846,11 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 				qPos.add(companyId);
 
-				if (pluginId != null) {
+				if (bindPluginId) {
 					qPos.add(pluginId);
 				}
 
-				if (pluginType != null) {
+				if (bindPluginType) {
 					qPos.add(pluginType);
 				}
 
@@ -867,10 +874,10 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	private static final String _FINDER_COLUMN_C_I_T_COMPANYID_2 = "pluginSetting.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_1 = "pluginSetting.pluginId IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_2 = "pluginSetting.pluginId = ? AND ";
-	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_3 = "(pluginSetting.pluginId IS NULL OR pluginSetting.pluginId = ?) AND ";
+	private static final String _FINDER_COLUMN_C_I_T_PLUGINID_3 = "(pluginSetting.pluginId IS NULL OR pluginSetting.pluginId = '') AND ";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_1 = "pluginSetting.pluginType IS NULL";
 	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_2 = "pluginSetting.pluginType = ?";
-	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_3 = "(pluginSetting.pluginType IS NULL OR pluginSetting.pluginType = ?)";
+	private static final String _FINDER_COLUMN_C_I_T_PLUGINTYPE_3 = "(pluginSetting.pluginType IS NULL OR pluginSetting.pluginType = '')";
 
 	/**
 	 * Caches the plugin setting in the entity cache if it is enabled.
@@ -884,11 +891,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_I_T,
 			new Object[] {
-				Long.valueOf(pluginSetting.getCompanyId()),
-				
-			pluginSetting.getPluginId(),
-				
-			pluginSetting.getPluginType()
+				pluginSetting.getCompanyId(), pluginSetting.getPluginId(),
+				pluginSetting.getPluginType()
 			}, pluginSetting);
 
 		pluginSetting.resetOriginalValues();
@@ -966,10 +970,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	protected void cacheUniqueFindersCache(PluginSetting pluginSetting) {
 		if (pluginSetting.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(pluginSetting.getCompanyId()),
-					
-					pluginSetting.getPluginId(),
-					
+					pluginSetting.getCompanyId(), pluginSetting.getPluginId(),
 					pluginSetting.getPluginType()
 				};
 
@@ -984,10 +985,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			if ((pluginSettingModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(pluginSetting.getCompanyId()),
-						
+						pluginSetting.getCompanyId(),
 						pluginSetting.getPluginId(),
-						
 						pluginSetting.getPluginType()
 					};
 
@@ -1003,10 +1002,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		PluginSettingModelImpl pluginSettingModelImpl = (PluginSettingModelImpl)pluginSetting;
 
 		Object[] args = new Object[] {
-				Long.valueOf(pluginSetting.getCompanyId()),
-				
-				pluginSetting.getPluginId(),
-				
+				pluginSetting.getCompanyId(), pluginSetting.getPluginId(),
 				pluginSetting.getPluginType()
 			};
 
@@ -1016,10 +1012,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		if ((pluginSettingModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(pluginSettingModelImpl.getOriginalCompanyId()),
-					
+					pluginSettingModelImpl.getOriginalCompanyId(),
 					pluginSettingModelImpl.getOriginalPluginId(),
-					
 					pluginSettingModelImpl.getOriginalPluginType()
 				};
 
@@ -1053,7 +1047,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 */
 	public PluginSetting remove(long pluginSettingId)
 		throws NoSuchPluginSettingException, SystemException {
-		return remove(Long.valueOf(pluginSettingId));
+		return remove((Serializable)pluginSettingId);
 	}
 
 	/**
@@ -1171,7 +1165,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			if ((pluginSettingModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(pluginSettingModelImpl.getOriginalCompanyId())
+						pluginSettingModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -1179,9 +1173,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(pluginSettingModelImpl.getCompanyId())
-					};
+				args = new Object[] { pluginSettingModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -1225,13 +1217,24 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 *
 	 * @param primaryKey the primary key of the plugin setting
 	 * @return the plugin setting
-	 * @throws com.liferay.portal.NoSuchModelException if a plugin setting with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPluginSettingException if a plugin setting with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PluginSetting findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPluginSettingException, SystemException {
+		PluginSetting pluginSetting = fetchByPrimaryKey(primaryKey);
+
+		if (pluginSetting == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPluginSettingException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return pluginSetting;
 	}
 
 	/**
@@ -1244,18 +1247,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 */
 	public PluginSetting findByPrimaryKey(long pluginSettingId)
 		throws NoSuchPluginSettingException, SystemException {
-		PluginSetting pluginSetting = fetchByPrimaryKey(pluginSettingId);
-
-		if (pluginSetting == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + pluginSettingId);
-			}
-
-			throw new NoSuchPluginSettingException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				pluginSettingId);
-		}
-
-		return pluginSetting;
+		return findByPrimaryKey((Serializable)pluginSettingId);
 	}
 
 	/**
@@ -1268,20 +1260,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	@Override
 	public PluginSetting fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the plugin setting with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param pluginSettingId the primary key of the plugin setting
-	 * @return the plugin setting, or <code>null</code> if a plugin setting with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PluginSetting fetchByPrimaryKey(long pluginSettingId)
-		throws SystemException {
 		PluginSetting pluginSetting = (PluginSetting)EntityCacheUtil.getResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-				PluginSettingImpl.class, pluginSettingId);
+				PluginSettingImpl.class, primaryKey);
 
 		if (pluginSetting == _nullPluginSetting) {
 			return null;
@@ -1294,20 +1274,19 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 				session = openSession();
 
 				pluginSetting = (PluginSetting)session.get(PluginSettingImpl.class,
-						Long.valueOf(pluginSettingId));
+						primaryKey);
 
 				if (pluginSetting != null) {
 					cacheResult(pluginSetting);
 				}
 				else {
 					EntityCacheUtil.putResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-						PluginSettingImpl.class, pluginSettingId,
-						_nullPluginSetting);
+						PluginSettingImpl.class, primaryKey, _nullPluginSetting);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-					PluginSettingImpl.class, pluginSettingId);
+					PluginSettingImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1317,6 +1296,18 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		}
 
 		return pluginSetting;
+	}
+
+	/**
+	 * Returns the plugin setting with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param pluginSettingId the primary key of the plugin setting
+	 * @return the plugin setting, or <code>null</code> if a plugin setting with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PluginSetting fetchByPrimaryKey(long pluginSettingId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)pluginSettingId);
 	}
 
 	/**

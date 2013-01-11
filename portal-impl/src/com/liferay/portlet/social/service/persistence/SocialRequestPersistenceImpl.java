@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.social.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -192,16 +191,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			query.append(_SQL_SELECT_SOCIALREQUEST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -224,7 +225,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -414,16 +415,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 		query.append(_SQL_SELECT_SOCIALREQUEST_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -494,7 +497,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -549,16 +552,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			query.append(_SQL_COUNT_SOCIALREQUEST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -572,7 +577,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -595,7 +600,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "socialRequest.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "socialRequest.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRequestModelImpl.FINDER_CACHE_ENABLED,
 			SocialRequestImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -690,16 +695,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			query.append(_SQL_SELECT_SOCIALREQUEST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -715,7 +722,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -798,16 +805,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			query.append(_SQL_COUNT_SOCIALREQUEST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -823,7 +832,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -848,7 +857,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "socialRequest.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "socialRequest.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "socialRequest.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRequestModelImpl.FINDER_CACHE_ENABLED,
@@ -970,16 +979,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			query.append(_SQL_SELECT_SOCIALREQUEST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1004,7 +1015,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1210,16 +1221,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 		query.append(_SQL_SELECT_SOCIALREQUEST_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1292,7 +1305,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1353,16 +1366,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			query.append(_SQL_COUNT_SOCIALREQUEST_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1378,7 +1393,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1403,7 +1418,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "socialRequest.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "socialRequest.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "socialRequest.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
@@ -5457,18 +5472,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			socialRequest);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				socialRequest.getUuid(),
-				Long.valueOf(socialRequest.getGroupId())
-			}, socialRequest);
+			new Object[] { socialRequest.getUuid(), socialRequest.getGroupId() },
+			socialRequest);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C_T_R,
 			new Object[] {
-				Long.valueOf(socialRequest.getUserId()),
-				Long.valueOf(socialRequest.getClassNameId()),
-				Long.valueOf(socialRequest.getClassPK()),
-				Integer.valueOf(socialRequest.getType()),
-				Long.valueOf(socialRequest.getReceiverUserId())
+				socialRequest.getUserId(), socialRequest.getClassNameId(),
+				socialRequest.getClassPK(), socialRequest.getType(),
+				socialRequest.getReceiverUserId()
 			}, socialRequest);
 
 		socialRequest.resetOriginalValues();
@@ -5546,8 +5557,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	protected void cacheUniqueFindersCache(SocialRequest socialRequest) {
 		if (socialRequest.isNew()) {
 			Object[] args = new Object[] {
-					socialRequest.getUuid(),
-					Long.valueOf(socialRequest.getGroupId())
+					socialRequest.getUuid(), socialRequest.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -5556,11 +5566,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				socialRequest);
 
 			args = new Object[] {
-					Long.valueOf(socialRequest.getUserId()),
-					Long.valueOf(socialRequest.getClassNameId()),
-					Long.valueOf(socialRequest.getClassPK()),
-					Integer.valueOf(socialRequest.getType()),
-					Long.valueOf(socialRequest.getReceiverUserId())
+					socialRequest.getUserId(), socialRequest.getClassNameId(),
+					socialRequest.getClassPK(), socialRequest.getType(),
+					socialRequest.getReceiverUserId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args,
@@ -5574,8 +5582,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						socialRequest.getUuid(),
-						Long.valueOf(socialRequest.getGroupId())
+						socialRequest.getUuid(), socialRequest.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -5587,11 +5594,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_U_C_C_T_R.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequest.getUserId()),
-						Long.valueOf(socialRequest.getClassNameId()),
-						Long.valueOf(socialRequest.getClassPK()),
-						Integer.valueOf(socialRequest.getType()),
-						Long.valueOf(socialRequest.getReceiverUserId())
+						socialRequest.getUserId(),
+						socialRequest.getClassNameId(),
+						socialRequest.getClassPK(), socialRequest.getType(),
+						socialRequest.getReceiverUserId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args,
@@ -5606,8 +5612,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		SocialRequestModelImpl socialRequestModelImpl = (SocialRequestModelImpl)socialRequest;
 
 		Object[] args = new Object[] {
-				socialRequest.getUuid(),
-				Long.valueOf(socialRequest.getGroupId())
+				socialRequest.getUuid(), socialRequest.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -5617,7 +5622,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					socialRequestModelImpl.getOriginalUuid(),
-					Long.valueOf(socialRequestModelImpl.getOriginalGroupId())
+					socialRequestModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -5625,11 +5630,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		}
 
 		args = new Object[] {
-				Long.valueOf(socialRequest.getUserId()),
-				Long.valueOf(socialRequest.getClassNameId()),
-				Long.valueOf(socialRequest.getClassPK()),
-				Integer.valueOf(socialRequest.getType()),
-				Long.valueOf(socialRequest.getReceiverUserId())
+				socialRequest.getUserId(), socialRequest.getClassNameId(),
+				socialRequest.getClassPK(), socialRequest.getType(),
+				socialRequest.getReceiverUserId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args);
@@ -5638,11 +5641,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		if ((socialRequestModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_C_C_T_R.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(socialRequestModelImpl.getOriginalUserId()),
-					Long.valueOf(socialRequestModelImpl.getOriginalClassNameId()),
-					Long.valueOf(socialRequestModelImpl.getOriginalClassPK()),
-					Integer.valueOf(socialRequestModelImpl.getOriginalType()),
-					Long.valueOf(socialRequestModelImpl.getOriginalReceiverUserId())
+					socialRequestModelImpl.getOriginalUserId(),
+					socialRequestModelImpl.getOriginalClassNameId(),
+					socialRequestModelImpl.getOriginalClassPK(),
+					socialRequestModelImpl.getOriginalType(),
+					socialRequestModelImpl.getOriginalReceiverUserId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args);
@@ -5679,7 +5682,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 */
 	public SocialRequest remove(long requestId)
 		throws NoSuchRequestException, SystemException {
-		return remove(Long.valueOf(requestId));
+		return remove((Serializable)requestId);
 	}
 
 	/**
@@ -5821,7 +5824,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						socialRequestModelImpl.getOriginalUuid(),
-						Long.valueOf(socialRequestModelImpl.getOriginalCompanyId())
+						socialRequestModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -5830,7 +5833,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				args = new Object[] {
 						socialRequestModelImpl.getUuid(),
-						Long.valueOf(socialRequestModelImpl.getCompanyId())
+						socialRequestModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -5841,7 +5844,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalCompanyId())
+						socialRequestModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -5849,9 +5852,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getCompanyId())
-					};
+				args = new Object[] { socialRequestModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -5862,16 +5863,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalUserId())
+						socialRequestModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getUserId())
-					};
+				args = new Object[] { socialRequestModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -5881,7 +5880,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalReceiverUserId())
+						socialRequestModelImpl.getOriginalReceiverUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RECEIVERUSERID,
@@ -5889,9 +5888,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getReceiverUserId())
-					};
+				args = new Object[] { socialRequestModelImpl.getReceiverUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RECEIVERUSERID,
 					args);
@@ -5902,8 +5899,8 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalUserId()),
-						Integer.valueOf(socialRequestModelImpl.getOriginalStatus())
+						socialRequestModelImpl.getOriginalUserId(),
+						socialRequestModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_S, args);
@@ -5911,8 +5908,8 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getUserId()),
-						Integer.valueOf(socialRequestModelImpl.getStatus())
+						socialRequestModelImpl.getUserId(),
+						socialRequestModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_S, args);
@@ -5923,8 +5920,8 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalReceiverUserId()),
-						Integer.valueOf(socialRequestModelImpl.getOriginalStatus())
+						socialRequestModelImpl.getOriginalReceiverUserId(),
+						socialRequestModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_S, args);
@@ -5932,8 +5929,8 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getReceiverUserId()),
-						Integer.valueOf(socialRequestModelImpl.getStatus())
+						socialRequestModelImpl.getReceiverUserId(),
+						socialRequestModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_S, args);
@@ -5944,11 +5941,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_C_C_T_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalUserId()),
-						Long.valueOf(socialRequestModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialRequestModelImpl.getOriginalClassPK()),
-						Integer.valueOf(socialRequestModelImpl.getOriginalType()),
-						Integer.valueOf(socialRequestModelImpl.getOriginalStatus())
+						socialRequestModelImpl.getOriginalUserId(),
+						socialRequestModelImpl.getOriginalClassNameId(),
+						socialRequestModelImpl.getOriginalClassPK(),
+						socialRequestModelImpl.getOriginalType(),
+						socialRequestModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C_T_S,
@@ -5957,11 +5954,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getUserId()),
-						Long.valueOf(socialRequestModelImpl.getClassNameId()),
-						Long.valueOf(socialRequestModelImpl.getClassPK()),
-						Integer.valueOf(socialRequestModelImpl.getType()),
-						Integer.valueOf(socialRequestModelImpl.getStatus())
+						socialRequestModelImpl.getUserId(),
+						socialRequestModelImpl.getClassNameId(),
+						socialRequestModelImpl.getClassPK(),
+						socialRequestModelImpl.getType(),
+						socialRequestModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_C_C_T_S,
@@ -5973,11 +5970,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			if ((socialRequestModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_T_R_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialRequestModelImpl.getOriginalClassPK()),
-						Integer.valueOf(socialRequestModelImpl.getOriginalType()),
-						Long.valueOf(socialRequestModelImpl.getOriginalReceiverUserId()),
-						Integer.valueOf(socialRequestModelImpl.getOriginalStatus())
+						socialRequestModelImpl.getOriginalClassNameId(),
+						socialRequestModelImpl.getOriginalClassPK(),
+						socialRequestModelImpl.getOriginalType(),
+						socialRequestModelImpl.getOriginalReceiverUserId(),
+						socialRequestModelImpl.getOriginalStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_T_R_S,
@@ -5986,11 +5983,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 					args);
 
 				args = new Object[] {
-						Long.valueOf(socialRequestModelImpl.getClassNameId()),
-						Long.valueOf(socialRequestModelImpl.getClassPK()),
-						Integer.valueOf(socialRequestModelImpl.getType()),
-						Long.valueOf(socialRequestModelImpl.getReceiverUserId()),
-						Integer.valueOf(socialRequestModelImpl.getStatus())
+						socialRequestModelImpl.getClassNameId(),
+						socialRequestModelImpl.getClassPK(),
+						socialRequestModelImpl.getType(),
+						socialRequestModelImpl.getReceiverUserId(),
+						socialRequestModelImpl.getStatus()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_T_R_S,
@@ -6042,13 +6039,24 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param primaryKey the primary key of the social request
 	 * @return the social request
-	 * @throws com.liferay.portal.NoSuchModelException if a social request with the primary key could not be found
+	 * @throws com.liferay.portlet.social.NoSuchRequestException if a social request with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SocialRequest findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchRequestException, SystemException {
+		SocialRequest socialRequest = fetchByPrimaryKey(primaryKey);
+
+		if (socialRequest == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchRequestException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return socialRequest;
 	}
 
 	/**
@@ -6061,18 +6069,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 */
 	public SocialRequest findByPrimaryKey(long requestId)
 		throws NoSuchRequestException, SystemException {
-		SocialRequest socialRequest = fetchByPrimaryKey(requestId);
-
-		if (socialRequest == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + requestId);
-			}
-
-			throw new NoSuchRequestException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				requestId);
-		}
-
-		return socialRequest;
+		return findByPrimaryKey((Serializable)requestId);
 	}
 
 	/**
@@ -6085,20 +6082,8 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	@Override
 	public SocialRequest fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the social request with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param requestId the primary key of the social request
-	 * @return the social request, or <code>null</code> if a social request with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SocialRequest fetchByPrimaryKey(long requestId)
-		throws SystemException {
 		SocialRequest socialRequest = (SocialRequest)EntityCacheUtil.getResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
-				SocialRequestImpl.class, requestId);
+				SocialRequestImpl.class, primaryKey);
 
 		if (socialRequest == _nullSocialRequest) {
 			return null;
@@ -6111,19 +6096,19 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				session = openSession();
 
 				socialRequest = (SocialRequest)session.get(SocialRequestImpl.class,
-						Long.valueOf(requestId));
+						primaryKey);
 
 				if (socialRequest != null) {
 					cacheResult(socialRequest);
 				}
 				else {
 					EntityCacheUtil.putResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
-						SocialRequestImpl.class, requestId, _nullSocialRequest);
+						SocialRequestImpl.class, primaryKey, _nullSocialRequest);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
-					SocialRequestImpl.class, requestId);
+					SocialRequestImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -6133,6 +6118,18 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		}
 
 		return socialRequest;
+	}
+
+	/**
+	 * Returns the social request with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param requestId the primary key of the social request
+	 * @return the social request, or <code>null</code> if a social request with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SocialRequest fetchByPrimaryKey(long requestId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)requestId);
 	}
 
 	/**

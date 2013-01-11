@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -196,16 +195,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_SQL_SELECT_JOURNALFOLDER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -228,7 +229,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -418,16 +419,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 		query.append(_SQL_SELECT_JOURNALFOLDER_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -498,7 +501,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -553,16 +556,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_SQL_COUNT_JOURNALFOLDER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -576,7 +581,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -599,7 +604,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalFolder.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalFolder.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
 			JournalFolderImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -694,16 +699,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_SQL_SELECT_JOURNALFOLDER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -719,7 +726,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -802,16 +809,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_SQL_COUNT_JOURNALFOLDER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -827,7 +836,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -852,7 +861,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalFolder.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalFolder.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "journalFolder.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
@@ -976,16 +985,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_SQL_SELECT_JOURNALFOLDER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1010,7 +1021,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1216,16 +1227,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 		query.append(_SQL_SELECT_JOURNALFOLDER_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1298,7 +1311,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1359,16 +1372,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_SQL_COUNT_JOURNALFOLDER_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1384,7 +1399,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1409,7 +1424,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "journalFolder.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "journalFolder.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "journalFolder.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
@@ -3722,16 +3737,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_FINDER_COLUMN_G_N_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -3747,7 +3764,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -3836,16 +3853,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_FINDER_COLUMN_G_N_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -3861,7 +3880,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -3885,7 +3904,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "journalFolder.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_NAME_1 = "journalFolder.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "journalFolder.name = ?";
-	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(journalFolder.name IS NULL OR journalFolder.name = ?)";
+	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(journalFolder.name IS NULL OR journalFolder.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_P_N = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
 			JournalFolderImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByG_P_N",
@@ -3998,16 +4017,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_FINDER_COLUMN_G_P_N_PARENTFOLDERID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_P_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_P_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_P_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -4025,7 +4046,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				qPos.add(parentFolderId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -4113,16 +4134,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			query.append(_FINDER_COLUMN_G_P_N_PARENTFOLDERID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_P_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_P_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_P_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_P_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -4140,7 +4163,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				qPos.add(parentFolderId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -4165,7 +4188,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	private static final String _FINDER_COLUMN_G_P_N_PARENTFOLDERID_2 = "journalFolder.parentFolderId = ? AND ";
 	private static final String _FINDER_COLUMN_G_P_N_NAME_1 = "journalFolder.name IS NULL";
 	private static final String _FINDER_COLUMN_G_P_N_NAME_2 = "journalFolder.name = ?";
-	private static final String _FINDER_COLUMN_G_P_N_NAME_3 = "(journalFolder.name IS NULL OR journalFolder.name = ?)";
+	private static final String _FINDER_COLUMN_G_P_N_NAME_3 = "(journalFolder.name IS NULL OR journalFolder.name = '')";
 
 	/**
 	 * Caches the journal folder in the entity cache if it is enabled.
@@ -4178,24 +4201,17 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			journalFolder);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				journalFolder.getUuid(),
-				Long.valueOf(journalFolder.getGroupId())
-			}, journalFolder);
+			new Object[] { journalFolder.getUuid(), journalFolder.getGroupId() },
+			journalFolder);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N,
-			new Object[] {
-				Long.valueOf(journalFolder.getGroupId()),
-				
-			journalFolder.getName()
-			}, journalFolder);
+			new Object[] { journalFolder.getGroupId(), journalFolder.getName() },
+			journalFolder);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P_N,
 			new Object[] {
-				Long.valueOf(journalFolder.getGroupId()),
-				Long.valueOf(journalFolder.getParentFolderId()),
-				
-			journalFolder.getName()
+				journalFolder.getGroupId(), journalFolder.getParentFolderId(),
+				journalFolder.getName()
 			}, journalFolder);
 
 		journalFolder.resetOriginalValues();
@@ -4273,8 +4289,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	protected void cacheUniqueFindersCache(JournalFolder journalFolder) {
 		if (journalFolder.isNew()) {
 			Object[] args = new Object[] {
-					journalFolder.getUuid(),
-					Long.valueOf(journalFolder.getGroupId())
+					journalFolder.getUuid(), journalFolder.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -4283,9 +4298,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 				journalFolder);
 
 			args = new Object[] {
-					Long.valueOf(journalFolder.getGroupId()),
-					
-					journalFolder.getName()
+					journalFolder.getGroupId(), journalFolder.getName()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N, args,
@@ -4294,10 +4307,8 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 				journalFolder);
 
 			args = new Object[] {
-					Long.valueOf(journalFolder.getGroupId()),
-					Long.valueOf(journalFolder.getParentFolderId()),
-					
-					journalFolder.getName()
+					journalFolder.getGroupId(),
+					journalFolder.getParentFolderId(), journalFolder.getName()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_P_N, args,
@@ -4311,8 +4322,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			if ((journalFolderModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						journalFolder.getUuid(),
-						Long.valueOf(journalFolder.getGroupId())
+						journalFolder.getUuid(), journalFolder.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -4324,9 +4334,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			if ((journalFolderModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalFolder.getGroupId()),
-						
-						journalFolder.getName()
+						journalFolder.getGroupId(), journalFolder.getName()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_N, args,
@@ -4338,9 +4346,8 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			if ((journalFolderModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_P_N.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalFolder.getGroupId()),
-						Long.valueOf(journalFolder.getParentFolderId()),
-						
+						journalFolder.getGroupId(),
+						journalFolder.getParentFolderId(),
 						journalFolder.getName()
 					};
 
@@ -4356,8 +4363,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		JournalFolderModelImpl journalFolderModelImpl = (JournalFolderModelImpl)journalFolder;
 
 		Object[] args = new Object[] {
-				journalFolder.getUuid(),
-				Long.valueOf(journalFolder.getGroupId())
+				journalFolder.getUuid(), journalFolder.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -4367,18 +4373,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					journalFolderModelImpl.getOriginalUuid(),
-					Long.valueOf(journalFolderModelImpl.getOriginalGroupId())
+					journalFolderModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				Long.valueOf(journalFolder.getGroupId()),
-				
-				journalFolder.getName()
-			};
+		args = new Object[] { journalFolder.getGroupId(), journalFolder.getName() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
@@ -4386,8 +4388,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		if ((journalFolderModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(journalFolderModelImpl.getOriginalGroupId()),
-					
+					journalFolderModelImpl.getOriginalGroupId(),
 					journalFolderModelImpl.getOriginalName()
 				};
 
@@ -4396,9 +4397,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 
 		args = new Object[] {
-				Long.valueOf(journalFolder.getGroupId()),
-				Long.valueOf(journalFolder.getParentFolderId()),
-				
+				journalFolder.getGroupId(), journalFolder.getParentFolderId(),
 				journalFolder.getName()
 			};
 
@@ -4408,9 +4407,8 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		if ((journalFolderModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_P_N.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(journalFolderModelImpl.getOriginalGroupId()),
-					Long.valueOf(journalFolderModelImpl.getOriginalParentFolderId()),
-					
+					journalFolderModelImpl.getOriginalGroupId(),
+					journalFolderModelImpl.getOriginalParentFolderId(),
 					journalFolderModelImpl.getOriginalName()
 				};
 
@@ -4448,7 +4446,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	 */
 	public JournalFolder remove(long folderId)
 		throws NoSuchFolderException, SystemException {
-		return remove(Long.valueOf(folderId));
+		return remove((Serializable)folderId);
 	}
 
 	/**
@@ -4590,7 +4588,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						journalFolderModelImpl.getOriginalUuid(),
-						Long.valueOf(journalFolderModelImpl.getOriginalCompanyId())
+						journalFolderModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -4599,7 +4597,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 				args = new Object[] {
 						journalFolderModelImpl.getUuid(),
-						Long.valueOf(journalFolderModelImpl.getCompanyId())
+						journalFolderModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -4610,16 +4608,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			if ((journalFolderModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalFolderModelImpl.getOriginalGroupId())
+						journalFolderModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(journalFolderModelImpl.getGroupId())
-					};
+				args = new Object[] { journalFolderModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -4629,7 +4625,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			if ((journalFolderModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalFolderModelImpl.getOriginalCompanyId())
+						journalFolderModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -4637,9 +4633,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(journalFolderModelImpl.getCompanyId())
-					};
+				args = new Object[] { journalFolderModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -4650,8 +4644,8 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			if ((journalFolderModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(journalFolderModelImpl.getOriginalGroupId()),
-						Long.valueOf(journalFolderModelImpl.getOriginalParentFolderId())
+						journalFolderModelImpl.getOriginalGroupId(),
+						journalFolderModelImpl.getOriginalParentFolderId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -4659,8 +4653,8 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 					args);
 
 				args = new Object[] {
-						Long.valueOf(journalFolderModelImpl.getGroupId()),
-						Long.valueOf(journalFolderModelImpl.getParentFolderId())
+						journalFolderModelImpl.getGroupId(),
+						journalFolderModelImpl.getParentFolderId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_P, args);
@@ -4709,13 +4703,24 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	 *
 	 * @param primaryKey the primary key of the journal folder
 	 * @return the journal folder
-	 * @throws com.liferay.portal.NoSuchModelException if a journal folder with the primary key could not be found
+	 * @throws com.liferay.portlet.journal.NoSuchFolderException if a journal folder with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public JournalFolder findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchFolderException, SystemException {
+		JournalFolder journalFolder = fetchByPrimaryKey(primaryKey);
+
+		if (journalFolder == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchFolderException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return journalFolder;
 	}
 
 	/**
@@ -4728,18 +4733,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	 */
 	public JournalFolder findByPrimaryKey(long folderId)
 		throws NoSuchFolderException, SystemException {
-		JournalFolder journalFolder = fetchByPrimaryKey(folderId);
-
-		if (journalFolder == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + folderId);
-			}
-
-			throw new NoSuchFolderException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				folderId);
-		}
-
-		return journalFolder;
+		return findByPrimaryKey((Serializable)folderId);
 	}
 
 	/**
@@ -4752,20 +4746,8 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	@Override
 	public JournalFolder fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the journal folder with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param folderId the primary key of the journal folder
-	 * @return the journal folder, or <code>null</code> if a journal folder with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public JournalFolder fetchByPrimaryKey(long folderId)
-		throws SystemException {
 		JournalFolder journalFolder = (JournalFolder)EntityCacheUtil.getResult(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
-				JournalFolderImpl.class, folderId);
+				JournalFolderImpl.class, primaryKey);
 
 		if (journalFolder == _nullJournalFolder) {
 			return null;
@@ -4778,19 +4760,19 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 				session = openSession();
 
 				journalFolder = (JournalFolder)session.get(JournalFolderImpl.class,
-						Long.valueOf(folderId));
+						primaryKey);
 
 				if (journalFolder != null) {
 					cacheResult(journalFolder);
 				}
 				else {
 					EntityCacheUtil.putResult(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
-						JournalFolderImpl.class, folderId, _nullJournalFolder);
+						JournalFolderImpl.class, primaryKey, _nullJournalFolder);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
-					JournalFolderImpl.class, folderId);
+					JournalFolderImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -4800,6 +4782,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 
 		return journalFolder;
+	}
+
+	/**
+	 * Returns the journal folder with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param folderId the primary key of the journal folder
+	 * @return the journal folder, or <code>null</code> if a journal folder with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public JournalFolder fetchByPrimaryKey(long folderId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)folderId);
 	}
 
 	/**

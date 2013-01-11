@@ -102,9 +102,10 @@ create unique index IX_82254C25 on BlogsStatsUser (groupId, userId);
 create index IX_BB51F1D9 on BlogsStatsUser (userId);
 create index IX_507BA031 on BlogsStatsUser (userId, lastPostDate);
 
-create index IX_E52FF7EF on BookmarksEntry (groupId);
 create index IX_5200100C on BookmarksEntry (groupId, folderId);
-create index IX_E2E9F129 on BookmarksEntry (groupId, userId);
+create index IX_146382F2 on BookmarksEntry (groupId, folderId, status);
+create index IX_416AD7D5 on BookmarksEntry (groupId, status);
+create index IX_9D9CF70F on BookmarksEntry (groupId, userId, status);
 create index IX_E848278F on BookmarksEntry (resourceBlockId);
 create index IX_B670BA39 on BookmarksEntry (uuid_);
 create index IX_89BEDC4F on BookmarksEntry (uuid_, companyId);
@@ -113,6 +114,7 @@ create unique index IX_EAA02A91 on BookmarksEntry (uuid_, groupId);
 create index IX_2ABA25D7 on BookmarksFolder (companyId);
 create index IX_7F703619 on BookmarksFolder (groupId);
 create index IX_967799C0 on BookmarksFolder (groupId, parentFolderId);
+create index IX_D16018A6 on BookmarksFolder (groupId, parentFolderId, status);
 create index IX_28A49BB9 on BookmarksFolder (resourceBlockId);
 create index IX_451E7AE3 on BookmarksFolder (uuid_);
 create index IX_54F0ED65 on BookmarksFolder (uuid_, companyId);
@@ -463,8 +465,7 @@ create index IX_D9FFCA84 on LayoutSetPrototype (uuid_, companyId);
 
 create index IX_2932DD37 on ListType (type_);
 
-create index IX_228562AD on Lock_ (className, key_);
-create unique index IX_DD635956 on Lock_ (className, key_, owner);
+create unique index IX_228562AD on Lock_ (className, key_);
 create index IX_E3F1286B on Lock_ (expirationDate);
 create index IX_13C5CD3A on Lock_ (uuid_);
 create index IX_2C418EAE on Lock_ (uuid_, companyId);
@@ -579,9 +580,8 @@ create index IX_418E4522 on Organization_ (companyId, parentOrganizationId);
 create index IX_2C1142E on PasswordPolicy (companyId, defaultPolicy);
 create unique index IX_3FBFA9F4 on PasswordPolicy (companyId, name);
 
-create index IX_C3A17327 on PasswordPolicyRel (classNameId, classPK);
+create unique index IX_C3A17327 on PasswordPolicyRel (classNameId, classPK);
 create index IX_CD25266E on PasswordPolicyRel (passwordPolicyId);
-create index IX_ED7CF243 on PasswordPolicyRel (passwordPolicyId, classNameId, classPK);
 
 create index IX_326F75BD on PasswordTracker (userId);
 
@@ -660,15 +660,11 @@ create index IX_2D4CC782 on ResourceBlock (companyId, name);
 create index IX_4AB3756 on ResourceBlockPermission (resourceBlockId);
 create unique index IX_D63D20BB on ResourceBlockPermission (resourceBlockId, roleId);
 
-create index IX_88705859 on ResourcePermission (companyId, name, primKey, ownerId);
-create index IX_C94C7708 on ResourcePermission (companyId, name, primKey, roleId, actionIds);
 create index IX_60B99860 on ResourcePermission (companyId, name, scope);
 create index IX_2200AA69 on ResourcePermission (companyId, name, scope, primKey);
 create index IX_8D83D0CE on ResourcePermission (companyId, name, scope, primKey, roleId);
 create index IX_D2E2B644 on ResourcePermission (companyId, name, scope, primKey, roleId, actionIds);
-create index IX_4A1F4402 on ResourcePermission (companyId, name, scope, primKey, roleId, ownerId, actionIds);
 create index IX_26284944 on ResourcePermission (companyId, primKey);
-create index IX_8DB864A9 on ResourcePermission (companyId, primKey, roleId);
 create index IX_A37A0588 on ResourcePermission (roleId);
 create index IX_F4555981 on ResourcePermission (scope);
 

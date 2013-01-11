@@ -55,16 +55,6 @@ public class DLFolderTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	public void testTrashAssetTagsApproved() throws Exception {
-		Assert.assertTrue("This test does not apply", true);
-	}
-
-	@Override
-	public void testTrashAssetTagsDraft() throws Exception {
-		Assert.assertTrue("This test does not apply", true);
-	}
-
-	@Override
 	public void testTrashVersionAndDelete() throws Exception {
 		Assert.assertTrue("This test does not apply", true);
 	}
@@ -86,10 +76,6 @@ public class DLFolderTrashHandlerTest extends BaseTrashHandlerTestCase {
 
 		name += ServiceTestUtil.randomString(
 			_FOLDER_NAME_MAX_LENGTH - name.length());
-
-		serviceContext = (ServiceContext)serviceContext.clone();
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
 
 		DLFolder dlFolder = DLFolderLocalServiceUtil.addFolder(
 			TestPropsValues.getUserId(), parentDLFolder.getGroupId(),

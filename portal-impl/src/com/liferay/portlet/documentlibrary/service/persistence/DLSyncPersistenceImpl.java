@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -401,10 +400,14 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 			query.append(_FINDER_COLUMN_C_M_R_COMPANYID_2);
 
+			boolean bindModifiedDate = false;
+
 			if (modifiedDate == null) {
 				query.append(_FINDER_COLUMN_C_M_R_MODIFIEDDATE_1);
 			}
 			else {
+				bindModifiedDate = true;
+
 				query.append(_FINDER_COLUMN_C_M_R_MODIFIEDDATE_2);
 			}
 
@@ -432,7 +435,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 				qPos.add(companyId);
 
-				if (modifiedDate != null) {
+				if (bindModifiedDate) {
 					qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 				}
 
@@ -654,10 +657,14 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 		query.append(_FINDER_COLUMN_C_M_R_COMPANYID_2);
 
+		boolean bindModifiedDate = false;
+
 		if (modifiedDate == null) {
 			query.append(_FINDER_COLUMN_C_M_R_MODIFIEDDATE_1);
 		}
 		else {
+			bindModifiedDate = true;
+
 			query.append(_FINDER_COLUMN_C_M_R_MODIFIEDDATE_2);
 		}
 
@@ -733,7 +740,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 		qPos.add(companyId);
 
-		if (modifiedDate != null) {
+		if (bindModifiedDate) {
 			qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 		}
 
@@ -798,10 +805,14 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 			query.append(_FINDER_COLUMN_C_M_R_COMPANYID_2);
 
+			boolean bindModifiedDate = false;
+
 			if (modifiedDate == null) {
 				query.append(_FINDER_COLUMN_C_M_R_MODIFIEDDATE_1);
 			}
 			else {
+				bindModifiedDate = true;
+
 				query.append(_FINDER_COLUMN_C_M_R_MODIFIEDDATE_2);
 			}
 
@@ -820,7 +831,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 				qPos.add(companyId);
 
-				if (modifiedDate != null) {
+				if (bindModifiedDate) {
 					qPos.add(CalendarUtil.getTimestamp(modifiedDate));
 				}
 
@@ -858,7 +869,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			DLSyncImpl.class, dlSync.getPrimaryKey(), dlSync);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FILEID,
-			new Object[] { Long.valueOf(dlSync.getFileId()) }, dlSync);
+			new Object[] { dlSync.getFileId() }, dlSync);
 
 		dlSync.resetOriginalValues();
 	}
@@ -934,7 +945,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 	protected void cacheUniqueFindersCache(DLSync dlSync) {
 		if (dlSync.isNew()) {
-			Object[] args = new Object[] { Long.valueOf(dlSync.getFileId()) };
+			Object[] args = new Object[] { dlSync.getFileId() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_FILEID, args,
 				Long.valueOf(1));
@@ -945,7 +956,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 			if ((dlSyncModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_FILEID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { Long.valueOf(dlSync.getFileId()) };
+				Object[] args = new Object[] { dlSync.getFileId() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_FILEID, args,
 					Long.valueOf(1));
@@ -958,16 +969,14 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 	protected void clearUniqueFindersCache(DLSync dlSync) {
 		DLSyncModelImpl dlSyncModelImpl = (DLSyncModelImpl)dlSync;
 
-		Object[] args = new Object[] { Long.valueOf(dlSync.getFileId()) };
+		Object[] args = new Object[] { dlSync.getFileId() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEID, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FILEID, args);
 
 		if ((dlSyncModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_FILEID.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					Long.valueOf(dlSyncModelImpl.getOriginalFileId())
-				};
+			args = new Object[] { dlSyncModelImpl.getOriginalFileId() };
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEID, args);
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FILEID, args);
@@ -999,7 +1008,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 	 */
 	public DLSync remove(long syncId)
 		throws NoSuchSyncException, SystemException {
-		return remove(Long.valueOf(syncId));
+		return remove((Serializable)syncId);
 	}
 
 	/**
@@ -1150,13 +1159,24 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 	 *
 	 * @param primaryKey the primary key of the d l sync
 	 * @return the d l sync
-	 * @throws com.liferay.portal.NoSuchModelException if a d l sync with the primary key could not be found
+	 * @throws com.liferay.portlet.documentlibrary.NoSuchSyncException if a d l sync with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public DLSync findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchSyncException, SystemException {
+		DLSync dlSync = fetchByPrimaryKey(primaryKey);
+
+		if (dlSync == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchSyncException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return dlSync;
 	}
 
 	/**
@@ -1169,18 +1189,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 	 */
 	public DLSync findByPrimaryKey(long syncId)
 		throws NoSuchSyncException, SystemException {
-		DLSync dlSync = fetchByPrimaryKey(syncId);
-
-		if (dlSync == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + syncId);
-			}
-
-			throw new NoSuchSyncException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				syncId);
-		}
-
-		return dlSync;
+		return findByPrimaryKey((Serializable)syncId);
 	}
 
 	/**
@@ -1193,19 +1202,8 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 	@Override
 	public DLSync fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the d l sync with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param syncId the primary key of the d l sync
-	 * @return the d l sync, or <code>null</code> if a d l sync with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public DLSync fetchByPrimaryKey(long syncId) throws SystemException {
 		DLSync dlSync = (DLSync)EntityCacheUtil.getResult(DLSyncModelImpl.ENTITY_CACHE_ENABLED,
-				DLSyncImpl.class, syncId);
+				DLSyncImpl.class, primaryKey);
 
 		if (dlSync == _nullDLSync) {
 			return null;
@@ -1217,20 +1215,19 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				dlSync = (DLSync)session.get(DLSyncImpl.class,
-						Long.valueOf(syncId));
+				dlSync = (DLSync)session.get(DLSyncImpl.class, primaryKey);
 
 				if (dlSync != null) {
 					cacheResult(dlSync);
 				}
 				else {
 					EntityCacheUtil.putResult(DLSyncModelImpl.ENTITY_CACHE_ENABLED,
-						DLSyncImpl.class, syncId, _nullDLSync);
+						DLSyncImpl.class, primaryKey, _nullDLSync);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(DLSyncModelImpl.ENTITY_CACHE_ENABLED,
-					DLSyncImpl.class, syncId);
+					DLSyncImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1240,6 +1237,17 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 		}
 
 		return dlSync;
+	}
+
+	/**
+	 * Returns the d l sync with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param syncId the primary key of the d l sync
+	 * @return the d l sync, or <code>null</code> if a d l sync with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DLSync fetchByPrimaryKey(long syncId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)syncId);
 	}
 
 	/**

@@ -94,6 +94,7 @@ import com.liferay.portlet.asset.service.permission.AssetPermission;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.asset.service.persistence.AssetTagUtil;
 import com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil;
+import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.expando.NoSuchTableException;
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.model.ExpandoTable;
@@ -354,7 +355,9 @@ public class PortletImporter {
 				if (!ArrayUtil.contains(
 						targetAvailableLocales, sourceAvailableLocale)) {
 
-					LocaleException le = new LocaleException();
+					LocaleException le = new LocaleException(
+						"Locale " + sourceAvailableLocale + " is not " +
+							"available in company " + layout.getCompanyId());
 
 					le.setSourceAvailableLocales(sourceAvailableLocales);
 					le.setTargetAvailableLocales(targetAvailableLocales);
@@ -1779,31 +1782,6 @@ public class PortletImporter {
 		jxPreferences.setValues(key, newValues);
 	}
 
-	protected void updateAssetPublisherGlobalScopeId(
-			javax.portlet.PortletPreferences jxPreferences, String key,
-			long groupId)
-		throws Exception {
-
-		String[] oldValues = jxPreferences.getValues(key, null);
-
-		if (oldValues == null) {
-			return;
-		}
-
-		String newValue = "Group_" + groupId;
-
-		String[] newValues = new String[oldValues.length];
-
-		for (int i = 0; i < oldValues.length; i++) {
-			String oldValue = oldValues[i];
-
-			newValues[i] = StringUtil.replace(
-				oldValue, "Group_Company", newValue);
-		}
-
-		jxPreferences.setValues(key, newValues);
-	}
-
 	protected String updateAssetPublisherPortletPreferences(
 			PortletDataContext portletDataContext, long companyId, long ownerId,
 			int ownerType, long plid, String portletId, String xml)
@@ -1841,8 +1819,8 @@ public class PortletImporter {
 				updateAssetPublisherClassNameIds(jxPreferences, name);
 			}
 			else if (name.equals("defaultScope") || name.equals("scopeIds")) {
-				updateAssetPublisherGlobalScopeId(
-					jxPreferences, name, companyGroup.getGroupId());
+				updateAssetPublisherScopeIds(
+					jxPreferences, name, companyGroup.getGroupId(), plid);
 			}
 			else if (name.startsWith("queryName") &&
 					 value.equalsIgnoreCase("assetCategories")) {
@@ -1856,6 +1834,39 @@ public class PortletImporter {
 		}
 
 		return PortletPreferencesFactoryUtil.toXML(jxPreferences);
+	}
+
+	protected void updateAssetPublisherScopeIds(
+			javax.portlet.PortletPreferences jxPreferences, String key,
+			long groupId, long plid)
+		throws Exception {
+
+		String[] oldValues = jxPreferences.getValues(key, null);
+
+		if (oldValues == null) {
+			return;
+		}
+
+		String groupScopeId =
+			AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX + groupId;
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(plid);
+
+		String layoutScopeId =
+			AssetPublisherUtil.SCOPE_ID_LAYOUT_PREFIX + layout.getLayoutId();
+
+		String[] newValues = new String[oldValues.length];
+
+		for (int i = 0; i < oldValues.length; i++) {
+			String oldValue = oldValues[i];
+
+			newValues[i] = StringUtil.replace(
+				oldValue,
+				new String[] {"[$GROUP_SCOPE_ID$]", "[$LAYOUT_SCOPE_ID$]"},
+				new String[] {groupScopeId, layoutScopeId});
+		}
+
+		jxPreferences.setValues(key, newValues);
 	}
 
 	protected void updatePortletPreferences(

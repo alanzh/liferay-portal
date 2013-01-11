@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1806,10 +1805,8 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 			MBStatsUserImpl.class, mbStatsUser.getPrimaryKey(), mbStatsUser);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U,
-			new Object[] {
-				Long.valueOf(mbStatsUser.getGroupId()),
-				Long.valueOf(mbStatsUser.getUserId())
-			}, mbStatsUser);
+			new Object[] { mbStatsUser.getGroupId(), mbStatsUser.getUserId() },
+			mbStatsUser);
 
 		mbStatsUser.resetOriginalValues();
 	}
@@ -1886,8 +1883,7 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 	protected void cacheUniqueFindersCache(MBStatsUser mbStatsUser) {
 		if (mbStatsUser.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(mbStatsUser.getGroupId()),
-					Long.valueOf(mbStatsUser.getUserId())
+					mbStatsUser.getGroupId(), mbStatsUser.getUserId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_U, args,
@@ -1901,8 +1897,7 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 			if ((mbStatsUserModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_U.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbStatsUser.getGroupId()),
-						Long.valueOf(mbStatsUser.getUserId())
+						mbStatsUser.getGroupId(), mbStatsUser.getUserId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_U, args,
@@ -1917,8 +1912,7 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 		MBStatsUserModelImpl mbStatsUserModelImpl = (MBStatsUserModelImpl)mbStatsUser;
 
 		Object[] args = new Object[] {
-				Long.valueOf(mbStatsUser.getGroupId()),
-				Long.valueOf(mbStatsUser.getUserId())
+				mbStatsUser.getGroupId(), mbStatsUser.getUserId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U, args);
@@ -1927,8 +1921,8 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 		if ((mbStatsUserModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_U.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(mbStatsUserModelImpl.getOriginalGroupId()),
-					Long.valueOf(mbStatsUserModelImpl.getOriginalUserId())
+					mbStatsUserModelImpl.getOriginalGroupId(),
+					mbStatsUserModelImpl.getOriginalUserId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U, args);
@@ -1961,7 +1955,7 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 	 */
 	public MBStatsUser remove(long statsUserId)
 		throws NoSuchStatsUserException, SystemException {
-		return remove(Long.valueOf(statsUserId));
+		return remove((Serializable)statsUserId);
 	}
 
 	/**
@@ -2079,16 +2073,14 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 			if ((mbStatsUserModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbStatsUserModelImpl.getOriginalGroupId())
+						mbStatsUserModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(mbStatsUserModelImpl.getGroupId())
-					};
+				args = new Object[] { mbStatsUserModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2098,16 +2090,14 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 			if ((mbStatsUserModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(mbStatsUserModelImpl.getOriginalUserId())
+						mbStatsUserModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(mbStatsUserModelImpl.getUserId())
-					};
+				args = new Object[] { mbStatsUserModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2148,13 +2138,24 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 	 *
 	 * @param primaryKey the primary key of the message boards stats user
 	 * @return the message boards stats user
-	 * @throws com.liferay.portal.NoSuchModelException if a message boards stats user with the primary key could not be found
+	 * @throws com.liferay.portlet.messageboards.NoSuchStatsUserException if a message boards stats user with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public MBStatsUser findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchStatsUserException, SystemException {
+		MBStatsUser mbStatsUser = fetchByPrimaryKey(primaryKey);
+
+		if (mbStatsUser == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchStatsUserException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return mbStatsUser;
 	}
 
 	/**
@@ -2167,18 +2168,7 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 	 */
 	public MBStatsUser findByPrimaryKey(long statsUserId)
 		throws NoSuchStatsUserException, SystemException {
-		MBStatsUser mbStatsUser = fetchByPrimaryKey(statsUserId);
-
-		if (mbStatsUser == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + statsUserId);
-			}
-
-			throw new NoSuchStatsUserException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				statsUserId);
-		}
-
-		return mbStatsUser;
+		return findByPrimaryKey((Serializable)statsUserId);
 	}
 
 	/**
@@ -2191,20 +2181,8 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 	@Override
 	public MBStatsUser fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the message boards stats user with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param statsUserId the primary key of the message boards stats user
-	 * @return the message boards stats user, or <code>null</code> if a message boards stats user with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public MBStatsUser fetchByPrimaryKey(long statsUserId)
-		throws SystemException {
 		MBStatsUser mbStatsUser = (MBStatsUser)EntityCacheUtil.getResult(MBStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-				MBStatsUserImpl.class, statsUserId);
+				MBStatsUserImpl.class, primaryKey);
 
 		if (mbStatsUser == _nullMBStatsUser) {
 			return null;
@@ -2217,19 +2195,19 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 				session = openSession();
 
 				mbStatsUser = (MBStatsUser)session.get(MBStatsUserImpl.class,
-						Long.valueOf(statsUserId));
+						primaryKey);
 
 				if (mbStatsUser != null) {
 					cacheResult(mbStatsUser);
 				}
 				else {
 					EntityCacheUtil.putResult(MBStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-						MBStatsUserImpl.class, statsUserId, _nullMBStatsUser);
+						MBStatsUserImpl.class, primaryKey, _nullMBStatsUser);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(MBStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-					MBStatsUserImpl.class, statsUserId);
+					MBStatsUserImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2239,6 +2217,18 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 		}
 
 		return mbStatsUser;
+	}
+
+	/**
+	 * Returns the message boards stats user with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param statsUserId the primary key of the message boards stats user
+	 * @return the message boards stats user, or <code>null</code> if a message boards stats user with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MBStatsUser fetchByPrimaryKey(long statsUserId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)statsUserId);
 	}
 
 	/**

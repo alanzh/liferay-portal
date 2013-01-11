@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPhoneException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -2785,7 +2784,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	 */
 	public Phone remove(long phoneId)
 		throws NoSuchPhoneException, SystemException {
-		return remove(Long.valueOf(phoneId));
+		return remove((Serializable)phoneId);
 	}
 
 	/**
@@ -2900,7 +2899,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId())
+						phoneModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2908,7 +2907,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] { Long.valueOf(phoneModelImpl.getCompanyId()) };
+				args = new Object[] { phoneModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2918,15 +2917,13 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalUserId())
-					};
+				Object[] args = new Object[] { phoneModelImpl.getOriginalUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(phoneModelImpl.getUserId()) };
+				args = new Object[] { phoneModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -2936,8 +2933,8 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassNameId())
+						phoneModelImpl.getOriginalCompanyId(),
+						phoneModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2945,8 +2942,8 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(phoneModelImpl.getCompanyId()),
-						Long.valueOf(phoneModelImpl.getClassNameId())
+						phoneModelImpl.getCompanyId(),
+						phoneModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -2957,9 +2954,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassNameId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassPK())
+						phoneModelImpl.getOriginalCompanyId(),
+						phoneModelImpl.getOriginalClassNameId(),
+						phoneModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2967,9 +2964,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(phoneModelImpl.getCompanyId()),
-						Long.valueOf(phoneModelImpl.getClassNameId()),
-						Long.valueOf(phoneModelImpl.getClassPK())
+						phoneModelImpl.getCompanyId(),
+						phoneModelImpl.getClassNameId(),
+						phoneModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -2980,10 +2977,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			if ((phoneModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(phoneModelImpl.getOriginalCompanyId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassNameId()),
-						Long.valueOf(phoneModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(phoneModelImpl.getOriginalPrimary())
+						phoneModelImpl.getOriginalCompanyId(),
+						phoneModelImpl.getOriginalClassNameId(),
+						phoneModelImpl.getOriginalClassPK(),
+						phoneModelImpl.getOriginalPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -2991,10 +2988,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(phoneModelImpl.getCompanyId()),
-						Long.valueOf(phoneModelImpl.getClassNameId()),
-						Long.valueOf(phoneModelImpl.getClassPK()),
-						Boolean.valueOf(phoneModelImpl.getPrimary())
+						phoneModelImpl.getCompanyId(),
+						phoneModelImpl.getClassNameId(),
+						phoneModelImpl.getClassPK(), phoneModelImpl.getPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3040,13 +3036,24 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	 *
 	 * @param primaryKey the primary key of the phone
 	 * @return the phone
-	 * @throws com.liferay.portal.NoSuchModelException if a phone with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPhoneException if a phone with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Phone findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPhoneException, SystemException {
+		Phone phone = fetchByPrimaryKey(primaryKey);
+
+		if (phone == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPhoneException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return phone;
 	}
 
 	/**
@@ -3059,18 +3066,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	 */
 	public Phone findByPrimaryKey(long phoneId)
 		throws NoSuchPhoneException, SystemException {
-		Phone phone = fetchByPrimaryKey(phoneId);
-
-		if (phone == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + phoneId);
-			}
-
-			throw new NoSuchPhoneException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				phoneId);
-		}
-
-		return phone;
+		return findByPrimaryKey((Serializable)phoneId);
 	}
 
 	/**
@@ -3083,19 +3079,8 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	@Override
 	public Phone fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the phone with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param phoneId the primary key of the phone
-	 * @return the phone, or <code>null</code> if a phone with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Phone fetchByPrimaryKey(long phoneId) throws SystemException {
 		Phone phone = (Phone)EntityCacheUtil.getResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-				PhoneImpl.class, phoneId);
+				PhoneImpl.class, primaryKey);
 
 		if (phone == _nullPhone) {
 			return null;
@@ -3107,20 +3092,19 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				phone = (Phone)session.get(PhoneImpl.class,
-						Long.valueOf(phoneId));
+				phone = (Phone)session.get(PhoneImpl.class, primaryKey);
 
 				if (phone != null) {
 					cacheResult(phone);
 				}
 				else {
 					EntityCacheUtil.putResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-						PhoneImpl.class, phoneId, _nullPhone);
+						PhoneImpl.class, primaryKey, _nullPhone);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-					PhoneImpl.class, phoneId);
+					PhoneImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3130,6 +3114,17 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 		}
 
 		return phone;
+	}
+
+	/**
+	 * Returns the phone with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param phoneId the primary key of the phone
+	 * @return the phone, or <code>null</code> if a phone with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Phone fetchByPrimaryKey(long phoneId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)phoneId);
 	}
 
 	/**

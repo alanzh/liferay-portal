@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserGroupException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
@@ -1911,16 +1910,18 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -1936,7 +1937,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 				qPos.add(companyId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -2019,16 +2020,18 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_C_N_NAME_1);
 			}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_N_NAME_3);
+			}
 			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_N_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_N_NAME_2);
-				}
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_C_N_NAME_2);
 			}
 
 			String sql = query.toString();
@@ -2044,7 +2047,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 				qPos.add(companyId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
@@ -2068,7 +2071,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "userGroup.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_NAME_1 = "userGroup.name IS NULL";
 	private static final String _FINDER_COLUMN_C_N_NAME_2 = "userGroup.name = ?";
-	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(userGroup.name IS NULL OR userGroup.name = ?)";
+	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(userGroup.name IS NULL OR userGroup.name = '')";
 
 	/**
 	 * Caches the user group in the entity cache if it is enabled.
@@ -2080,11 +2083,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 			UserGroupImpl.class, userGroup.getPrimaryKey(), userGroup);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N,
-			new Object[] {
-				Long.valueOf(userGroup.getCompanyId()),
-				
-			userGroup.getName()
-			}, userGroup);
+			new Object[] { userGroup.getCompanyId(), userGroup.getName() },
+			userGroup);
 
 		userGroup.resetOriginalValues();
 	}
@@ -2161,9 +2161,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	protected void cacheUniqueFindersCache(UserGroup userGroup) {
 		if (userGroup.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(userGroup.getCompanyId()),
-					
-					userGroup.getName()
+					userGroup.getCompanyId(), userGroup.getName()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_N, args,
@@ -2176,9 +2174,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 			if ((userGroupModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroup.getCompanyId()),
-						
-						userGroup.getName()
+						userGroup.getCompanyId(), userGroup.getName()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_N, args,
@@ -2193,9 +2189,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		UserGroupModelImpl userGroupModelImpl = (UserGroupModelImpl)userGroup;
 
 		Object[] args = new Object[] {
-				Long.valueOf(userGroup.getCompanyId()),
-				
-				userGroup.getName()
+				userGroup.getCompanyId(), userGroup.getName()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
@@ -2204,8 +2198,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		if ((userGroupModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(userGroupModelImpl.getOriginalCompanyId()),
-					
+					userGroupModelImpl.getOriginalCompanyId(),
 					userGroupModelImpl.getOriginalName()
 				};
 
@@ -2239,7 +2232,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	 */
 	public UserGroup remove(long userGroupId)
 		throws NoSuchUserGroupException, SystemException {
-		return remove(Long.valueOf(userGroupId));
+		return remove((Serializable)userGroupId);
 	}
 
 	/**
@@ -2386,7 +2379,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 			if ((userGroupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupModelImpl.getOriginalCompanyId())
+						userGroupModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2394,9 +2387,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userGroupModelImpl.getCompanyId())
-					};
+				args = new Object[] { userGroupModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2407,8 +2398,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 			if ((userGroupModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userGroupModelImpl.getOriginalCompanyId()),
-						Long.valueOf(userGroupModelImpl.getOriginalParentUserGroupId())
+						userGroupModelImpl.getOriginalCompanyId(),
+						userGroupModelImpl.getOriginalParentUserGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
@@ -2416,8 +2407,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(userGroupModelImpl.getCompanyId()),
-						Long.valueOf(userGroupModelImpl.getParentUserGroupId())
+						userGroupModelImpl.getCompanyId(),
+						userGroupModelImpl.getParentUserGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
@@ -2460,13 +2451,24 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	 *
 	 * @param primaryKey the primary key of the user group
 	 * @return the user group
-	 * @throws com.liferay.portal.NoSuchModelException if a user group with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserGroupException if a user group with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserGroup findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserGroupException, SystemException {
+		UserGroup userGroup = fetchByPrimaryKey(primaryKey);
+
+		if (userGroup == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userGroup;
 	}
 
 	/**
@@ -2479,18 +2481,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	 */
 	public UserGroup findByPrimaryKey(long userGroupId)
 		throws NoSuchUserGroupException, SystemException {
-		UserGroup userGroup = fetchByPrimaryKey(userGroupId);
-
-		if (userGroup == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userGroupId);
-			}
-
-			throw new NoSuchUserGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userGroupId);
-		}
-
-		return userGroup;
+		return findByPrimaryKey((Serializable)userGroupId);
 	}
 
 	/**
@@ -2503,20 +2494,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	@Override
 	public UserGroup fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user group with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userGroupId the primary key of the user group
-	 * @return the user group, or <code>null</code> if a user group with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserGroup fetchByPrimaryKey(long userGroupId)
-		throws SystemException {
 		UserGroup userGroup = (UserGroup)EntityCacheUtil.getResult(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
-				UserGroupImpl.class, userGroupId);
+				UserGroupImpl.class, primaryKey);
 
 		if (userGroup == _nullUserGroup) {
 			return null;
@@ -2529,19 +2508,19 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 				session = openSession();
 
 				userGroup = (UserGroup)session.get(UserGroupImpl.class,
-						Long.valueOf(userGroupId));
+						primaryKey);
 
 				if (userGroup != null) {
 					cacheResult(userGroup);
 				}
 				else {
 					EntityCacheUtil.putResult(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
-						UserGroupImpl.class, userGroupId, _nullUserGroup);
+						UserGroupImpl.class, primaryKey, _nullUserGroup);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
-					UserGroupImpl.class, userGroupId);
+					UserGroupImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2551,6 +2530,18 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		}
 
 		return userGroup;
+	}
+
+	/**
+	 * Returns the user group with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userGroupId the primary key of the user group
+	 * @return the user group, or <code>null</code> if a user group with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserGroup fetchByPrimaryKey(long userGroupId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userGroupId);
 	}
 
 	/**

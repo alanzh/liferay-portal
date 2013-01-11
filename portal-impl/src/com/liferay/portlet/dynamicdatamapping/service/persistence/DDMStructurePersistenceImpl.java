@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -191,16 +190,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -223,7 +224,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -413,16 +414,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_UUID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -493,7 +496,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -548,16 +551,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_COUNT_DDMSTRUCTURE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_UUID_2);
 			}
 
 			String sql = query.toString();
@@ -571,7 +576,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -594,7 +599,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmStructure.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmStructure.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = ?)";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -689,16 +694,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -714,7 +721,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -797,16 +804,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_COUNT_DDMSTRUCTURE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_G_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_G_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
@@ -822,7 +831,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -847,7 +856,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmStructure.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmStructure.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddmStructure.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
@@ -967,16 +976,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1001,7 +1012,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1207,16 +1218,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+		boolean bindUuid = false;
+
 		if (uuid == null) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 		}
+		else if (uuid.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+		}
 		else {
-			if (uuid.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-			}
+			bindUuid = true;
+
+			query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 		}
 
 		query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1289,7 +1302,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (uuid != null) {
+		if (bindUuid) {
 			qPos.add(uuid);
 		}
 
@@ -1350,16 +1363,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_COUNT_DDMSTRUCTURE_WHERE);
 
+			boolean bindUuid = false;
+
 			if (uuid == null) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
 			}
+			else if (uuid.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
+			}
 			else {
-				if (uuid.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_UUID_C_UUID_2);
-				}
+				bindUuid = true;
+
+				query.append(_FINDER_COLUMN_UUID_C_UUID_2);
 			}
 
 			query.append(_FINDER_COLUMN_UUID_C_COMPANYID_2);
@@ -1375,7 +1390,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (uuid != null) {
+				if (bindUuid) {
 					qPos.add(uuid);
 				}
 
@@ -1400,7 +1415,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmStructure.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmStructure.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = ?) AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmStructure.uuid IS NULL OR ddmStructure.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddmStructure.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
@@ -2692,7 +2707,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "ddmStructure.groupId = ?";
 	private static final String _FINDER_COLUMN_GROUPID_GROUPID_5 = "(" +
-		_removeConjunction(_FINDER_COLUMN_GROUPID_GROUPID_2) + ")";
+		removeConjunction(_FINDER_COLUMN_GROUPID_GROUPID_2) + ")";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_CLASSNAMEID =
 		new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
@@ -3286,16 +3301,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+			boolean bindStructureKey = false;
+
 			if (structureKey == null) {
 				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_1);
 			}
+			else if (structureKey.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3);
+			}
 			else {
-				if (structureKey.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2);
-				}
+				bindStructureKey = true;
+
+				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2);
 			}
 
 			if (orderByComparator != null) {
@@ -3318,7 +3335,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (structureKey != null) {
+				if (bindStructureKey) {
 					qPos.add(structureKey);
 				}
 
@@ -3511,16 +3528,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_SQL_SELECT_DDMSTRUCTURE_WHERE);
 
+		boolean bindStructureKey = false;
+
 		if (structureKey == null) {
 			query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_1);
 		}
+		else if (structureKey.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3);
+		}
 		else {
-			if (structureKey.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2);
-			}
+			bindStructureKey = true;
+
+			query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2);
 		}
 
 		if (orderByComparator != null) {
@@ -3591,7 +3610,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		if (structureKey != null) {
+		if (bindStructureKey) {
 			qPos.add(structureKey);
 		}
 
@@ -3648,16 +3667,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_SQL_COUNT_DDMSTRUCTURE_WHERE);
 
+			boolean bindStructureKey = false;
+
 			if (structureKey == null) {
 				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_1);
 			}
+			else if (structureKey.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3);
+			}
 			else {
-				if (structureKey.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2);
-				}
+				bindStructureKey = true;
+
+				query.append(_FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2);
 			}
 
 			String sql = query.toString();
@@ -3671,7 +3692,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (structureKey != null) {
+				if (bindStructureKey) {
 					qPos.add(structureKey);
 				}
 
@@ -3694,7 +3715,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 	private static final String _FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_1 = "ddmStructure.structureKey IS NULL";
 	private static final String _FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_2 = "ddmStructure.structureKey = ?";
-	private static final String _FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3 = "(ddmStructure.structureKey IS NULL OR ddmStructure.structureKey = ?)";
+	private static final String _FINDER_COLUMN_STRUCTUREKEY_STRUCTUREKEY_3 = "(ddmStructure.structureKey IS NULL OR ddmStructure.structureKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C",
@@ -4684,16 +4705,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_FINDER_COLUMN_G_S_GROUPID_2);
 
+			boolean bindStructureKey = false;
+
 			if (structureKey == null) {
 				query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_1);
 			}
+			else if (structureKey.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_3);
+			}
 			else {
-				if (structureKey.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_2);
-				}
+				bindStructureKey = true;
+
+				query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_2);
 			}
 
 			String sql = query.toString();
@@ -4709,7 +4732,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				qPos.add(groupId);
 
-				if (structureKey != null) {
+				if (bindStructureKey) {
 					qPos.add(structureKey);
 				}
 
@@ -4792,16 +4815,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_FINDER_COLUMN_G_S_GROUPID_2);
 
+			boolean bindStructureKey = false;
+
 			if (structureKey == null) {
 				query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_1);
 			}
+			else if (structureKey.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_3);
+			}
 			else {
-				if (structureKey.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_2);
-				}
+				bindStructureKey = true;
+
+				query.append(_FINDER_COLUMN_G_S_STRUCTUREKEY_2);
 			}
 
 			String sql = query.toString();
@@ -4817,7 +4842,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				qPos.add(groupId);
 
-				if (structureKey != null) {
+				if (bindStructureKey) {
 					qPos.add(structureKey);
 				}
 
@@ -4841,7 +4866,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	private static final String _FINDER_COLUMN_G_S_GROUPID_2 = "ddmStructure.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_S_STRUCTUREKEY_1 = "ddmStructure.structureKey IS NULL";
 	private static final String _FINDER_COLUMN_G_S_STRUCTUREKEY_2 = "ddmStructure.structureKey = ?";
-	private static final String _FINDER_COLUMN_G_S_STRUCTUREKEY_3 = "(ddmStructure.structureKey IS NULL OR ddmStructure.structureKey = ?)";
+	private static final String _FINDER_COLUMN_G_S_STRUCTUREKEY_3 = "(ddmStructure.structureKey IS NULL OR ddmStructure.structureKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C = new FinderPath(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStructureModelImpl.FINDER_CACHE_ENABLED, DDMStructureImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_C",
@@ -5488,28 +5513,32 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_FINDER_COLUMN_G_N_D_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_D_NAME_1);
 			}
-			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_D_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_D_NAME_2);
-				}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_D_NAME_3);
 			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_D_NAME_2);
+			}
+
+			boolean bindDescription = false;
 
 			if (description == null) {
 				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_1);
 			}
+			else if (description.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
+			}
 			else {
-				if (description.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
-				}
+				bindDescription = true;
+
+				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
 			}
 
 			if (orderByComparator != null) {
@@ -5534,11 +5563,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
-				if (description != null) {
+				if (bindDescription) {
 					qPos.add(description);
 				}
 
@@ -5759,28 +5788,32 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_FINDER_COLUMN_G_N_D_GROUPID_2);
 
+		boolean bindName = false;
+
 		if (name == null) {
 			query.append(_FINDER_COLUMN_G_N_D_NAME_1);
 		}
-		else {
-			if (name.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_2);
-			}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_NAME_3);
 		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_NAME_2);
+		}
+
+		boolean bindDescription = false;
 
 		if (description == null) {
 			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_1);
 		}
+		else if (description.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
+		}
 		else {
-			if (description.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
-			}
+			bindDescription = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
 		}
 
 		if (orderByComparator != null) {
@@ -5853,11 +5886,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		qPos.add(groupId);
 
-		if (name != null) {
+		if (bindName) {
 			qPos.add(name);
 		}
 
-		if (description != null) {
+		if (bindDescription) {
 			qPos.add(description);
 		}
 
@@ -5957,28 +5990,32 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_FINDER_COLUMN_G_N_D_GROUPID_2);
 
+		boolean bindName = false;
+
 		if (name == null) {
 			query.append(_FINDER_COLUMN_G_N_D_NAME_1);
 		}
-		else {
-			if (name.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_2);
-			}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_NAME_3);
 		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_NAME_2);
+		}
+
+		boolean bindDescription = false;
 
 		if (description == null) {
 			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_1);
 		}
+		else if (description.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
+		}
 		else {
-			if (description.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
-			}
+			bindDescription = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
 		}
 
 		if (!getDB().isSupportsInlineDistinct()) {
@@ -6026,11 +6063,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			qPos.add(groupId);
 
-			if (name != null) {
+			if (bindName) {
 				qPos.add(name);
 			}
 
-			if (description != null) {
+			if (bindDescription) {
 				qPos.add(description);
 			}
 
@@ -6116,28 +6153,32 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_FINDER_COLUMN_G_N_D_GROUPID_2);
 
+		boolean bindName = false;
+
 		if (name == null) {
 			query.append(_FINDER_COLUMN_G_N_D_NAME_1);
 		}
-		else {
-			if (name.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_2);
-			}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_NAME_3);
 		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_NAME_2);
+		}
+
+		boolean bindDescription = false;
 
 		if (description == null) {
 			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_1);
 		}
+		else if (description.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
+		}
 		else {
-			if (description.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
-			}
+			bindDescription = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
 		}
 
 		if (!getDB().isSupportsInlineDistinct()) {
@@ -6240,11 +6281,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		qPos.add(groupId);
 
-		if (name != null) {
+		if (bindName) {
 			qPos.add(name);
 		}
 
-		if (description != null) {
+		if (bindDescription) {
 			qPos.add(description);
 		}
 
@@ -6307,28 +6348,32 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			query.append(_FINDER_COLUMN_G_N_D_GROUPID_2);
 
+			boolean bindName = false;
+
 			if (name == null) {
 				query.append(_FINDER_COLUMN_G_N_D_NAME_1);
 			}
-			else {
-				if (name.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_D_NAME_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_D_NAME_2);
-				}
+			else if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_D_NAME_3);
 			}
+			else {
+				bindName = true;
+
+				query.append(_FINDER_COLUMN_G_N_D_NAME_2);
+			}
+
+			boolean bindDescription = false;
 
 			if (description == null) {
 				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_1);
 			}
+			else if (description.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
+			}
 			else {
-				if (description.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
-				}
+				bindDescription = true;
+
+				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
 			}
 
 			String sql = query.toString();
@@ -6344,11 +6389,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				qPos.add(groupId);
 
-				if (name != null) {
+				if (bindName) {
 					qPos.add(name);
 				}
 
-				if (description != null) {
+				if (bindDescription) {
 					qPos.add(description);
 				}
 
@@ -6390,28 +6435,32 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 		query.append(_FINDER_COLUMN_G_N_D_GROUPID_2);
 
+		boolean bindName = false;
+
 		if (name == null) {
 			query.append(_FINDER_COLUMN_G_N_D_NAME_1);
 		}
-		else {
-			if (name.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_NAME_2);
-			}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_NAME_3);
 		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_NAME_2);
+		}
+
+		boolean bindDescription = false;
 
 		if (description == null) {
 			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_1);
 		}
+		else if (description.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
+		}
 		else {
-			if (description.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
-			}
+			bindDescription = true;
+
+			query.append(_FINDER_COLUMN_G_N_D_DESCRIPTION_2);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -6432,11 +6481,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			qPos.add(groupId);
 
-			if (name != null) {
+			if (bindName) {
 				qPos.add(name);
 			}
 
-			if (description != null) {
+			if (bindDescription) {
 				qPos.add(description);
 			}
 
@@ -6455,10 +6504,10 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	private static final String _FINDER_COLUMN_G_N_D_GROUPID_2 = "ddmStructure.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_D_NAME_1 = "ddmStructure.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_N_D_NAME_2 = "ddmStructure.name = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_D_NAME_3 = "(ddmStructure.name IS NULL OR ddmStructure.name = ?) AND ";
+	private static final String _FINDER_COLUMN_G_N_D_NAME_3 = "(ddmStructure.name IS NULL OR ddmStructure.name = '') AND ";
 	private static final String _FINDER_COLUMN_G_N_D_DESCRIPTION_1 = "ddmStructure.description IS NULL";
 	private static final String _FINDER_COLUMN_G_N_D_DESCRIPTION_2 = "ddmStructure.description = ?";
-	private static final String _FINDER_COLUMN_G_N_D_DESCRIPTION_3 = "(ddmStructure.description IS NULL OR ddmStructure.description = ?)";
+	private static final String _FINDER_COLUMN_G_N_D_DESCRIPTION_3 = "(ddmStructure.description IS NULL OR ddmStructure.description = '')";
 
 	/**
 	 * Caches the d d m structure in the entity cache if it is enabled.
@@ -6470,15 +6519,12 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			DDMStructureImpl.class, ddmStructure.getPrimaryKey(), ddmStructure);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				ddmStructure.getUuid(), Long.valueOf(ddmStructure.getGroupId())
-			}, ddmStructure);
+			new Object[] { ddmStructure.getUuid(), ddmStructure.getGroupId() },
+			ddmStructure);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,
 			new Object[] {
-				Long.valueOf(ddmStructure.getGroupId()),
-				
-			ddmStructure.getStructureKey()
+				ddmStructure.getGroupId(), ddmStructure.getStructureKey()
 			}, ddmStructure);
 
 		ddmStructure.resetOriginalValues();
@@ -6556,8 +6602,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	protected void cacheUniqueFindersCache(DDMStructure ddmStructure) {
 		if (ddmStructure.isNew()) {
 			Object[] args = new Object[] {
-					ddmStructure.getUuid(),
-					Long.valueOf(ddmStructure.getGroupId())
+					ddmStructure.getUuid(), ddmStructure.getGroupId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -6566,9 +6611,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				ddmStructure);
 
 			args = new Object[] {
-					Long.valueOf(ddmStructure.getGroupId()),
-					
-					ddmStructure.getStructureKey()
+					ddmStructure.getGroupId(), ddmStructure.getStructureKey()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_S, args,
@@ -6582,8 +6625,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						ddmStructure.getUuid(),
-						Long.valueOf(ddmStructure.getGroupId())
+						ddmStructure.getUuid(), ddmStructure.getGroupId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -6595,8 +6637,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmStructure.getGroupId()),
-						
+						ddmStructure.getGroupId(),
 						ddmStructure.getStructureKey()
 					};
 
@@ -6612,7 +6653,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		DDMStructureModelImpl ddmStructureModelImpl = (DDMStructureModelImpl)ddmStructure;
 
 		Object[] args = new Object[] {
-				ddmStructure.getUuid(), Long.valueOf(ddmStructure.getGroupId())
+				ddmStructure.getUuid(), ddmStructure.getGroupId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -6622,7 +6663,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					ddmStructureModelImpl.getOriginalUuid(),
-					Long.valueOf(ddmStructureModelImpl.getOriginalGroupId())
+					ddmStructureModelImpl.getOriginalGroupId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -6630,9 +6671,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 
 		args = new Object[] {
-				Long.valueOf(ddmStructure.getGroupId()),
-				
-				ddmStructure.getStructureKey()
+				ddmStructure.getGroupId(), ddmStructure.getStructureKey()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_S, args);
@@ -6641,8 +6680,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		if ((ddmStructureModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_S.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(ddmStructureModelImpl.getOriginalGroupId()),
-					
+					ddmStructureModelImpl.getOriginalGroupId(),
 					ddmStructureModelImpl.getOriginalStructureKey()
 				};
 
@@ -6680,7 +6718,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	 */
 	public DDMStructure remove(long structureId)
 		throws NoSuchStructureException, SystemException {
-		return remove(Long.valueOf(structureId));
+		return remove((Serializable)structureId);
 	}
 
 	/**
@@ -6822,7 +6860,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						ddmStructureModelImpl.getOriginalUuid(),
-						Long.valueOf(ddmStructureModelImpl.getOriginalCompanyId())
+						ddmStructureModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -6831,7 +6869,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				args = new Object[] {
 						ddmStructureModelImpl.getUuid(),
-						Long.valueOf(ddmStructureModelImpl.getCompanyId())
+						ddmStructureModelImpl.getCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -6842,16 +6880,14 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getOriginalGroupId())
+						ddmStructureModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getGroupId())
-					};
+				args = new Object[] { ddmStructureModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -6861,7 +6897,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getOriginalClassNameId())
+						ddmStructureModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
@@ -6869,9 +6905,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getClassNameId())
-					};
+				args = new Object[] { ddmStructureModelImpl.getClassNameId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
 					args);
@@ -6901,8 +6935,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getOriginalGroupId()),
-						Long.valueOf(ddmStructureModelImpl.getOriginalClassNameId())
+						ddmStructureModelImpl.getOriginalGroupId(),
+						ddmStructureModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -6910,8 +6944,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 					args);
 
 				args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getGroupId()),
-						Long.valueOf(ddmStructureModelImpl.getClassNameId())
+						ddmStructureModelImpl.getGroupId(),
+						ddmStructureModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -6922,8 +6956,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getOriginalCompanyId()),
-						Long.valueOf(ddmStructureModelImpl.getOriginalClassNameId())
+						ddmStructureModelImpl.getOriginalCompanyId(),
+						ddmStructureModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -6931,8 +6965,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 					args);
 
 				args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getCompanyId()),
-						Long.valueOf(ddmStructureModelImpl.getClassNameId())
+						ddmStructureModelImpl.getCompanyId(),
+						ddmStructureModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -6943,10 +6977,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((ddmStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_D.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getOriginalGroupId()),
-						
+						ddmStructureModelImpl.getOriginalGroupId(),
 						ddmStructureModelImpl.getOriginalName(),
-						
 						ddmStructureModelImpl.getOriginalDescription()
 					};
 
@@ -6955,10 +6987,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 					args);
 
 				args = new Object[] {
-						Long.valueOf(ddmStructureModelImpl.getGroupId()),
-						
+						ddmStructureModelImpl.getGroupId(),
 						ddmStructureModelImpl.getName(),
-						
 						ddmStructureModelImpl.getDescription()
 					};
 
@@ -7012,13 +7042,24 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	 *
 	 * @param primaryKey the primary key of the d d m structure
 	 * @return the d d m structure
-	 * @throws com.liferay.portal.NoSuchModelException if a d d m structure with the primary key could not be found
+	 * @throws com.liferay.portlet.dynamicdatamapping.NoSuchStructureException if a d d m structure with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public DDMStructure findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchStructureException, SystemException {
+		DDMStructure ddmStructure = fetchByPrimaryKey(primaryKey);
+
+		if (ddmStructure == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchStructureException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return ddmStructure;
 	}
 
 	/**
@@ -7031,18 +7072,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	 */
 	public DDMStructure findByPrimaryKey(long structureId)
 		throws NoSuchStructureException, SystemException {
-		DDMStructure ddmStructure = fetchByPrimaryKey(structureId);
-
-		if (ddmStructure == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + structureId);
-			}
-
-			throw new NoSuchStructureException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				structureId);
-		}
-
-		return ddmStructure;
+		return findByPrimaryKey((Serializable)structureId);
 	}
 
 	/**
@@ -7055,20 +7085,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	@Override
 	public DDMStructure fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the d d m structure with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param structureId the primary key of the d d m structure
-	 * @return the d d m structure, or <code>null</code> if a d d m structure with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public DDMStructure fetchByPrimaryKey(long structureId)
-		throws SystemException {
 		DDMStructure ddmStructure = (DDMStructure)EntityCacheUtil.getResult(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
-				DDMStructureImpl.class, structureId);
+				DDMStructureImpl.class, primaryKey);
 
 		if (ddmStructure == _nullDDMStructure) {
 			return null;
@@ -7081,19 +7099,19 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				session = openSession();
 
 				ddmStructure = (DDMStructure)session.get(DDMStructureImpl.class,
-						Long.valueOf(structureId));
+						primaryKey);
 
 				if (ddmStructure != null) {
 					cacheResult(ddmStructure);
 				}
 				else {
 					EntityCacheUtil.putResult(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
-						DDMStructureImpl.class, structureId, _nullDDMStructure);
+						DDMStructureImpl.class, primaryKey, _nullDDMStructure);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(DDMStructureModelImpl.ENTITY_CACHE_ENABLED,
-					DDMStructureImpl.class, structureId);
+					DDMStructureImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -7103,6 +7121,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		}
 
 		return ddmStructure;
+	}
+
+	/**
+	 * Returns the d d m structure with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param structureId the primary key of the d d m structure
+	 * @return the d d m structure, or <code>null</code> if a d d m structure with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DDMStructure fetchByPrimaryKey(long structureId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)structureId);
 	}
 
 	/**
@@ -7309,17 +7339,6 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	private static final String _SQL_SELECT_DDMSTRUCTURE_WHERE = "SELECT ddmStructure FROM DDMStructure ddmStructure WHERE ";
 	private static final String _SQL_COUNT_DDMSTRUCTURE = "SELECT COUNT(ddmStructure) FROM DDMStructure ddmStructure";
 	private static final String _SQL_COUNT_DDMSTRUCTURE_WHERE = "SELECT COUNT(ddmStructure) FROM DDMStructure ddmStructure WHERE ";
-
-	private static String _removeConjunction(String sql) {
-		int pos = sql.indexOf(" AND ");
-
-		if (pos != -1) {
-			sql = sql.substring(0, pos);
-		}
-
-		return sql;
-	}
-
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "ddmStructure.structureId";
 	private static final String _FILTER_SQL_SELECT_DDMSTRUCTURE_WHERE = "SELECT DISTINCT {ddmStructure.*} FROM DDMStructure ddmStructure WHERE ";
 	private static final String _FILTER_SQL_SELECT_DDMSTRUCTURE_NO_INLINE_DISTINCT_WHERE_1 =

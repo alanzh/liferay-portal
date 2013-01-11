@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchOrgLaborException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -668,7 +667,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 */
 	public OrgLabor remove(long orgLaborId)
 		throws NoSuchOrgLaborException, SystemException {
-		return remove(Long.valueOf(orgLaborId));
+		return remove((Serializable)orgLaborId);
 	}
 
 	/**
@@ -784,7 +783,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			if ((orgLaborModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORGANIZATIONID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(orgLaborModelImpl.getOriginalOrganizationId())
+						orgLaborModelImpl.getOriginalOrganizationId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ORGANIZATIONID,
@@ -792,9 +791,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ORGANIZATIONID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(orgLaborModelImpl.getOrganizationId())
-					};
+				args = new Object[] { orgLaborModelImpl.getOrganizationId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ORGANIZATIONID,
 					args);
@@ -845,13 +842,24 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 *
 	 * @param primaryKey the primary key of the org labor
 	 * @return the org labor
-	 * @throws com.liferay.portal.NoSuchModelException if a org labor with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchOrgLaborException if a org labor with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public OrgLabor findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchOrgLaborException, SystemException {
+		OrgLabor orgLabor = fetchByPrimaryKey(primaryKey);
+
+		if (orgLabor == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchOrgLaborException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return orgLabor;
 	}
 
 	/**
@@ -864,18 +872,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	 */
 	public OrgLabor findByPrimaryKey(long orgLaborId)
 		throws NoSuchOrgLaborException, SystemException {
-		OrgLabor orgLabor = fetchByPrimaryKey(orgLaborId);
-
-		if (orgLabor == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + orgLaborId);
-			}
-
-			throw new NoSuchOrgLaborException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				orgLaborId);
-		}
-
-		return orgLabor;
+		return findByPrimaryKey((Serializable)orgLaborId);
 	}
 
 	/**
@@ -888,20 +885,8 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 	@Override
 	public OrgLabor fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the org labor with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param orgLaborId the primary key of the org labor
-	 * @return the org labor, or <code>null</code> if a org labor with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public OrgLabor fetchByPrimaryKey(long orgLaborId)
-		throws SystemException {
 		OrgLabor orgLabor = (OrgLabor)EntityCacheUtil.getResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
-				OrgLaborImpl.class, orgLaborId);
+				OrgLaborImpl.class, primaryKey);
 
 		if (orgLabor == _nullOrgLabor) {
 			return null;
@@ -913,20 +898,19 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			try {
 				session = openSession();
 
-				orgLabor = (OrgLabor)session.get(OrgLaborImpl.class,
-						Long.valueOf(orgLaborId));
+				orgLabor = (OrgLabor)session.get(OrgLaborImpl.class, primaryKey);
 
 				if (orgLabor != null) {
 					cacheResult(orgLabor);
 				}
 				else {
 					EntityCacheUtil.putResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
-						OrgLaborImpl.class, orgLaborId, _nullOrgLabor);
+						OrgLaborImpl.class, primaryKey, _nullOrgLabor);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
-					OrgLaborImpl.class, orgLaborId);
+					OrgLaborImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -936,6 +920,18 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 		}
 
 		return orgLabor;
+	}
+
+	/**
+	 * Returns the org labor with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param orgLaborId the primary key of the org labor
+	 * @return the org labor, or <code>null</code> if a org labor with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public OrgLabor fetchByPrimaryKey(long orgLaborId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)orgLaborId);
 	}
 
 	/**

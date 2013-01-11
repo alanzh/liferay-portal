@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.jdbc.MappingSqlQuery;
@@ -1716,16 +1715,18 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 			query.append(_FINDER_COLUMN_C_S_COMPANYID_2);
 
+			boolean bindSku = false;
+
 			if (sku == null) {
 				query.append(_FINDER_COLUMN_C_S_SKU_1);
 			}
+			else if (sku.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_S_SKU_3);
+			}
 			else {
-				if (sku.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_S_SKU_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_S_SKU_2);
-				}
+				bindSku = true;
+
+				query.append(_FINDER_COLUMN_C_S_SKU_2);
 			}
 
 			String sql = query.toString();
@@ -1741,7 +1742,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 				qPos.add(companyId);
 
-				if (sku != null) {
+				if (bindSku) {
 					qPos.add(sku);
 				}
 
@@ -1823,16 +1824,18 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 			query.append(_FINDER_COLUMN_C_S_COMPANYID_2);
 
+			boolean bindSku = false;
+
 			if (sku == null) {
 				query.append(_FINDER_COLUMN_C_S_SKU_1);
 			}
+			else if (sku.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_S_SKU_3);
+			}
 			else {
-				if (sku.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_S_SKU_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_S_SKU_2);
-				}
+				bindSku = true;
+
+				query.append(_FINDER_COLUMN_C_S_SKU_2);
 			}
 
 			String sql = query.toString();
@@ -1848,7 +1851,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 				qPos.add(companyId);
 
-				if (sku != null) {
+				if (bindSku) {
 					qPos.add(sku);
 				}
 
@@ -1872,7 +1875,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 	private static final String _FINDER_COLUMN_C_S_COMPANYID_2 = "shoppingItem.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_S_SKU_1 = "shoppingItem.sku IS NULL";
 	private static final String _FINDER_COLUMN_C_S_SKU_2 = "shoppingItem.sku = ?";
-	private static final String _FINDER_COLUMN_C_S_SKU_3 = "(shoppingItem.sku IS NULL OR shoppingItem.sku = ?)";
+	private static final String _FINDER_COLUMN_C_S_SKU_3 = "(shoppingItem.sku IS NULL OR shoppingItem.sku = '')";
 
 	/**
 	 * Caches the shopping item in the entity cache if it is enabled.
@@ -1884,23 +1887,17 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 			ShoppingItemImpl.class, shoppingItem.getPrimaryKey(), shoppingItem);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID,
-			new Object[] { Long.valueOf(shoppingItem.getSmallImageId()) },
-			shoppingItem);
+			new Object[] { shoppingItem.getSmallImageId() }, shoppingItem);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MEDIUMIMAGEID,
-			new Object[] { Long.valueOf(shoppingItem.getMediumImageId()) },
-			shoppingItem);
+			new Object[] { shoppingItem.getMediumImageId() }, shoppingItem);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_LARGEIMAGEID,
-			new Object[] { Long.valueOf(shoppingItem.getLargeImageId()) },
-			shoppingItem);
+			new Object[] { shoppingItem.getLargeImageId() }, shoppingItem);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_S,
-			new Object[] {
-				Long.valueOf(shoppingItem.getCompanyId()),
-				
-			shoppingItem.getSku()
-			}, shoppingItem);
+			new Object[] { shoppingItem.getCompanyId(), shoppingItem.getSku() },
+			shoppingItem);
 
 		shoppingItem.resetOriginalValues();
 	}
@@ -1976,23 +1973,21 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 	protected void cacheUniqueFindersCache(ShoppingItem shoppingItem) {
 		if (shoppingItem.isNew()) {
-			Object[] args = new Object[] {
-					Long.valueOf(shoppingItem.getSmallImageId())
-				};
+			Object[] args = new Object[] { shoppingItem.getSmallImageId() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_SMALLIMAGEID, args,
 				Long.valueOf(1));
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID, args,
 				shoppingItem);
 
-			args = new Object[] { Long.valueOf(shoppingItem.getMediumImageId()) };
+			args = new Object[] { shoppingItem.getMediumImageId() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_MEDIUMIMAGEID, args,
 				Long.valueOf(1));
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MEDIUMIMAGEID, args,
 				shoppingItem);
 
-			args = new Object[] { Long.valueOf(shoppingItem.getLargeImageId()) };
+			args = new Object[] { shoppingItem.getLargeImageId() };
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_LARGEIMAGEID, args,
 				Long.valueOf(1));
@@ -2000,9 +1995,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 				shoppingItem);
 
 			args = new Object[] {
-					Long.valueOf(shoppingItem.getCompanyId()),
-					
-					shoppingItem.getSku()
+					shoppingItem.getCompanyId(), shoppingItem.getSku()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_S, args,
@@ -2015,9 +2008,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 			if ((shoppingItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_SMALLIMAGEID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(shoppingItem.getSmallImageId())
-					};
+				Object[] args = new Object[] { shoppingItem.getSmallImageId() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_SMALLIMAGEID,
 					args, Long.valueOf(1));
@@ -2027,9 +2018,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 			if ((shoppingItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_MEDIUMIMAGEID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(shoppingItem.getMediumImageId())
-					};
+				Object[] args = new Object[] { shoppingItem.getMediumImageId() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_MEDIUMIMAGEID,
 					args, Long.valueOf(1));
@@ -2039,9 +2028,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 
 			if ((shoppingItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_LARGEIMAGEID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(shoppingItem.getLargeImageId())
-					};
+				Object[] args = new Object[] { shoppingItem.getLargeImageId() };
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_LARGEIMAGEID,
 					args, Long.valueOf(1));
@@ -2052,9 +2039,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 			if ((shoppingItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingItem.getCompanyId()),
-						
-						shoppingItem.getSku()
+						shoppingItem.getCompanyId(), shoppingItem.getSku()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_S, args,
@@ -2068,33 +2053,27 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 	protected void clearUniqueFindersCache(ShoppingItem shoppingItem) {
 		ShoppingItemModelImpl shoppingItemModelImpl = (ShoppingItemModelImpl)shoppingItem;
 
-		Object[] args = new Object[] {
-				Long.valueOf(shoppingItem.getSmallImageId())
-			};
+		Object[] args = new Object[] { shoppingItem.getSmallImageId() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SMALLIMAGEID, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID, args);
 
 		if ((shoppingItemModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_SMALLIMAGEID.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					Long.valueOf(shoppingItemModelImpl.getOriginalSmallImageId())
-				};
+			args = new Object[] { shoppingItemModelImpl.getOriginalSmallImageId() };
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SMALLIMAGEID, args);
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID, args);
 		}
 
-		args = new Object[] { Long.valueOf(shoppingItem.getMediumImageId()) };
+		args = new Object[] { shoppingItem.getMediumImageId() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MEDIUMIMAGEID, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MEDIUMIMAGEID, args);
 
 		if ((shoppingItemModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_MEDIUMIMAGEID.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					Long.valueOf(shoppingItemModelImpl.getOriginalMediumImageId())
-				};
+			args = new Object[] { shoppingItemModelImpl.getOriginalMediumImageId() };
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MEDIUMIMAGEID,
 				args);
@@ -2102,26 +2081,20 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 				args);
 		}
 
-		args = new Object[] { Long.valueOf(shoppingItem.getLargeImageId()) };
+		args = new Object[] { shoppingItem.getLargeImageId() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LARGEIMAGEID, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LARGEIMAGEID, args);
 
 		if ((shoppingItemModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_LARGEIMAGEID.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					Long.valueOf(shoppingItemModelImpl.getOriginalLargeImageId())
-				};
+			args = new Object[] { shoppingItemModelImpl.getOriginalLargeImageId() };
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_LARGEIMAGEID, args);
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LARGEIMAGEID, args);
 		}
 
-		args = new Object[] {
-				Long.valueOf(shoppingItem.getCompanyId()),
-				
-				shoppingItem.getSku()
-			};
+		args = new Object[] { shoppingItem.getCompanyId(), shoppingItem.getSku() };
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S, args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_S, args);
@@ -2129,8 +2102,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 		if ((shoppingItemModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_S.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(shoppingItemModelImpl.getOriginalCompanyId()),
-					
+					shoppingItemModelImpl.getOriginalCompanyId(),
 					shoppingItemModelImpl.getOriginalSku()
 				};
 
@@ -2164,7 +2136,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 	 */
 	public ShoppingItem remove(long itemId)
 		throws NoSuchItemException, SystemException {
-		return remove(Long.valueOf(itemId));
+		return remove((Serializable)itemId);
 	}
 
 	/**
@@ -2282,8 +2254,8 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 			if ((shoppingItemModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingItemModelImpl.getOriginalGroupId()),
-						Long.valueOf(shoppingItemModelImpl.getOriginalCategoryId())
+						shoppingItemModelImpl.getOriginalGroupId(),
+						shoppingItemModelImpl.getOriginalCategoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -2291,8 +2263,8 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 					args);
 
 				args = new Object[] {
-						Long.valueOf(shoppingItemModelImpl.getGroupId()),
-						Long.valueOf(shoppingItemModelImpl.getCategoryId())
+						shoppingItemModelImpl.getGroupId(),
+						shoppingItemModelImpl.getCategoryId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
@@ -2363,13 +2335,24 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 	 *
 	 * @param primaryKey the primary key of the shopping item
 	 * @return the shopping item
-	 * @throws com.liferay.portal.NoSuchModelException if a shopping item with the primary key could not be found
+	 * @throws com.liferay.portlet.shopping.NoSuchItemException if a shopping item with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ShoppingItem findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchItemException, SystemException {
+		ShoppingItem shoppingItem = fetchByPrimaryKey(primaryKey);
+
+		if (shoppingItem == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchItemException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return shoppingItem;
 	}
 
 	/**
@@ -2382,18 +2365,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 	 */
 	public ShoppingItem findByPrimaryKey(long itemId)
 		throws NoSuchItemException, SystemException {
-		ShoppingItem shoppingItem = fetchByPrimaryKey(itemId);
-
-		if (shoppingItem == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + itemId);
-			}
-
-			throw new NoSuchItemException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				itemId);
-		}
-
-		return shoppingItem;
+		return findByPrimaryKey((Serializable)itemId);
 	}
 
 	/**
@@ -2406,20 +2378,8 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 	@Override
 	public ShoppingItem fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the shopping item with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param itemId the primary key of the shopping item
-	 * @return the shopping item, or <code>null</code> if a shopping item with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ShoppingItem fetchByPrimaryKey(long itemId)
-		throws SystemException {
 		ShoppingItem shoppingItem = (ShoppingItem)EntityCacheUtil.getResult(ShoppingItemModelImpl.ENTITY_CACHE_ENABLED,
-				ShoppingItemImpl.class, itemId);
+				ShoppingItemImpl.class, primaryKey);
 
 		if (shoppingItem == _nullShoppingItem) {
 			return null;
@@ -2432,19 +2392,19 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 				session = openSession();
 
 				shoppingItem = (ShoppingItem)session.get(ShoppingItemImpl.class,
-						Long.valueOf(itemId));
+						primaryKey);
 
 				if (shoppingItem != null) {
 					cacheResult(shoppingItem);
 				}
 				else {
 					EntityCacheUtil.putResult(ShoppingItemModelImpl.ENTITY_CACHE_ENABLED,
-						ShoppingItemImpl.class, itemId, _nullShoppingItem);
+						ShoppingItemImpl.class, primaryKey, _nullShoppingItem);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ShoppingItemModelImpl.ENTITY_CACHE_ENABLED,
-					ShoppingItemImpl.class, itemId);
+					ShoppingItemImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2454,6 +2414,18 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 		}
 
 		return shoppingItem;
+	}
+
+	/**
+	 * Returns the shopping item with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param itemId the primary key of the shopping item
+	 * @return the shopping item, or <code>null</code> if a shopping item with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ShoppingItem fetchByPrimaryKey(long itemId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)itemId);
 	}
 
 	/**

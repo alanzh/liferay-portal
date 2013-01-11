@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -2826,9 +2825,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_E_E_T,
 			new Object[] {
-				Long.valueOf(assetLink.getEntryId1()),
-				Long.valueOf(assetLink.getEntryId2()),
-				Integer.valueOf(assetLink.getType())
+				assetLink.getEntryId1(), assetLink.getEntryId2(),
+				assetLink.getType()
 			}, assetLink);
 
 		assetLink.resetOriginalValues();
@@ -2906,9 +2904,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	protected void cacheUniqueFindersCache(AssetLink assetLink) {
 		if (assetLink.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(assetLink.getEntryId1()),
-					Long.valueOf(assetLink.getEntryId2()),
-					Integer.valueOf(assetLink.getType())
+					assetLink.getEntryId1(), assetLink.getEntryId2(),
+					assetLink.getType()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_E_E_T, args,
@@ -2922,9 +2919,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			if ((assetLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_E_E_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetLink.getEntryId1()),
-						Long.valueOf(assetLink.getEntryId2()),
-						Integer.valueOf(assetLink.getType())
+						assetLink.getEntryId1(), assetLink.getEntryId2(),
+						assetLink.getType()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_E_E_T, args,
@@ -2939,9 +2935,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		AssetLinkModelImpl assetLinkModelImpl = (AssetLinkModelImpl)assetLink;
 
 		Object[] args = new Object[] {
-				Long.valueOf(assetLink.getEntryId1()),
-				Long.valueOf(assetLink.getEntryId2()),
-				Integer.valueOf(assetLink.getType())
+				assetLink.getEntryId1(), assetLink.getEntryId2(),
+				assetLink.getType()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E_E_T, args);
@@ -2950,9 +2945,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		if ((assetLinkModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_E_E_T.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(assetLinkModelImpl.getOriginalEntryId1()),
-					Long.valueOf(assetLinkModelImpl.getOriginalEntryId2()),
-					Integer.valueOf(assetLinkModelImpl.getOriginalType())
+					assetLinkModelImpl.getOriginalEntryId1(),
+					assetLinkModelImpl.getOriginalEntryId2(),
+					assetLinkModelImpl.getOriginalType()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E_E_T, args);
@@ -2985,7 +2980,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	 */
 	public AssetLink remove(long linkId)
 		throws NoSuchLinkException, SystemException {
-		return remove(Long.valueOf(linkId));
+		return remove((Serializable)linkId);
 	}
 
 	/**
@@ -3103,16 +3098,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			if ((assetLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E1.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getOriginalEntryId1())
+						assetLinkModelImpl.getOriginalEntryId1()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E1, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E1,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getEntryId1())
-					};
+				args = new Object[] { assetLinkModelImpl.getEntryId1() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E1, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E1,
@@ -3122,16 +3115,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			if ((assetLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E2.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getOriginalEntryId2())
+						assetLinkModelImpl.getOriginalEntryId2()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E2, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E2,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getEntryId2())
-					};
+				args = new Object[] { assetLinkModelImpl.getEntryId2() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E2, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E2,
@@ -3141,8 +3132,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			if ((assetLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E_E.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getOriginalEntryId1()),
-						Long.valueOf(assetLinkModelImpl.getOriginalEntryId2())
+						assetLinkModelImpl.getOriginalEntryId1(),
+						assetLinkModelImpl.getOriginalEntryId2()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E_E, args);
@@ -3150,8 +3141,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getEntryId1()),
-						Long.valueOf(assetLinkModelImpl.getEntryId2())
+						assetLinkModelImpl.getEntryId1(),
+						assetLinkModelImpl.getEntryId2()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E_E, args);
@@ -3162,8 +3153,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			if ((assetLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E1_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getOriginalEntryId1()),
-						Integer.valueOf(assetLinkModelImpl.getOriginalType())
+						assetLinkModelImpl.getOriginalEntryId1(),
+						assetLinkModelImpl.getOriginalType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E1_T, args);
@@ -3171,8 +3162,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getEntryId1()),
-						Integer.valueOf(assetLinkModelImpl.getType())
+						assetLinkModelImpl.getEntryId1(),
+						assetLinkModelImpl.getType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E1_T, args);
@@ -3183,8 +3174,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			if ((assetLinkModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_E2_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getOriginalEntryId2()),
-						Integer.valueOf(assetLinkModelImpl.getOriginalType())
+						assetLinkModelImpl.getOriginalEntryId2(),
+						assetLinkModelImpl.getOriginalType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E2_T, args);
@@ -3192,8 +3183,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(assetLinkModelImpl.getEntryId2()),
-						Integer.valueOf(assetLinkModelImpl.getType())
+						assetLinkModelImpl.getEntryId2(),
+						assetLinkModelImpl.getType()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_E2_T, args);
@@ -3239,13 +3230,24 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	 *
 	 * @param primaryKey the primary key of the asset link
 	 * @return the asset link
-	 * @throws com.liferay.portal.NoSuchModelException if a asset link with the primary key could not be found
+	 * @throws com.liferay.portlet.asset.NoSuchLinkException if a asset link with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public AssetLink findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchLinkException, SystemException {
+		AssetLink assetLink = fetchByPrimaryKey(primaryKey);
+
+		if (assetLink == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchLinkException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return assetLink;
 	}
 
 	/**
@@ -3258,18 +3260,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	 */
 	public AssetLink findByPrimaryKey(long linkId)
 		throws NoSuchLinkException, SystemException {
-		AssetLink assetLink = fetchByPrimaryKey(linkId);
-
-		if (assetLink == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + linkId);
-			}
-
-			throw new NoSuchLinkException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				linkId);
-		}
-
-		return assetLink;
+		return findByPrimaryKey((Serializable)linkId);
 	}
 
 	/**
@@ -3282,19 +3273,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	@Override
 	public AssetLink fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the asset link with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param linkId the primary key of the asset link
-	 * @return the asset link, or <code>null</code> if a asset link with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public AssetLink fetchByPrimaryKey(long linkId) throws SystemException {
 		AssetLink assetLink = (AssetLink)EntityCacheUtil.getResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
-				AssetLinkImpl.class, linkId);
+				AssetLinkImpl.class, primaryKey);
 
 		if (assetLink == _nullAssetLink) {
 			return null;
@@ -3307,19 +3287,19 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 				session = openSession();
 
 				assetLink = (AssetLink)session.get(AssetLinkImpl.class,
-						Long.valueOf(linkId));
+						primaryKey);
 
 				if (assetLink != null) {
 					cacheResult(assetLink);
 				}
 				else {
 					EntityCacheUtil.putResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
-						AssetLinkImpl.class, linkId, _nullAssetLink);
+						AssetLinkImpl.class, primaryKey, _nullAssetLink);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
-					AssetLinkImpl.class, linkId);
+					AssetLinkImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3329,6 +3309,17 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		}
 
 		return assetLink;
+	}
+
+	/**
+	 * Returns the asset link with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param linkId the primary key of the asset link
+	 * @return the asset link, or <code>null</code> if a asset link with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AssetLink fetchByPrimaryKey(long linkId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)linkId);
 	}
 
 	/**

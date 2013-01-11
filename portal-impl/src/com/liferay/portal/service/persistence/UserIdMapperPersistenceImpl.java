@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchUserIdMapperException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -651,16 +650,18 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_FINDER_COLUMN_U_T_USERID_2);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_U_T_TYPE_1);
 			}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_U_T_TYPE_3);
+			}
 			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_U_T_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_U_T_TYPE_2);
-				}
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_U_T_TYPE_2);
 			}
 
 			String sql = query.toString();
@@ -676,7 +677,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				qPos.add(userId);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
@@ -758,16 +759,18 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_FINDER_COLUMN_U_T_USERID_2);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_U_T_TYPE_1);
 			}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_U_T_TYPE_3);
+			}
 			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_U_T_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_U_T_TYPE_2);
-				}
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_U_T_TYPE_2);
 			}
 
 			String sql = query.toString();
@@ -783,7 +786,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				qPos.add(userId);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
@@ -807,7 +810,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	private static final String _FINDER_COLUMN_U_T_USERID_2 = "userIdMapper.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_T_TYPE_1 = "userIdMapper.type IS NULL";
 	private static final String _FINDER_COLUMN_U_T_TYPE_2 = "userIdMapper.type = ?";
-	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = ?)";
+	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_T_E = new FinderPath(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 			UserIdMapperModelImpl.FINDER_CACHE_ENABLED, UserIdMapperImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByT_E",
@@ -903,28 +906,32 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_SQL_SELECT_USERIDMAPPER_WHERE);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_T_E_TYPE_1);
 			}
-			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_TYPE_2);
-				}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_TYPE_3);
 			}
+			else {
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_T_E_TYPE_2);
+			}
+
+			boolean bindExternalUserId = false;
 
 			if (externalUserId == null) {
 				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_1);
 			}
+			else if (externalUserId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
+			}
 			else {
-				if (externalUserId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
-				}
+				bindExternalUserId = true;
+
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
 			}
 
 			String sql = query.toString();
@@ -938,11 +945,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
-				if (externalUserId != null) {
+				if (bindExternalUserId) {
 					qPos.add(externalUserId);
 				}
 
@@ -1025,28 +1032,32 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			query.append(_SQL_COUNT_USERIDMAPPER_WHERE);
 
+			boolean bindType = false;
+
 			if (type == null) {
 				query.append(_FINDER_COLUMN_T_E_TYPE_1);
 			}
-			else {
-				if (type.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_TYPE_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_TYPE_2);
-				}
+			else if (type.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_TYPE_3);
 			}
+			else {
+				bindType = true;
+
+				query.append(_FINDER_COLUMN_T_E_TYPE_2);
+			}
+
+			boolean bindExternalUserId = false;
 
 			if (externalUserId == null) {
 				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_1);
 			}
+			else if (externalUserId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
+			}
 			else {
-				if (externalUserId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
-				}
+				bindExternalUserId = true;
+
+				query.append(_FINDER_COLUMN_T_E_EXTERNALUSERID_2);
 			}
 
 			String sql = query.toString();
@@ -1060,11 +1071,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (type != null) {
+				if (bindType) {
 					qPos.add(type);
 				}
 
-				if (externalUserId != null) {
+				if (bindExternalUserId) {
 					qPos.add(externalUserId);
 				}
 
@@ -1087,10 +1098,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 	private static final String _FINDER_COLUMN_T_E_TYPE_1 = "userIdMapper.type IS NULL AND ";
 	private static final String _FINDER_COLUMN_T_E_TYPE_2 = "userIdMapper.type = ? AND ";
-	private static final String _FINDER_COLUMN_T_E_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = ?) AND ";
+	private static final String _FINDER_COLUMN_T_E_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = '') AND ";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_1 = "userIdMapper.externalUserId IS NULL";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_2 = "userIdMapper.externalUserId = ?";
-	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_3 = "(userIdMapper.externalUserId IS NULL OR userIdMapper.externalUserId = ?)";
+	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_3 = "(userIdMapper.externalUserId IS NULL OR userIdMapper.externalUserId = '')";
 
 	/**
 	 * Caches the user ID mapper in the entity cache if it is enabled.
@@ -1102,17 +1113,12 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			UserIdMapperImpl.class, userIdMapper.getPrimaryKey(), userIdMapper);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(userIdMapper.getUserId()),
-				
-			userIdMapper.getType()
-			}, userIdMapper);
+			new Object[] { userIdMapper.getUserId(), userIdMapper.getType() },
+			userIdMapper);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_E,
 			new Object[] {
-				userIdMapper.getType(),
-				
-			userIdMapper.getExternalUserId()
+				userIdMapper.getType(), userIdMapper.getExternalUserId()
 			}, userIdMapper);
 
 		userIdMapper.resetOriginalValues();
@@ -1190,9 +1196,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	protected void cacheUniqueFindersCache(UserIdMapper userIdMapper) {
 		if (userIdMapper.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(userIdMapper.getUserId()),
-					
-					userIdMapper.getType()
+					userIdMapper.getUserId(), userIdMapper.getType()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
@@ -1201,9 +1205,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 				userIdMapper);
 
 			args = new Object[] {
-					userIdMapper.getType(),
-					
-					userIdMapper.getExternalUserId()
+					userIdMapper.getType(), userIdMapper.getExternalUserId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_E, args,
@@ -1217,9 +1219,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			if ((userIdMapperModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userIdMapper.getUserId()),
-						
-						userIdMapper.getType()
+						userIdMapper.getUserId(), userIdMapper.getType()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
@@ -1231,9 +1231,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			if ((userIdMapperModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						userIdMapper.getType(),
-						
-						userIdMapper.getExternalUserId()
+						userIdMapper.getType(), userIdMapper.getExternalUserId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_E, args,
@@ -1248,9 +1246,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		UserIdMapperModelImpl userIdMapperModelImpl = (UserIdMapperModelImpl)userIdMapper;
 
 		Object[] args = new Object[] {
-				Long.valueOf(userIdMapper.getUserId()),
-				
-				userIdMapper.getType()
+				userIdMapper.getUserId(), userIdMapper.getType()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
@@ -1259,8 +1255,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		if ((userIdMapperModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(userIdMapperModelImpl.getOriginalUserId()),
-					
+					userIdMapperModelImpl.getOriginalUserId(),
 					userIdMapperModelImpl.getOriginalType()
 				};
 
@@ -1269,9 +1264,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		}
 
 		args = new Object[] {
-				userIdMapper.getType(),
-				
-				userIdMapper.getExternalUserId()
+				userIdMapper.getType(), userIdMapper.getExternalUserId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_E, args);
@@ -1281,7 +1274,6 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 				FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					userIdMapperModelImpl.getOriginalType(),
-					
 					userIdMapperModelImpl.getOriginalExternalUserId()
 				};
 
@@ -1315,7 +1307,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 */
 	public UserIdMapper remove(long userIdMapperId)
 		throws NoSuchUserIdMapperException, SystemException {
-		return remove(Long.valueOf(userIdMapperId));
+		return remove((Serializable)userIdMapperId);
 	}
 
 	/**
@@ -1433,16 +1425,14 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			if ((userIdMapperModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(userIdMapperModelImpl.getOriginalUserId())
+						userIdMapperModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(userIdMapperModelImpl.getUserId())
-					};
+				args = new Object[] { userIdMapperModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -1483,13 +1473,24 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 *
 	 * @param primaryKey the primary key of the user ID mapper
 	 * @return the user ID mapper
-	 * @throws com.liferay.portal.NoSuchModelException if a user ID mapper with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchUserIdMapperException if a user ID mapper with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public UserIdMapper findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchUserIdMapperException, SystemException {
+		UserIdMapper userIdMapper = fetchByPrimaryKey(primaryKey);
+
+		if (userIdMapper == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchUserIdMapperException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return userIdMapper;
 	}
 
 	/**
@@ -1502,18 +1503,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 */
 	public UserIdMapper findByPrimaryKey(long userIdMapperId)
 		throws NoSuchUserIdMapperException, SystemException {
-		UserIdMapper userIdMapper = fetchByPrimaryKey(userIdMapperId);
-
-		if (userIdMapper == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + userIdMapperId);
-			}
-
-			throw new NoSuchUserIdMapperException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				userIdMapperId);
-		}
-
-		return userIdMapper;
+		return findByPrimaryKey((Serializable)userIdMapperId);
 	}
 
 	/**
@@ -1526,20 +1516,8 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	@Override
 	public UserIdMapper fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the user ID mapper with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param userIdMapperId the primary key of the user ID mapper
-	 * @return the user ID mapper, or <code>null</code> if a user ID mapper with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserIdMapper fetchByPrimaryKey(long userIdMapperId)
-		throws SystemException {
 		UserIdMapper userIdMapper = (UserIdMapper)EntityCacheUtil.getResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-				UserIdMapperImpl.class, userIdMapperId);
+				UserIdMapperImpl.class, primaryKey);
 
 		if (userIdMapper == _nullUserIdMapper) {
 			return null;
@@ -1552,20 +1530,19 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 				session = openSession();
 
 				userIdMapper = (UserIdMapper)session.get(UserIdMapperImpl.class,
-						Long.valueOf(userIdMapperId));
+						primaryKey);
 
 				if (userIdMapper != null) {
 					cacheResult(userIdMapper);
 				}
 				else {
 					EntityCacheUtil.putResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-						UserIdMapperImpl.class, userIdMapperId,
-						_nullUserIdMapper);
+						UserIdMapperImpl.class, primaryKey, _nullUserIdMapper);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-					UserIdMapperImpl.class, userIdMapperId);
+					UserIdMapperImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1575,6 +1552,18 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		}
 
 		return userIdMapper;
+	}
+
+	/**
+	 * Returns the user ID mapper with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param userIdMapperId the primary key of the user ID mapper
+	 * @return the user ID mapper, or <code>null</code> if a user ID mapper with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public UserIdMapper fetchByPrimaryKey(long userIdMapperId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)userIdMapperId);
 	}
 
 	/**

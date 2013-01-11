@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1007,16 +1006,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			query.append(_SQL_SELECT_SHOPPINGORDER_WHERE);
 
+			boolean bindNumber = false;
+
 			if (number == null) {
 				query.append(_FINDER_COLUMN_NUMBER_NUMBER_1);
 			}
+			else if (number.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NUMBER_NUMBER_3);
+			}
 			else {
-				if (number.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NUMBER_NUMBER_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NUMBER_NUMBER_2);
-				}
+				bindNumber = true;
+
+				query.append(_FINDER_COLUMN_NUMBER_NUMBER_2);
 			}
 
 			String sql = query.toString();
@@ -1030,7 +1031,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (number != null) {
+				if (bindNumber) {
 					qPos.add(number);
 				}
 
@@ -1107,16 +1108,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			query.append(_SQL_COUNT_SHOPPINGORDER_WHERE);
 
+			boolean bindNumber = false;
+
 			if (number == null) {
 				query.append(_FINDER_COLUMN_NUMBER_NUMBER_1);
 			}
+			else if (number.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NUMBER_NUMBER_3);
+			}
 			else {
-				if (number.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_NUMBER_NUMBER_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_NUMBER_NUMBER_2);
-				}
+				bindNumber = true;
+
+				query.append(_FINDER_COLUMN_NUMBER_NUMBER_2);
 			}
 
 			String sql = query.toString();
@@ -1130,7 +1133,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (number != null) {
+				if (bindNumber) {
 					qPos.add(number);
 				}
 
@@ -1153,7 +1156,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 	private static final String _FINDER_COLUMN_NUMBER_NUMBER_1 = "shoppingOrder.number IS NULL";
 	private static final String _FINDER_COLUMN_NUMBER_NUMBER_2 = "shoppingOrder.number = ?";
-	private static final String _FINDER_COLUMN_NUMBER_NUMBER_3 = "(shoppingOrder.number IS NULL OR shoppingOrder.number = ?)";
+	private static final String _FINDER_COLUMN_NUMBER_NUMBER_3 = "(shoppingOrder.number IS NULL OR shoppingOrder.number = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_PPTXNID = new FinderPath(ShoppingOrderModelImpl.ENTITY_CACHE_ENABLED,
 			ShoppingOrderModelImpl.FINDER_CACHE_ENABLED,
 			ShoppingOrderImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -1240,16 +1243,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			query.append(_SQL_SELECT_SHOPPINGORDER_WHERE);
 
+			boolean bindPpTxnId = false;
+
 			if (ppTxnId == null) {
 				query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_1);
 			}
+			else if (ppTxnId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_3);
+			}
 			else {
-				if (ppTxnId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_2);
-				}
+				bindPpTxnId = true;
+
+				query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_2);
 			}
 
 			String sql = query.toString();
@@ -1263,7 +1268,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (ppTxnId != null) {
+				if (bindPpTxnId) {
 					qPos.add(ppTxnId);
 				}
 
@@ -1347,16 +1352,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			query.append(_SQL_COUNT_SHOPPINGORDER_WHERE);
 
+			boolean bindPpTxnId = false;
+
 			if (ppTxnId == null) {
 				query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_1);
 			}
+			else if (ppTxnId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_3);
+			}
 			else {
-				if (ppTxnId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_2);
-				}
+				bindPpTxnId = true;
+
+				query.append(_FINDER_COLUMN_PPTXNID_PPTXNID_2);
 			}
 
 			String sql = query.toString();
@@ -1370,7 +1377,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (ppTxnId != null) {
+				if (bindPpTxnId) {
 					qPos.add(ppTxnId);
 				}
 
@@ -1393,7 +1400,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 	private static final String _FINDER_COLUMN_PPTXNID_PPTXNID_1 = "shoppingOrder.ppTxnId IS NULL";
 	private static final String _FINDER_COLUMN_PPTXNID_PPTXNID_2 = "shoppingOrder.ppTxnId = ?";
-	private static final String _FINDER_COLUMN_PPTXNID_PPTXNID_3 = "(shoppingOrder.ppTxnId IS NULL OR shoppingOrder.ppTxnId = ?)";
+	private static final String _FINDER_COLUMN_PPTXNID_PPTXNID_3 = "(shoppingOrder.ppTxnId IS NULL OR shoppingOrder.ppTxnId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_U_PPPS = new FinderPath(ShoppingOrderModelImpl.ENTITY_CACHE_ENABLED,
 			ShoppingOrderModelImpl.FINDER_CACHE_ENABLED,
 			ShoppingOrderImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -1532,16 +1539,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			query.append(_FINDER_COLUMN_G_U_PPPS_USERID_2);
 
+			boolean bindPpPaymentStatus = false;
+
 			if (ppPaymentStatus == null) {
 				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1);
 			}
+			else if (ppPaymentStatus.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
+			}
 			else {
-				if (ppPaymentStatus.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
-				}
+				bindPpPaymentStatus = true;
+
+				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
 			}
 
 			if (orderByComparator != null) {
@@ -1568,7 +1577,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 				qPos.add(userId);
 
-				if (ppPaymentStatus != null) {
+				if (bindPpPaymentStatus) {
 					qPos.add(ppPaymentStatus);
 				}
 
@@ -1791,16 +1800,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 		query.append(_FINDER_COLUMN_G_U_PPPS_USERID_2);
 
+		boolean bindPpPaymentStatus = false;
+
 		if (ppPaymentStatus == null) {
 			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1);
 		}
+		else if (ppPaymentStatus.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
+		}
 		else {
-			if (ppPaymentStatus.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
-			}
+			bindPpPaymentStatus = true;
+
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1875,7 +1886,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 		qPos.add(userId);
 
-		if (ppPaymentStatus != null) {
+		if (bindPpPaymentStatus) {
 			qPos.add(ppPaymentStatus);
 		}
 
@@ -1978,16 +1989,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 		query.append(_FINDER_COLUMN_G_U_PPPS_USERID_2);
 
+		boolean bindPpPaymentStatus = false;
+
 		if (ppPaymentStatus == null) {
 			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1);
 		}
+		else if (ppPaymentStatus.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
+		}
 		else {
-			if (ppPaymentStatus.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
-			}
+			bindPpPaymentStatus = true;
+
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
 		}
 
 		if (!getDB().isSupportsInlineDistinct()) {
@@ -2037,7 +2050,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			qPos.add(userId);
 
-			if (ppPaymentStatus != null) {
+			if (bindPpPaymentStatus) {
 				qPos.add(ppPaymentStatus);
 			}
 
@@ -2125,16 +2138,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 		query.append(_FINDER_COLUMN_G_U_PPPS_USERID_2);
 
+		boolean bindPpPaymentStatus = false;
+
 		if (ppPaymentStatus == null) {
 			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1);
 		}
+		else if (ppPaymentStatus.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
+		}
 		else {
-			if (ppPaymentStatus.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
-			}
+			bindPpPaymentStatus = true;
+
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
 		}
 
 		if (!getDB().isSupportsInlineDistinct()) {
@@ -2239,7 +2254,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 		qPos.add(userId);
 
-		if (ppPaymentStatus != null) {
+		if (bindPpPaymentStatus) {
 			qPos.add(ppPaymentStatus);
 		}
 
@@ -2304,16 +2319,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			query.append(_FINDER_COLUMN_G_U_PPPS_USERID_2);
 
+			boolean bindPpPaymentStatus = false;
+
 			if (ppPaymentStatus == null) {
 				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1);
 			}
+			else if (ppPaymentStatus.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
+			}
 			else {
-				if (ppPaymentStatus.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
-				}
+				bindPpPaymentStatus = true;
+
+				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
 			}
 
 			String sql = query.toString();
@@ -2331,7 +2348,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 				qPos.add(userId);
 
-				if (ppPaymentStatus != null) {
+				if (bindPpPaymentStatus) {
 					qPos.add(ppPaymentStatus);
 				}
 
@@ -2375,16 +2392,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 		query.append(_FINDER_COLUMN_G_U_PPPS_USERID_2);
 
+		boolean bindPpPaymentStatus = false;
+
 		if (ppPaymentStatus == null) {
 			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1);
 		}
+		else if (ppPaymentStatus.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
+		}
 		else {
-			if (ppPaymentStatus.equals(StringPool.BLANK)) {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3);
-			}
-			else {
-				query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
-			}
+			bindPpPaymentStatus = true;
+
+			query.append(_FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -2407,7 +2426,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 
 			qPos.add(userId);
 
-			if (ppPaymentStatus != null) {
+			if (bindPpPaymentStatus) {
 				qPos.add(ppPaymentStatus);
 			}
 
@@ -2427,7 +2446,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 	private static final String _FINDER_COLUMN_G_U_PPPS_USERID_2 = "shoppingOrder.userId = ? AND ";
 	private static final String _FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_1 = "shoppingOrder.ppPaymentStatus IS NULL";
 	private static final String _FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_2 = "shoppingOrder.ppPaymentStatus = ?";
-	private static final String _FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3 = "(shoppingOrder.ppPaymentStatus IS NULL OR shoppingOrder.ppPaymentStatus = ?)";
+	private static final String _FINDER_COLUMN_G_U_PPPS_PPPAYMENTSTATUS_3 = "(shoppingOrder.ppPaymentStatus IS NULL OR shoppingOrder.ppPaymentStatus = '')";
 
 	/**
 	 * Caches the shopping order in the entity cache if it is enabled.
@@ -2613,7 +2632,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 	 */
 	public ShoppingOrder remove(long orderId)
 		throws NoSuchOrderException, SystemException {
-		return remove(Long.valueOf(orderId));
+		return remove((Serializable)orderId);
 	}
 
 	/**
@@ -2731,16 +2750,14 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 			if ((shoppingOrderModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingOrderModelImpl.getOriginalGroupId())
+						shoppingOrderModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(shoppingOrderModelImpl.getGroupId())
-					};
+				args = new Object[] { shoppingOrderModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2750,9 +2767,8 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 			if ((shoppingOrderModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U_PPPS.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(shoppingOrderModelImpl.getOriginalGroupId()),
-						Long.valueOf(shoppingOrderModelImpl.getOriginalUserId()),
-						
+						shoppingOrderModelImpl.getOriginalGroupId(),
+						shoppingOrderModelImpl.getOriginalUserId(),
 						shoppingOrderModelImpl.getOriginalPpPaymentStatus()
 					};
 
@@ -2761,9 +2777,8 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 					args);
 
 				args = new Object[] {
-						Long.valueOf(shoppingOrderModelImpl.getGroupId()),
-						Long.valueOf(shoppingOrderModelImpl.getUserId()),
-						
+						shoppingOrderModelImpl.getGroupId(),
+						shoppingOrderModelImpl.getUserId(),
 						shoppingOrderModelImpl.getPpPaymentStatus()
 					};
 
@@ -2853,13 +2868,24 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 	 *
 	 * @param primaryKey the primary key of the shopping order
 	 * @return the shopping order
-	 * @throws com.liferay.portal.NoSuchModelException if a shopping order with the primary key could not be found
+	 * @throws com.liferay.portlet.shopping.NoSuchOrderException if a shopping order with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ShoppingOrder findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchOrderException, SystemException {
+		ShoppingOrder shoppingOrder = fetchByPrimaryKey(primaryKey);
+
+		if (shoppingOrder == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchOrderException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return shoppingOrder;
 	}
 
 	/**
@@ -2872,18 +2898,7 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 	 */
 	public ShoppingOrder findByPrimaryKey(long orderId)
 		throws NoSuchOrderException, SystemException {
-		ShoppingOrder shoppingOrder = fetchByPrimaryKey(orderId);
-
-		if (shoppingOrder == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + orderId);
-			}
-
-			throw new NoSuchOrderException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				orderId);
-		}
-
-		return shoppingOrder;
+		return findByPrimaryKey((Serializable)orderId);
 	}
 
 	/**
@@ -2896,20 +2911,8 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 	@Override
 	public ShoppingOrder fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the shopping order with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param orderId the primary key of the shopping order
-	 * @return the shopping order, or <code>null</code> if a shopping order with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ShoppingOrder fetchByPrimaryKey(long orderId)
-		throws SystemException {
 		ShoppingOrder shoppingOrder = (ShoppingOrder)EntityCacheUtil.getResult(ShoppingOrderModelImpl.ENTITY_CACHE_ENABLED,
-				ShoppingOrderImpl.class, orderId);
+				ShoppingOrderImpl.class, primaryKey);
 
 		if (shoppingOrder == _nullShoppingOrder) {
 			return null;
@@ -2922,19 +2925,19 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 				session = openSession();
 
 				shoppingOrder = (ShoppingOrder)session.get(ShoppingOrderImpl.class,
-						Long.valueOf(orderId));
+						primaryKey);
 
 				if (shoppingOrder != null) {
 					cacheResult(shoppingOrder);
 				}
 				else {
 					EntityCacheUtil.putResult(ShoppingOrderModelImpl.ENTITY_CACHE_ENABLED,
-						ShoppingOrderImpl.class, orderId, _nullShoppingOrder);
+						ShoppingOrderImpl.class, primaryKey, _nullShoppingOrder);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(ShoppingOrderModelImpl.ENTITY_CACHE_ENABLED,
-					ShoppingOrderImpl.class, orderId);
+					ShoppingOrderImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -2944,6 +2947,18 @@ public class ShoppingOrderPersistenceImpl extends BasePersistenceImpl<ShoppingOr
 		}
 
 		return shoppingOrder;
+	}
+
+	/**
+	 * Returns the shopping order with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param orderId the primary key of the shopping order
+	 * @return the shopping order, or <code>null</code> if a shopping order with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ShoppingOrder fetchByPrimaryKey(long orderId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)orderId);
 	}
 
 	/**

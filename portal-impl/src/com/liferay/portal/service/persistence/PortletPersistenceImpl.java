@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPortletException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -652,16 +651,18 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 			query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_C_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_C_P_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -677,7 +678,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 				qPos.add(companyId);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -760,16 +761,18 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 			query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
 
+			boolean bindPortletId = false;
+
 			if (portletId == null) {
 				query.append(_FINDER_COLUMN_C_P_PORTLETID_1);
 			}
+			else if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_P_PORTLETID_3);
+			}
 			else {
-				if (portletId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_C_P_PORTLETID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_C_P_PORTLETID_2);
-				}
+				bindPortletId = true;
+
+				query.append(_FINDER_COLUMN_C_P_PORTLETID_2);
 			}
 
 			String sql = query.toString();
@@ -785,7 +788,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 				qPos.add(companyId);
 
-				if (portletId != null) {
+				if (bindPortletId) {
 					qPos.add(portletId);
 				}
 
@@ -809,7 +812,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	private static final String _FINDER_COLUMN_C_P_COMPANYID_2 = "portlet.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_P_PORTLETID_1 = "portlet.portletId IS NULL";
 	private static final String _FINDER_COLUMN_C_P_PORTLETID_2 = "portlet.portletId = ?";
-	private static final String _FINDER_COLUMN_C_P_PORTLETID_3 = "(portlet.portletId IS NULL OR portlet.portletId = ?)";
+	private static final String _FINDER_COLUMN_C_P_PORTLETID_3 = "(portlet.portletId IS NULL OR portlet.portletId = '')";
 
 	/**
 	 * Caches the portlet in the entity cache if it is enabled.
@@ -821,11 +824,8 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			PortletImpl.class, portlet.getPrimaryKey(), portlet);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_P,
-			new Object[] {
-				Long.valueOf(portlet.getCompanyId()),
-				
-			portlet.getPortletId()
-			}, portlet);
+			new Object[] { portlet.getCompanyId(), portlet.getPortletId() },
+			portlet);
 
 		portlet.resetOriginalValues();
 	}
@@ -902,9 +902,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	protected void cacheUniqueFindersCache(Portlet portlet) {
 		if (portlet.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(portlet.getCompanyId()),
-					
-					portlet.getPortletId()
+					portlet.getCompanyId(), portlet.getPortletId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_P, args,
@@ -917,9 +915,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			if ((portletModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portlet.getCompanyId()),
-						
-						portlet.getPortletId()
+						portlet.getCompanyId(), portlet.getPortletId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_P, args,
@@ -934,9 +930,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		PortletModelImpl portletModelImpl = (PortletModelImpl)portlet;
 
 		Object[] args = new Object[] {
-				Long.valueOf(portlet.getCompanyId()),
-				
-				portlet.getPortletId()
+				portlet.getCompanyId(), portlet.getPortletId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
@@ -945,8 +939,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		if ((portletModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_P.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(portletModelImpl.getOriginalCompanyId()),
-					
+					portletModelImpl.getOriginalCompanyId(),
 					portletModelImpl.getOriginalPortletId()
 				};
 
@@ -980,7 +973,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	 */
 	public Portlet remove(long id)
 		throws NoSuchPortletException, SystemException {
-		return remove(Long.valueOf(id));
+		return remove((Serializable)id);
 	}
 
 	/**
@@ -1095,7 +1088,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			if ((portletModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(portletModelImpl.getOriginalCompanyId())
+						portletModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -1103,9 +1096,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(portletModelImpl.getCompanyId())
-					};
+				args = new Object[] { portletModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -1147,13 +1138,24 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	 *
 	 * @param primaryKey the primary key of the portlet
 	 * @return the portlet
-	 * @throws com.liferay.portal.NoSuchModelException if a portlet with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPortletException if a portlet with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Portlet findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPortletException, SystemException {
+		Portlet portlet = fetchByPrimaryKey(primaryKey);
+
+		if (portlet == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPortletException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return portlet;
 	}
 
 	/**
@@ -1166,18 +1168,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	 */
 	public Portlet findByPrimaryKey(long id)
 		throws NoSuchPortletException, SystemException {
-		Portlet portlet = fetchByPrimaryKey(id);
-
-		if (portlet == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + id);
-			}
-
-			throw new NoSuchPortletException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				id);
-		}
-
-		return portlet;
+		return findByPrimaryKey((Serializable)id);
 	}
 
 	/**
@@ -1190,19 +1181,8 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	@Override
 	public Portlet fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the portlet with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param id the primary key of the portlet
-	 * @return the portlet, or <code>null</code> if a portlet with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Portlet fetchByPrimaryKey(long id) throws SystemException {
 		Portlet portlet = (Portlet)EntityCacheUtil.getResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
-				PortletImpl.class, id);
+				PortletImpl.class, primaryKey);
 
 		if (portlet == _nullPortlet) {
 			return null;
@@ -1214,20 +1194,19 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				portlet = (Portlet)session.get(PortletImpl.class,
-						Long.valueOf(id));
+				portlet = (Portlet)session.get(PortletImpl.class, primaryKey);
 
 				if (portlet != null) {
 					cacheResult(portlet);
 				}
 				else {
 					EntityCacheUtil.putResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
-						PortletImpl.class, id, _nullPortlet);
+						PortletImpl.class, primaryKey, _nullPortlet);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
-					PortletImpl.class, id);
+					PortletImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1237,6 +1216,17 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		}
 
 		return portlet;
+	}
+
+	/**
+	 * Returns the portlet with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param id the primary key of the portlet
+	 * @return the portlet, or <code>null</code> if a portlet with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Portlet fetchByPrimaryKey(long id) throws SystemException {
+		return fetchByPrimaryKey((Serializable)id);
 	}
 
 	/**

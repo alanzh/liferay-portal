@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchPasswordTrackerException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -666,7 +665,7 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 	 */
 	public PasswordTracker remove(long passwordTrackerId)
 		throws NoSuchPasswordTrackerException, SystemException {
-		return remove(Long.valueOf(passwordTrackerId));
+		return remove((Serializable)passwordTrackerId);
 	}
 
 	/**
@@ -784,16 +783,14 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 			if ((passwordTrackerModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(passwordTrackerModelImpl.getOriginalUserId())
+						passwordTrackerModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(passwordTrackerModelImpl.getUserId())
-					};
+				args = new Object[] { passwordTrackerModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -831,13 +828,24 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 	 *
 	 * @param primaryKey the primary key of the password tracker
 	 * @return the password tracker
-	 * @throws com.liferay.portal.NoSuchModelException if a password tracker with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchPasswordTrackerException if a password tracker with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public PasswordTracker findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchPasswordTrackerException, SystemException {
+		PasswordTracker passwordTracker = fetchByPrimaryKey(primaryKey);
+
+		if (passwordTracker == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchPasswordTrackerException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return passwordTracker;
 	}
 
 	/**
@@ -850,18 +858,7 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 	 */
 	public PasswordTracker findByPrimaryKey(long passwordTrackerId)
 		throws NoSuchPasswordTrackerException, SystemException {
-		PasswordTracker passwordTracker = fetchByPrimaryKey(passwordTrackerId);
-
-		if (passwordTracker == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + passwordTrackerId);
-			}
-
-			throw new NoSuchPasswordTrackerException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				passwordTrackerId);
-		}
-
-		return passwordTracker;
+		return findByPrimaryKey((Serializable)passwordTrackerId);
 	}
 
 	/**
@@ -874,20 +871,8 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 	@Override
 	public PasswordTracker fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the password tracker with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param passwordTrackerId the primary key of the password tracker
-	 * @return the password tracker, or <code>null</code> if a password tracker with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public PasswordTracker fetchByPrimaryKey(long passwordTrackerId)
-		throws SystemException {
 		PasswordTracker passwordTracker = (PasswordTracker)EntityCacheUtil.getResult(PasswordTrackerModelImpl.ENTITY_CACHE_ENABLED,
-				PasswordTrackerImpl.class, passwordTrackerId);
+				PasswordTrackerImpl.class, primaryKey);
 
 		if (passwordTracker == _nullPasswordTracker) {
 			return null;
@@ -900,20 +885,20 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 				session = openSession();
 
 				passwordTracker = (PasswordTracker)session.get(PasswordTrackerImpl.class,
-						Long.valueOf(passwordTrackerId));
+						primaryKey);
 
 				if (passwordTracker != null) {
 					cacheResult(passwordTracker);
 				}
 				else {
 					EntityCacheUtil.putResult(PasswordTrackerModelImpl.ENTITY_CACHE_ENABLED,
-						PasswordTrackerImpl.class, passwordTrackerId,
+						PasswordTrackerImpl.class, primaryKey,
 						_nullPasswordTracker);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(PasswordTrackerModelImpl.ENTITY_CACHE_ENABLED,
-					PasswordTrackerImpl.class, passwordTrackerId);
+					PasswordTrackerImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -923,6 +908,18 @@ public class PasswordTrackerPersistenceImpl extends BasePersistenceImpl<Password
 		}
 
 		return passwordTracker;
+	}
+
+	/**
+	 * Returns the password tracker with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param passwordTrackerId the primary key of the password tracker
+	 * @return the password tracker, or <code>null</code> if a password tracker with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public PasswordTracker fetchByPrimaryKey(long passwordTrackerId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)passwordTrackerId);
 	}
 
 	/**

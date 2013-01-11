@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.softwarecatalog.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.jdbc.MappingSqlQuery;
@@ -2405,28 +2404,32 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 
 			query.append(_SQL_SELECT_SCPRODUCTENTRY_WHERE);
 
+			boolean bindRepoGroupId = false;
+
 			if (repoGroupId == null) {
 				query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_1);
 			}
-			else {
-				if (repoGroupId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_2);
-				}
+			else if (repoGroupId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_3);
 			}
+			else {
+				bindRepoGroupId = true;
+
+				query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_2);
+			}
+
+			boolean bindRepoArtifactId = false;
 
 			if (repoArtifactId == null) {
 				query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_1);
 			}
+			else if (repoArtifactId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_3);
+			}
 			else {
-				if (repoArtifactId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_2);
-				}
+				bindRepoArtifactId = true;
+
+				query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_2);
 			}
 
 			String sql = query.toString();
@@ -2440,11 +2443,11 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (repoGroupId != null) {
+				if (bindRepoGroupId) {
 					qPos.add(repoGroupId);
 				}
 
-				if (repoArtifactId != null) {
+				if (bindRepoArtifactId) {
 					qPos.add(repoArtifactId);
 				}
 
@@ -2535,28 +2538,32 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 
 			query.append(_SQL_COUNT_SCPRODUCTENTRY_WHERE);
 
+			boolean bindRepoGroupId = false;
+
 			if (repoGroupId == null) {
 				query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_1);
 			}
-			else {
-				if (repoGroupId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_2);
-				}
+			else if (repoGroupId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_3);
 			}
+			else {
+				bindRepoGroupId = true;
+
+				query.append(_FINDER_COLUMN_RG_RA_REPOGROUPID_2);
+			}
+
+			boolean bindRepoArtifactId = false;
 
 			if (repoArtifactId == null) {
 				query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_1);
 			}
+			else if (repoArtifactId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_3);
+			}
 			else {
-				if (repoArtifactId.equals(StringPool.BLANK)) {
-					query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_3);
-				}
-				else {
-					query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_2);
-				}
+				bindRepoArtifactId = true;
+
+				query.append(_FINDER_COLUMN_RG_RA_REPOARTIFACTID_2);
 			}
 
 			String sql = query.toString();
@@ -2570,11 +2577,11 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				if (repoGroupId != null) {
+				if (bindRepoGroupId) {
 					qPos.add(repoGroupId);
 				}
 
-				if (repoArtifactId != null) {
+				if (bindRepoArtifactId) {
 					qPos.add(repoArtifactId);
 				}
 
@@ -2597,10 +2604,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 
 	private static final String _FINDER_COLUMN_RG_RA_REPOGROUPID_1 = "scProductEntry.repoGroupId IS NULL AND ";
 	private static final String _FINDER_COLUMN_RG_RA_REPOGROUPID_2 = "lower(scProductEntry.repoGroupId) = lower(CAST_TEXT(?)) AND ";
-	private static final String _FINDER_COLUMN_RG_RA_REPOGROUPID_3 = "(scProductEntry.repoGroupId IS NULL OR lower(scProductEntry.repoGroupId) = lower(CAST_TEXT(?))) AND ";
+	private static final String _FINDER_COLUMN_RG_RA_REPOGROUPID_3 = "(scProductEntry.repoGroupId IS NULL OR scProductEntry.repoGroupId = '') AND ";
 	private static final String _FINDER_COLUMN_RG_RA_REPOARTIFACTID_1 = "scProductEntry.repoArtifactId IS NULL";
 	private static final String _FINDER_COLUMN_RG_RA_REPOARTIFACTID_2 = "lower(scProductEntry.repoArtifactId) = lower(CAST_TEXT(?))";
-	private static final String _FINDER_COLUMN_RG_RA_REPOARTIFACTID_3 = "(scProductEntry.repoArtifactId IS NULL OR lower(scProductEntry.repoArtifactId) = lower(CAST_TEXT(?)))";
+	private static final String _FINDER_COLUMN_RG_RA_REPOARTIFACTID_3 = "(scProductEntry.repoArtifactId IS NULL OR scProductEntry.repoArtifactId = '')";
 
 	/**
 	 * Caches the s c product entry in the entity cache if it is enabled.
@@ -2615,8 +2622,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_RG_RA,
 			new Object[] {
 				scProductEntry.getRepoGroupId(),
-				
-			scProductEntry.getRepoArtifactId()
+				scProductEntry.getRepoArtifactId()
 			}, scProductEntry);
 
 		scProductEntry.resetOriginalValues();
@@ -2695,7 +2701,6 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		if (scProductEntry.isNew()) {
 			Object[] args = new Object[] {
 					scProductEntry.getRepoGroupId(),
-					
 					scProductEntry.getRepoArtifactId()
 				};
 
@@ -2711,7 +2716,6 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 					FINDER_PATH_FETCH_BY_RG_RA.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						scProductEntry.getRepoGroupId(),
-						
 						scProductEntry.getRepoArtifactId()
 					};
 
@@ -2728,7 +2732,6 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 
 		Object[] args = new Object[] {
 				scProductEntry.getRepoGroupId(),
-				
 				scProductEntry.getRepoArtifactId()
 			};
 
@@ -2739,7 +2742,6 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 				FINDER_PATH_FETCH_BY_RG_RA.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					scProductEntryModelImpl.getOriginalRepoGroupId(),
-					
 					scProductEntryModelImpl.getOriginalRepoArtifactId()
 				};
 
@@ -2773,7 +2775,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 	 */
 	public SCProductEntry remove(long productEntryId)
 		throws NoSuchProductEntryException, SystemException {
-		return remove(Long.valueOf(productEntryId));
+		return remove((Serializable)productEntryId);
 	}
 
 	/**
@@ -2901,16 +2903,14 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			if ((scProductEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(scProductEntryModelImpl.getOriginalGroupId())
+						scProductEntryModelImpl.getOriginalGroupId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(scProductEntryModelImpl.getGroupId())
-					};
+				args = new Object[] { scProductEntryModelImpl.getGroupId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -2920,7 +2920,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			if ((scProductEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(scProductEntryModelImpl.getOriginalCompanyId())
+						scProductEntryModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -2928,9 +2928,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(scProductEntryModelImpl.getCompanyId())
-					};
+				args = new Object[] { scProductEntryModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -2941,8 +2939,8 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			if ((scProductEntryModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(scProductEntryModelImpl.getOriginalGroupId()),
-						Long.valueOf(scProductEntryModelImpl.getOriginalUserId())
+						scProductEntryModelImpl.getOriginalGroupId(),
+						scProductEntryModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U, args);
@@ -2950,8 +2948,8 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 					args);
 
 				args = new Object[] {
-						Long.valueOf(scProductEntryModelImpl.getGroupId()),
-						Long.valueOf(scProductEntryModelImpl.getUserId())
+						scProductEntryModelImpl.getGroupId(),
+						scProductEntryModelImpl.getUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U, args);
@@ -3005,13 +3003,24 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 	 *
 	 * @param primaryKey the primary key of the s c product entry
 	 * @return the s c product entry
-	 * @throws com.liferay.portal.NoSuchModelException if a s c product entry with the primary key could not be found
+	 * @throws com.liferay.portlet.softwarecatalog.NoSuchProductEntryException if a s c product entry with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SCProductEntry findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchProductEntryException, SystemException {
+		SCProductEntry scProductEntry = fetchByPrimaryKey(primaryKey);
+
+		if (scProductEntry == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchProductEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return scProductEntry;
 	}
 
 	/**
@@ -3024,18 +3033,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 	 */
 	public SCProductEntry findByPrimaryKey(long productEntryId)
 		throws NoSuchProductEntryException, SystemException {
-		SCProductEntry scProductEntry = fetchByPrimaryKey(productEntryId);
-
-		if (scProductEntry == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + productEntryId);
-			}
-
-			throw new NoSuchProductEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				productEntryId);
-		}
-
-		return scProductEntry;
+		return findByPrimaryKey((Serializable)productEntryId);
 	}
 
 	/**
@@ -3048,20 +3046,8 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 	@Override
 	public SCProductEntry fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the s c product entry with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param productEntryId the primary key of the s c product entry
-	 * @return the s c product entry, or <code>null</code> if a s c product entry with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SCProductEntry fetchByPrimaryKey(long productEntryId)
-		throws SystemException {
 		SCProductEntry scProductEntry = (SCProductEntry)EntityCacheUtil.getResult(SCProductEntryModelImpl.ENTITY_CACHE_ENABLED,
-				SCProductEntryImpl.class, productEntryId);
+				SCProductEntryImpl.class, primaryKey);
 
 		if (scProductEntry == _nullSCProductEntry) {
 			return null;
@@ -3074,20 +3060,20 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 				session = openSession();
 
 				scProductEntry = (SCProductEntry)session.get(SCProductEntryImpl.class,
-						Long.valueOf(productEntryId));
+						primaryKey);
 
 				if (scProductEntry != null) {
 					cacheResult(scProductEntry);
 				}
 				else {
 					EntityCacheUtil.putResult(SCProductEntryModelImpl.ENTITY_CACHE_ENABLED,
-						SCProductEntryImpl.class, productEntryId,
+						SCProductEntryImpl.class, primaryKey,
 						_nullSCProductEntry);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(SCProductEntryModelImpl.ENTITY_CACHE_ENABLED,
-					SCProductEntryImpl.class, productEntryId);
+					SCProductEntryImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3097,6 +3083,18 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		}
 
 		return scProductEntry;
+	}
+
+	/**
+	 * Returns the s c product entry with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param productEntryId the primary key of the s c product entry
+	 * @return the s c product entry, or <code>null</code> if a s c product entry with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SCProductEntry fetchByPrimaryKey(long productEntryId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)productEntryId);
 	}
 
 	/**

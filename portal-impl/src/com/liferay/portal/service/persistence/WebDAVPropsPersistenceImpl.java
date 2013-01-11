@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.NoSuchWebDAVPropsException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
@@ -318,10 +317,8 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 			WebDAVPropsImpl.class, webDAVProps.getPrimaryKey(), webDAVProps);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
-				Long.valueOf(webDAVProps.getClassNameId()),
-				Long.valueOf(webDAVProps.getClassPK())
-			}, webDAVProps);
+			new Object[] { webDAVProps.getClassNameId(), webDAVProps.getClassPK() },
+			webDAVProps);
 
 		webDAVProps.resetOriginalValues();
 	}
@@ -398,8 +395,7 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 	protected void cacheUniqueFindersCache(WebDAVProps webDAVProps) {
 		if (webDAVProps.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(webDAVProps.getClassNameId()),
-					Long.valueOf(webDAVProps.getClassPK())
+					webDAVProps.getClassNameId(), webDAVProps.getClassPK()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -413,8 +409,7 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 			if ((webDAVPropsModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(webDAVProps.getClassNameId()),
-						Long.valueOf(webDAVProps.getClassPK())
+						webDAVProps.getClassNameId(), webDAVProps.getClassPK()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
@@ -429,8 +424,7 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 		WebDAVPropsModelImpl webDAVPropsModelImpl = (WebDAVPropsModelImpl)webDAVProps;
 
 		Object[] args = new Object[] {
-				Long.valueOf(webDAVProps.getClassNameId()),
-				Long.valueOf(webDAVProps.getClassPK())
+				webDAVProps.getClassNameId(), webDAVProps.getClassPK()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -439,8 +433,8 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 		if ((webDAVPropsModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(webDAVPropsModelImpl.getOriginalClassNameId()),
-					Long.valueOf(webDAVPropsModelImpl.getOriginalClassPK())
+					webDAVPropsModelImpl.getOriginalClassNameId(),
+					webDAVPropsModelImpl.getOriginalClassPK()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -473,7 +467,7 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 	 */
 	public WebDAVProps remove(long webDavPropsId)
 		throws NoSuchWebDAVPropsException, SystemException {
-		return remove(Long.valueOf(webDavPropsId));
+		return remove((Serializable)webDavPropsId);
 	}
 
 	/**
@@ -620,13 +614,24 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 	 *
 	 * @param primaryKey the primary key of the web d a v props
 	 * @return the web d a v props
-	 * @throws com.liferay.portal.NoSuchModelException if a web d a v props with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchWebDAVPropsException if a web d a v props with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public WebDAVProps findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchWebDAVPropsException, SystemException {
+		WebDAVProps webDAVProps = fetchByPrimaryKey(primaryKey);
+
+		if (webDAVProps == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchWebDAVPropsException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return webDAVProps;
 	}
 
 	/**
@@ -639,18 +644,7 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 	 */
 	public WebDAVProps findByPrimaryKey(long webDavPropsId)
 		throws NoSuchWebDAVPropsException, SystemException {
-		WebDAVProps webDAVProps = fetchByPrimaryKey(webDavPropsId);
-
-		if (webDAVProps == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + webDavPropsId);
-			}
-
-			throw new NoSuchWebDAVPropsException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				webDavPropsId);
-		}
-
-		return webDAVProps;
+		return findByPrimaryKey((Serializable)webDavPropsId);
 	}
 
 	/**
@@ -663,20 +657,8 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 	@Override
 	public WebDAVProps fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the web d a v props with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param webDavPropsId the primary key of the web d a v props
-	 * @return the web d a v props, or <code>null</code> if a web d a v props with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public WebDAVProps fetchByPrimaryKey(long webDavPropsId)
-		throws SystemException {
 		WebDAVProps webDAVProps = (WebDAVProps)EntityCacheUtil.getResult(WebDAVPropsModelImpl.ENTITY_CACHE_ENABLED,
-				WebDAVPropsImpl.class, webDavPropsId);
+				WebDAVPropsImpl.class, primaryKey);
 
 		if (webDAVProps == _nullWebDAVProps) {
 			return null;
@@ -689,19 +671,19 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 				session = openSession();
 
 				webDAVProps = (WebDAVProps)session.get(WebDAVPropsImpl.class,
-						Long.valueOf(webDavPropsId));
+						primaryKey);
 
 				if (webDAVProps != null) {
 					cacheResult(webDAVProps);
 				}
 				else {
 					EntityCacheUtil.putResult(WebDAVPropsModelImpl.ENTITY_CACHE_ENABLED,
-						WebDAVPropsImpl.class, webDavPropsId, _nullWebDAVProps);
+						WebDAVPropsImpl.class, primaryKey, _nullWebDAVProps);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(WebDAVPropsModelImpl.ENTITY_CACHE_ENABLED,
-					WebDAVPropsImpl.class, webDavPropsId);
+					WebDAVPropsImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -711,6 +693,18 @@ public class WebDAVPropsPersistenceImpl extends BasePersistenceImpl<WebDAVProps>
 		}
 
 		return webDAVProps;
+	}
+
+	/**
+	 * Returns the web d a v props with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param webDavPropsId the primary key of the web d a v props
+	 * @return the web d a v props, or <code>null</code> if a web d a v props with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public WebDAVProps fetchByPrimaryKey(long webDavPropsId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)webDavPropsId);
 	}
 
 	/**

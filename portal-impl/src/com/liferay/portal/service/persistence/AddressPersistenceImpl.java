@@ -15,7 +15,6 @@
 package com.liferay.portal.service.persistence;
 
 import com.liferay.portal.NoSuchAddressException;
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -3381,7 +3380,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 */
 	public Address remove(long addressId)
 		throws NoSuchAddressException, SystemException {
-		return remove(Long.valueOf(addressId));
+		return remove((Serializable)addressId);
 	}
 
 	/**
@@ -3496,7 +3495,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId())
+						addressModelImpl.getOriginalCompanyId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
@@ -3504,9 +3503,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId())
-					};
+				args = new Object[] { addressModelImpl.getCompanyId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,
 					args);
@@ -3517,14 +3514,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalUserId())
+						addressModelImpl.getOriginalUserId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 
-				args = new Object[] { Long.valueOf(addressModelImpl.getUserId()) };
+				args = new Object[] { addressModelImpl.getUserId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
@@ -3534,8 +3531,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -3543,8 +3540,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
@@ -3555,9 +3552,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId()),
-						Long.valueOf(addressModelImpl.getOriginalClassPK())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId(),
+						addressModelImpl.getOriginalClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -3565,9 +3562,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId()),
-						Long.valueOf(addressModelImpl.getClassPK())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId(),
+						addressModelImpl.getClassPK()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
@@ -3578,10 +3575,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_M.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId()),
-						Long.valueOf(addressModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(addressModelImpl.getOriginalMailing())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId(),
+						addressModelImpl.getOriginalClassPK(),
+						addressModelImpl.getOriginalMailing()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_M, args);
@@ -3589,10 +3586,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId()),
-						Long.valueOf(addressModelImpl.getClassPK()),
-						Boolean.valueOf(addressModelImpl.getMailing())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId(),
+						addressModelImpl.getClassPK(),
+						addressModelImpl.getMailing()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_M, args);
@@ -3603,10 +3600,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			if ((addressModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_C_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(addressModelImpl.getOriginalCompanyId()),
-						Long.valueOf(addressModelImpl.getOriginalClassNameId()),
-						Long.valueOf(addressModelImpl.getOriginalClassPK()),
-						Boolean.valueOf(addressModelImpl.getOriginalPrimary())
+						addressModelImpl.getOriginalCompanyId(),
+						addressModelImpl.getOriginalClassNameId(),
+						addressModelImpl.getOriginalClassPK(),
+						addressModelImpl.getOriginalPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3614,10 +3611,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 					args);
 
 				args = new Object[] {
-						Long.valueOf(addressModelImpl.getCompanyId()),
-						Long.valueOf(addressModelImpl.getClassNameId()),
-						Long.valueOf(addressModelImpl.getClassPK()),
-						Boolean.valueOf(addressModelImpl.getPrimary())
+						addressModelImpl.getCompanyId(),
+						addressModelImpl.getClassNameId(),
+						addressModelImpl.getClassPK(),
+						addressModelImpl.getPrimary()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C_C_P, args);
@@ -3669,13 +3666,24 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param primaryKey the primary key of the address
 	 * @return the address
-	 * @throws com.liferay.portal.NoSuchModelException if a address with the primary key could not be found
+	 * @throws com.liferay.portal.NoSuchAddressException if a address with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Address findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchAddressException, SystemException {
+		Address address = fetchByPrimaryKey(primaryKey);
+
+		if (address == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchAddressException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return address;
 	}
 
 	/**
@@ -3688,18 +3696,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 */
 	public Address findByPrimaryKey(long addressId)
 		throws NoSuchAddressException, SystemException {
-		Address address = fetchByPrimaryKey(addressId);
-
-		if (address == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + addressId);
-			}
-
-			throw new NoSuchAddressException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				addressId);
-		}
-
-		return address;
+		return findByPrimaryKey((Serializable)addressId);
 	}
 
 	/**
@@ -3712,19 +3709,8 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	@Override
 	public Address fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the address with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param addressId the primary key of the address
-	 * @return the address, or <code>null</code> if a address with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Address fetchByPrimaryKey(long addressId) throws SystemException {
 		Address address = (Address)EntityCacheUtil.getResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-				AddressImpl.class, addressId);
+				AddressImpl.class, primaryKey);
 
 		if (address == _nullAddress) {
 			return null;
@@ -3736,20 +3722,19 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				address = (Address)session.get(AddressImpl.class,
-						Long.valueOf(addressId));
+				address = (Address)session.get(AddressImpl.class, primaryKey);
 
 				if (address != null) {
 					cacheResult(address);
 				}
 				else {
 					EntityCacheUtil.putResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-						AddressImpl.class, addressId, _nullAddress);
+						AddressImpl.class, primaryKey, _nullAddress);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-					AddressImpl.class, addressId);
+					AddressImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -3759,6 +3744,17 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		}
 
 		return address;
+	}
+
+	/**
+	 * Returns the address with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param addressId the primary key of the address
+	 * @return the address, or <code>null</code> if a address with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Address fetchByPrimaryKey(long addressId) throws SystemException {
+		return fetchByPrimaryKey((Serializable)addressId);
 	}
 
 	/**

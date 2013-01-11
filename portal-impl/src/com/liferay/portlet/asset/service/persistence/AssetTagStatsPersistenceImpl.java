@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
-import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -1278,8 +1277,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_C,
 			new Object[] {
-				Long.valueOf(assetTagStats.getTagId()),
-				Long.valueOf(assetTagStats.getClassNameId())
+				assetTagStats.getTagId(), assetTagStats.getClassNameId()
 			}, assetTagStats);
 
 		assetTagStats.resetOriginalValues();
@@ -1357,8 +1355,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 	protected void cacheUniqueFindersCache(AssetTagStats assetTagStats) {
 		if (assetTagStats.isNew()) {
 			Object[] args = new Object[] {
-					Long.valueOf(assetTagStats.getTagId()),
-					Long.valueOf(assetTagStats.getClassNameId())
+					assetTagStats.getTagId(), assetTagStats.getClassNameId()
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_C, args,
@@ -1372,8 +1369,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 			if ((assetTagStatsModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_T_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetTagStats.getTagId()),
-						Long.valueOf(assetTagStats.getClassNameId())
+						assetTagStats.getTagId(), assetTagStats.getClassNameId()
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_C, args,
@@ -1388,8 +1384,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 		AssetTagStatsModelImpl assetTagStatsModelImpl = (AssetTagStatsModelImpl)assetTagStats;
 
 		Object[] args = new Object[] {
-				Long.valueOf(assetTagStats.getTagId()),
-				Long.valueOf(assetTagStats.getClassNameId())
+				assetTagStats.getTagId(), assetTagStats.getClassNameId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_C, args);
@@ -1398,8 +1393,8 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 		if ((assetTagStatsModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_T_C.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					Long.valueOf(assetTagStatsModelImpl.getOriginalTagId()),
-					Long.valueOf(assetTagStatsModelImpl.getOriginalClassNameId())
+					assetTagStatsModelImpl.getOriginalTagId(),
+					assetTagStatsModelImpl.getOriginalClassNameId()
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_C, args);
@@ -1432,7 +1427,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 	 */
 	public AssetTagStats remove(long tagStatsId)
 		throws NoSuchTagStatsException, SystemException {
-		return remove(Long.valueOf(tagStatsId));
+		return remove((Serializable)tagStatsId);
 	}
 
 	/**
@@ -1550,16 +1545,14 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 			if ((assetTagStatsModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TAGID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetTagStatsModelImpl.getOriginalTagId())
+						assetTagStatsModelImpl.getOriginalTagId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TAGID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TAGID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(assetTagStatsModelImpl.getTagId())
-					};
+				args = new Object[] { assetTagStatsModelImpl.getTagId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TAGID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TAGID,
@@ -1569,7 +1562,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 			if ((assetTagStatsModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						Long.valueOf(assetTagStatsModelImpl.getOriginalClassNameId())
+						assetTagStatsModelImpl.getOriginalClassNameId()
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
@@ -1577,9 +1570,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CLASSNAMEID,
 					args);
 
-				args = new Object[] {
-						Long.valueOf(assetTagStatsModelImpl.getClassNameId())
-					};
+				args = new Object[] { assetTagStatsModelImpl.getClassNameId() };
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSNAMEID,
 					args);
@@ -1621,13 +1612,24 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 	 *
 	 * @param primaryKey the primary key of the asset tag stats
 	 * @return the asset tag stats
-	 * @throws com.liferay.portal.NoSuchModelException if a asset tag stats with the primary key could not be found
+	 * @throws com.liferay.portlet.asset.NoSuchTagStatsException if a asset tag stats with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public AssetTagStats findByPrimaryKey(Serializable primaryKey)
-		throws NoSuchModelException, SystemException {
-		return findByPrimaryKey(((Long)primaryKey).longValue());
+		throws NoSuchTagStatsException, SystemException {
+		AssetTagStats assetTagStats = fetchByPrimaryKey(primaryKey);
+
+		if (assetTagStats == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+			}
+
+			throw new NoSuchTagStatsException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
+				primaryKey);
+		}
+
+		return assetTagStats;
 	}
 
 	/**
@@ -1640,18 +1642,7 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 	 */
 	public AssetTagStats findByPrimaryKey(long tagStatsId)
 		throws NoSuchTagStatsException, SystemException {
-		AssetTagStats assetTagStats = fetchByPrimaryKey(tagStatsId);
-
-		if (assetTagStats == null) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + tagStatsId);
-			}
-
-			throw new NoSuchTagStatsException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY +
-				tagStatsId);
-		}
-
-		return assetTagStats;
+		return findByPrimaryKey((Serializable)tagStatsId);
 	}
 
 	/**
@@ -1664,20 +1655,8 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 	@Override
 	public AssetTagStats fetchByPrimaryKey(Serializable primaryKey)
 		throws SystemException {
-		return fetchByPrimaryKey(((Long)primaryKey).longValue());
-	}
-
-	/**
-	 * Returns the asset tag stats with the primary key or returns <code>null</code> if it could not be found.
-	 *
-	 * @param tagStatsId the primary key of the asset tag stats
-	 * @return the asset tag stats, or <code>null</code> if a asset tag stats with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public AssetTagStats fetchByPrimaryKey(long tagStatsId)
-		throws SystemException {
 		AssetTagStats assetTagStats = (AssetTagStats)EntityCacheUtil.getResult(AssetTagStatsModelImpl.ENTITY_CACHE_ENABLED,
-				AssetTagStatsImpl.class, tagStatsId);
+				AssetTagStatsImpl.class, primaryKey);
 
 		if (assetTagStats == _nullAssetTagStats) {
 			return null;
@@ -1690,19 +1669,19 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 				session = openSession();
 
 				assetTagStats = (AssetTagStats)session.get(AssetTagStatsImpl.class,
-						Long.valueOf(tagStatsId));
+						primaryKey);
 
 				if (assetTagStats != null) {
 					cacheResult(assetTagStats);
 				}
 				else {
 					EntityCacheUtil.putResult(AssetTagStatsModelImpl.ENTITY_CACHE_ENABLED,
-						AssetTagStatsImpl.class, tagStatsId, _nullAssetTagStats);
+						AssetTagStatsImpl.class, primaryKey, _nullAssetTagStats);
 				}
 			}
 			catch (Exception e) {
 				EntityCacheUtil.removeResult(AssetTagStatsModelImpl.ENTITY_CACHE_ENABLED,
-					AssetTagStatsImpl.class, tagStatsId);
+					AssetTagStatsImpl.class, primaryKey);
 
 				throw processException(e);
 			}
@@ -1712,6 +1691,18 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 		}
 
 		return assetTagStats;
+	}
+
+	/**
+	 * Returns the asset tag stats with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param tagStatsId the primary key of the asset tag stats
+	 * @return the asset tag stats, or <code>null</code> if a asset tag stats with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AssetTagStats fetchByPrimaryKey(long tagStatsId)
+		throws SystemException {
+		return fetchByPrimaryKey((Serializable)tagStatsId);
 	}
 
 	/**
