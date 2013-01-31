@@ -18,6 +18,7 @@ create index IX_9C7EB9F on AnnouncementsFlag (entryId);
 create unique index IX_4539A99C on AnnouncementsFlag (userId, entryId, value);
 
 create index IX_E639E2F6 on AssetCategory (groupId);
+create index IX_C7F39FCA on AssetCategory (groupId, name, vocabularyId);
 create index IX_852EA801 on AssetCategory (groupId, parentCategoryId, name, vocabularyId);
 create index IX_2008FACB on AssetCategory (groupId, vocabularyId);
 create index IX_D61ABE08 on AssetCategory (name, vocabularyId);
@@ -190,11 +191,12 @@ create unique index IX_C803899D on DDMStructureLink (classPK);
 create index IX_17692B58 on DDMStructureLink (structureId);
 
 create index IX_B6356F93 on DDMTemplate (classNameId, classPK, type_);
-create index IX_2E1BAFD9 on DDMTemplate (classNameId, classPK, type_, mode_);
 create index IX_32F83D16 on DDMTemplate (classPK);
 create index IX_DB24DDDD on DDMTemplate (groupId);
 create index IX_BD9A4A91 on DDMTemplate (groupId, classNameId);
 create index IX_824ADC72 on DDMTemplate (groupId, classNameId, classPK);
+create index IX_90800923 on DDMTemplate (groupId, classNameId, classPK, type_);
+create index IX_F0C3449 on DDMTemplate (groupId, classNameId, classPK, type_, mode_);
 create unique index IX_233D3B8 on DDMTemplate (groupId, templateKey);
 create index IX_33BEF579 on DDMTemplate (language);
 create index IX_CAE41A28 on DDMTemplate (templateKey);
@@ -426,7 +428,7 @@ create index IX_B529BFD3 on Layout (layoutPrototypeUuid);
 create index IX_39A18ECC on Layout (sourcePrototypeLayoutUuid);
 create index IX_D0822724 on Layout (uuid_);
 create index IX_2CE4BE84 on Layout (uuid_, companyId);
-create unique index IX_CED31606 on Layout (uuid_, groupId);
+create unique index IX_E118C537 on Layout (uuid_, groupId, privateLayout);
 
 create index IX_6C226433 on LayoutBranch (layoutSetBranchId);
 create index IX_2C42603E on LayoutBranch (layoutSetBranchId, plid);
@@ -662,8 +664,7 @@ create unique index IX_D63D20BB on ResourceBlockPermission (resourceBlockId, rol
 
 create index IX_60B99860 on ResourcePermission (companyId, name, scope);
 create index IX_2200AA69 on ResourcePermission (companyId, name, scope, primKey);
-create index IX_8D83D0CE on ResourcePermission (companyId, name, scope, primKey, roleId);
-create index IX_D2E2B644 on ResourcePermission (companyId, name, scope, primKey, roleId, actionIds);
+create unique index IX_8D83D0CE on ResourcePermission (companyId, name, scope, primKey, roleId);
 create index IX_26284944 on ResourcePermission (companyId, primKey);
 create index IX_A37A0588 on ResourcePermission (roleId);
 create index IX_F4555981 on ResourcePermission (scope);

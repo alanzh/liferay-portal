@@ -269,6 +269,8 @@
 
 		<action path="/asset_publisher/edit_query_rule" forward="portlet.asset_publisher.edit_query_rule" />
 
+		<action path="/asset_publisher/edit_subscription" type="com.liferay.portlet.assetpublisher.action.EditSubscriptionAction" />
+
 		<action path="/asset_publisher/export_journal_article" type="com.liferay.portlet.journalcontent.action.ExportArticleAction" />
 
 		<action path="/asset_publisher/export_wiki_page" type="com.liferay.portlet.wiki.action.ExportPageAction" />
@@ -665,6 +667,11 @@
 
 		<action path="/dynamic_data_mapping/render_structure_field" type="com.liferay.portlet.dynamicdatamapping.action.RenderStructureFieldAction" />
 
+		<action path="/dynamic_data_mapping/select_document_library" type="com.liferay.portlet.documentlibrary.action.ViewAction">
+			<forward name="portlet.document_library.error" path="portlet.document_library.error" />
+			<forward name="portlet.document_library.view" path="portlet.dynamic_data_mapping.select_document_library" />
+		</action>
+
 		<action path="/dynamic_data_mapping/select_structure" forward="portlet.dynamic_data_mapping.select_structure" />
 
 		<action path="/dynamic_data_mapping/view" forward="portlet.dynamic_data_mapping.view" />
@@ -868,11 +875,6 @@
 		</action>
 
 		<action path="/journal/select_display_page" type="com.liferay.portlet.layoutsadmin.action.EditLayoutsAction" />
-
-		<action path="/journal/select_document_library" type="com.liferay.portlet.documentlibrary.action.ViewAction">
-			<forward name="portlet.document_library.error" path="portlet.document_library.error" />
-			<forward name="portlet.document_library.view" path="portlet.journal.select_document_library" />
-		</action>
 
 		<action path="/journal/select_folder" type="com.liferay.portlet.journal.action.EditFolderAction">
 			<forward name="portlet.journal.edit_folder" path="portlet.journal.select_folder" />
@@ -1758,6 +1760,10 @@
 			<forward name="portlet.shopping.edit_item" path="portlet.shopping.view_item" />
 			<forward name="portlet.shopping.error" path="portlet.shopping.error" />
 		</action>
+
+		<!-- Site Browser -->
+
+		<action path="/site_browser/view" forward="portlet.site_browser.view" />
 
 		<!-- Site Map -->
 

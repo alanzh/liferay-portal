@@ -1,4 +1,4 @@
-.portlet-message-boards, .portlet-trash {
+.portlet-asset-publisher, .portlet-message-boards, .portlet-trash {
 	.category-buttons {
 		clear: both;
 		margin-bottom: 1em;
@@ -88,12 +88,6 @@
 		h3 {
 			color: #333;
 			font-size: 1em;
-		}
-
-		legend {
-			.aui-legend {
-				width: 100%;
-			}
 		}
 
 		ul {
@@ -400,6 +394,11 @@
 	.top-links .category-search {
 		float: right;
 		margin: 0 0 0.5em 0.5em;
+	}
+
+	.search-root-entry {
+		color: #999;
+		float: right;
 	}
 }
 

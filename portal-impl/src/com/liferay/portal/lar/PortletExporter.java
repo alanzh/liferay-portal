@@ -19,7 +19,7 @@ import com.liferay.portal.NoSuchPortletPreferencesException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
+import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -77,9 +77,9 @@ import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.expando.model.ExpandoColumn;
-import com.liferay.portlet.journal.model.JournalStructure;
-import com.liferay.portlet.journal.service.JournalStructureLocalServiceUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.util.xml.DocUtil;
@@ -134,13 +134,13 @@ public class PortletExporter {
 		throws Exception {
 
 		try {
-			ImportExportThreadLocal.setPortletExportInProcess(true);
+			ExportImportThreadLocal.setPortletExportInProcess(true);
 
 			return doExportPortletInfoAsFile(
 				plid, groupId, portletId, parameterMap, startDate, endDate);
 		}
 		finally {
-			ImportExportThreadLocal.setPortletExportInProcess(false);
+			ExportImportThreadLocal.setPortletExportInProcess(false);
 		}
 	}
 
@@ -802,6 +802,8 @@ public class PortletExporter {
 			"scope-layout-type", portletDataContext.getScopeType());
 		portletElement.addAttribute(
 			"scope-layout-uuid", portletDataContext.getScopeLayoutUuid());
+		portletElement.addAttribute(
+			"private-layout", String.valueOf(layout.isPrivateLayout()));
 
 		// Data
 
@@ -981,7 +983,7 @@ public class PortletExporter {
 
 		boolean staged = liveGroup.isStagedPortlet(portlet.getRootPortletId());
 
-		if (!staged && ImportExportThreadLocal.isLayoutExportInProcess()) {
+		if (!staged && ExportImportThreadLocal.isLayoutExportInProcess()) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Not exporting data for " + portletId +
@@ -1164,17 +1166,21 @@ public class PortletExporter {
 
 		PortletPreferences portletPreferences = null;
 
-		if ((ownerType == PortletKeys.PREFS_OWNER_TYPE_COMPANY) ||
-			(ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) ||
-			(ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED)) {
-
-			plid = PortletKeys.PREFS_OWNER_ID_DEFAULT;
-		}
-
 		try {
-			portletPreferences =
-				PortletPreferencesLocalServiceUtil.getPortletPreferences(
-					ownerId, ownerType, plid, portletId);
+			if ((ownerType == PortletKeys.PREFS_OWNER_TYPE_COMPANY) ||
+				(ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) ||
+				(ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED)) {
+
+				portletPreferences =
+					PortletPreferencesLocalServiceUtil.getPortletPreferences(
+						ownerId, ownerType, PortletKeys.PREFS_OWNER_ID_DEFAULT,
+						portletId);
+			}
+			else {
+				portletPreferences =
+					PortletPreferencesLocalServiceUtil.getPortletPreferences(
+						ownerId, ownerType, plid, portletId);
+			}
 		}
 		catch (NoSuchPortletPreferencesException nsppe) {
 			return;
@@ -1490,7 +1496,7 @@ public class PortletExporter {
 				name.equals("classTypeIds")) {
 
 				updatePreferencesClassPKs(
-					jxPreferences, name, JournalStructure.class.getName());
+					jxPreferences, name, DDMStructure.class.getName());
 			}
 			else if (name.equals("anyAssetType") ||
 					 name.equals("classNameIds")) {
@@ -1599,13 +1605,13 @@ public class PortletExporter {
 						uuid = assetVocabulary.getUuid();
 					}
 				}
-				else if (className.equals(JournalStructure.class.getName())) {
-					JournalStructure journalStructure =
-						JournalStructureLocalServiceUtil.fetchJournalStructure(
+				else if (className.equals(DDMStructure.class.getName())) {
+					DDMStructure ddmStructure =
+						DDMStructureLocalServiceUtil.fetchStructure(
 							primaryKeyLong);
 
-					if (journalStructure != null) {
-						uuid = journalStructure.getUuid();
+					if (ddmStructure != null) {
+						uuid = ddmStructure.getUuid();
 					}
 				}
 

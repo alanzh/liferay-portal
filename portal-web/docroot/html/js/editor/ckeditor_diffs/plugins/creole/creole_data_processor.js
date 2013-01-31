@@ -55,23 +55,16 @@
 			init: function(editor) {
 				editor.dataProcessor = new CKEDITOR.htmlDataProcessor(editor);
 
-				editor.dataProcessor.writer.setRules(
-					'p',
-					{
-						breakBeforeClose: false
-					}
-				);
-
 				editor.on(
 					'paste',
 					function(event) {
 						var data = event.data;
 
-						var htmlData = data.html;
+						var htmlData = data.dataValue;
 
 						htmlData = CKEDITOR.htmlDataProcessor.prototype.toDataFormat(htmlData);
 
-						data.html = htmlData;
+						data.dataValue = htmlData;
 					},
 					editor.element.$
 				);
@@ -361,17 +354,11 @@
 		_handleLink: function(element, listTagsIn, listTagsOut) {
 			var hrefAttribute = element.getAttribute('href');
 
-			if (CKEDITOR.env.ie && (CKEDITOR.env.version <= 8)) {
-				var location = window.location;
+			if (CKEDITOR.env.ie && (CKEDITOR.env.version < 8)) {
+				var ckeSavedHref = element.getAttribute('data-cke-saved-href');
 
-				var protocolHostPathname = location.protocol + '//' + location.host + location.pathname;
-
-				protocolHostPathname = protocolHostPathname.substr(0, protocolHostPathname.lastIndexOf('/') + 1);
-
-				var hostPrefix = hrefAttribute.indexOf(protocolHostPathname);
-
-				if (hostPrefix == 0) {
-					hrefAttribute = hrefAttribute.substr(protocolHostPathname.length);
+				if (ckeSavedHref) {
+					hrefAttribute = ckeSavedHref;
 				}
 			}
 

@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandlerImpl;
 import com.liferay.portlet.journal.lar.JournalPortletDataHandlerImpl;
 import com.liferay.portlet.wiki.NoSuchNodeException;
 import com.liferay.portlet.wiki.NoSuchPageException;
@@ -355,12 +356,10 @@ public class WikiPortletDataHandlerImpl extends BasePortletDataHandler {
 				pageElement = pagesElement.addElement("page");
 			}
 
-			String content =
-				JournalPortletDataHandlerImpl.exportReferencedContent(
-					portletDataContext, dlFileEntryTypesElement,
-					dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
-					dlRepositoriesElement, dlRepositoryEntriesElement,
-					pageElement, page.getContent());
+			String content = DDMPortletDataHandlerImpl.exportReferencedContent(
+				portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
+				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
+				dlRepositoryEntriesElement, pageElement, page.getContent());
 
 			page.setContent(content);
 

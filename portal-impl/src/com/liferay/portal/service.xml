@@ -340,6 +340,7 @@
 		<column name="classPK" type="long" />
 		<column name="parentGroupId" type="long" />
 		<column name="liveGroupId" type="long" />
+		<column name="treePath" type="String" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 		<column name="type" type="int" />
@@ -1123,6 +1124,7 @@
 		<column name="minNumbers" type="int" />
 		<column name="minSymbols" type="int" />
 		<column name="minUpperCase" type="int" />
+		<column name="regex" type="String" />
 		<column name="history" type="boolean" />
 		<column name="historyCount" type="int" />
 		<column name="expireable" type="boolean" />
@@ -1572,7 +1574,7 @@
 			<finder-column name="name" />
 		</finder>
 		<finder name="N_A" return-type="ResourceAction" unique="true">
-			<finder-column name="name" case-sensitive="false" />
+			<finder-column name="name" case-sensitive="true" />
 			<finder-column name="actionId" />
 		</finder>
 	</entity>
@@ -1657,7 +1659,7 @@
 		<finder name="RoleId" return-type="Collection">
 			<finder-column name="roleId" />
 		</finder>
-		<finder name="C_P" return-type="Collection">
+		<finder name="C_LikeP" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column name="primKey" comparator="LIKE" />
 		</finder>
@@ -1672,7 +1674,7 @@
 			<finder-column name="scope" />
 			<finder-column name="primKey" />
 		</finder>
-		<finder name="C_N_S_P_R" return-type="Collection">
+		<finder name="C_N_S_P_R" return-type="Collection" unique="true">
 			<finder-column name="companyId" />
 			<finder-column name="name" />
 			<finder-column name="scope" />
@@ -1856,11 +1858,11 @@
 			<finder-column name="classNameId" />
 			<finder-column name="classPK" />
 		</finder>
-		<finder name="C_U_C_C" return-type="Subscription" unique="true">
+		<finder name="C_U_C_C" return-type="Collection" unique="true">
 			<finder-column name="companyId" />
 			<finder-column name="userId" />
 			<finder-column name="classNameId" />
-			<finder-column name="classPK" />
+			<finder-column name="classPK" arrayable-operator="OR" />
 		</finder>
 
 		<!-- References -->

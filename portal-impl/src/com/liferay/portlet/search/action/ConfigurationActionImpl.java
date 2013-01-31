@@ -55,12 +55,18 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
+		boolean displayScopeFacet = GetterUtil.getBoolean(
+			getParameter(actionRequest, "displayScopeFacet"));
 		boolean displayAssetCategoriesFacet = GetterUtil.getBoolean(
 			getParameter(actionRequest, "displayAssetCategoriesFacet"));
 		boolean displayAssetTagsFacet = GetterUtil.getBoolean(
 			getParameter(actionRequest, "displayAssetTagsFacet"));
 		boolean displayAssetTypeFacet = GetterUtil.getBoolean(
 			getParameter(actionRequest, "displayAssetTypeFacet"));
+		boolean displayFolderFacet = GetterUtil.getBoolean(
+			getParameter(actionRequest, "displayFolderFacet"));
+		boolean displayUserFacet = GetterUtil.getBoolean(
+			getParameter(actionRequest, "displayUserFacet"));
 		boolean displayModifiedRangeFacet = GetterUtil.getBoolean(
 			getParameter(actionRequest, "displayModifiedRangeFacet"));
 
@@ -88,10 +94,13 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 			String fieldName = oldFacetJSONObject.getString("fieldName");
 
-			if ((displayAssetCategoriesFacet &&
+			if ((displayScopeFacet && fieldName.equals("groupId")) ||
+				(displayAssetCategoriesFacet &&
 					fieldName.equals("assetCategoryTitles")) ||
-				(displayAssetTagsFacet && fieldName.equals("entryClassName")) ||
-				(displayAssetTypeFacet && fieldName.equals("assetTagNames")) ||
+				(displayAssetTagsFacet && fieldName.equals("assetTagNames")) ||
+				(displayAssetTypeFacet && fieldName.equals("entryClassName")) ||
+				(displayFolderFacet && fieldName.equals("folderId")) ||
+				(displayUserFacet && fieldName.equals("userId")) ||
 				(displayModifiedRangeFacet && fieldName.equals("modified"))) {
 
 				newFacetsJSONArray.put(oldFacetJSONObject);

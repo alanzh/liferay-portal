@@ -23,7 +23,7 @@ import com.liferay.portal.PortletIdException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
+import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -95,14 +95,14 @@ import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.asset.service.persistence.AssetTagUtil;
 import com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureUtil;
 import com.liferay.portlet.expando.NoSuchTableException;
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.model.ExpandoTable;
 import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil;
 import com.liferay.portlet.expando.util.ExpandoConverterUtil;
-import com.liferay.portlet.journal.model.JournalStructure;
-import com.liferay.portlet.journal.service.persistence.JournalStructureUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.ratings.model.RatingsEntry;
@@ -139,13 +139,13 @@ public class PortletImporter {
 		throws Exception {
 
 		try {
-			ImportExportThreadLocal.setPortletImportInProcess(true);
+			ExportImportThreadLocal.setPortletImportInProcess(true);
 
 			doImportPortletInfo(
 				userId, plid, groupId, portletId, parameterMap, file);
 		}
 		finally {
-			ImportExportThreadLocal.setPortletImportInProcess(false);
+			ExportImportThreadLocal.setPortletImportInProcess(false);
 
 			CacheUtil.clearCache();
 			JournalContentUtil.clearCache();
@@ -1197,7 +1197,7 @@ public class PortletImporter {
 				if (rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
 					xml = updateAssetPublisherPortletPreferences(
 						portletDataContext, companyId, ownerId, ownerType, plid,
-						portletId, xml);
+						portletId, xml, layout);
 				}
 				else if (rootPotletId.equals(
 							PortletKeys.TAGS_CATEGORIES_NAVIGATION)) {
@@ -1662,9 +1662,13 @@ public class PortletImporter {
 					portletDataContext.getCompanyId());
 			}
 			else if (Validator.isNotNull(scopeLayoutUuid)) {
+				boolean privateLayout = GetterUtil.getBoolean(
+					portletElement.attributeValue("private-layout"));
+
 				Layout scopeLayout =
 					LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-						scopeLayoutUuid, portletDataContext.getGroupId());
+						scopeLayoutUuid, portletDataContext.getGroupId(),
+						privateLayout);
 
 				if (scopeLayout.hasScopeGroup()) {
 					scopeGroup = scopeLayout.getScopeGroup();
@@ -1687,7 +1691,8 @@ public class PortletImporter {
 						Layout oldLayout =
 							LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
 								scopeLayoutUuid,
-								portletDataContext.getSourceGroupId());
+								portletDataContext.getSourceGroupId(),
+								privateLayout);
 
 						Group oldScopeGroup = oldLayout.getScopeGroup();
 
@@ -1784,7 +1789,8 @@ public class PortletImporter {
 
 	protected String updateAssetPublisherPortletPreferences(
 			PortletDataContext portletDataContext, long companyId, long ownerId,
-			int ownerType, long plid, String portletId, String xml)
+			int ownerType, long plid, String portletId, String xml,
+			Layout layout)
 		throws Exception {
 
 		Company company = CompanyLocalServiceUtil.getCompanyById(companyId);
@@ -1810,8 +1816,8 @@ public class PortletImporter {
 				name.equals("classTypeIds")) {
 
 				updatePreferencesClassPKs(
-					portletDataContext, jxPreferences, name,
-					JournalStructure.class, companyGroup.getGroupId());
+					portletDataContext, jxPreferences, name, DDMStructure.class,
+					companyGroup.getGroupId());
 			}
 			else if (name.equals("anyAssetType") ||
 					 name.equals("classNameIds")) {
@@ -1820,7 +1826,8 @@ public class PortletImporter {
 			}
 			else if (name.equals("defaultScope") || name.equals("scopeIds")) {
 				updateAssetPublisherScopeIds(
-					jxPreferences, name, companyGroup.getGroupId(), plid);
+					jxPreferences, name, companyGroup.getGroupId(),
+					layout.getPlid());
 			}
 			else if (name.startsWith("queryName") &&
 					 value.equalsIgnoreCase("assetCategories")) {
@@ -2011,21 +2018,18 @@ public class PortletImporter {
 							newPrimaryKey = assetVocabulary.getVocabularyId();
 						}
 					}
-					else if (className.equals(
-							JournalStructure.class.getName())) {
-
-						JournalStructure journalStructure =
-							JournalStructureUtil.fetchByUUID_G(
+					else if (className.equals(DDMStructure.class.getName())) {
+						DDMStructure ddmStructure =
+							DDMStructureUtil.fetchByUUID_G(
 								uuid, portletDataContext.getScopeGroupId());
 
-						if (journalStructure == null) {
-							journalStructure =
-								JournalStructureUtil.fetchByUUID_G(
-									uuid, companyGroupId);
+						if (ddmStructure == null) {
+							ddmStructure = DDMStructureUtil.fetchByUUID_G(
+								uuid, companyGroupId);
 						}
 
-						if (journalStructure != null) {
-							newPrimaryKey = journalStructure.getId();
+						if (ddmStructure != null) {
+							newPrimaryKey = ddmStructure.getStructureId();
 						}
 					}
 				}

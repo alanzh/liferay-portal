@@ -118,6 +118,44 @@
 		</if>
 
 		<if>
+			<isset property="test.ant.script.legacy.plugins" />
+			<then>
+				<var name="first" value="true" />
+
+				<for list="${test.ant.script.legacy.plugins}" param="test.ant.script.legacy.plugin">
+					<sequential>
+						<if>
+							<equals arg1="${first}" arg2="true" />
+							<then>
+								<var name="first" value="false" />
+
+								<var name="legacy.plugin.list" value="@{test.ant.script.legacy.plugin}**.war" />
+							</then>
+							<else>
+								<var name="legacy.plugin.list" value="${legacy.plugin.list},@{test.ant.script.legacy.plugin}**.war" />
+							</else>
+						</if>
+					</sequential>
+				</for>
+
+				<property name="test.ant.script.file.legacy.plugins" value="&lt;property name=&quot;plugins.version.includes&quot; value=&quot;${legacy.plugin.list}&quot; /&gt;" />
+			</then>
+			<else>
+				<property name="test.ant.script.file.legacy.plugins" value=" " />
+			</else>
+		</if>
+
+		<if>
+			<isset property="test.ant.script.legacy.version" />
+			<then>
+				<property name="test.ant.script.file.legacy.version" value= "&lt;property name=&quot;lp.version&quot; value=&quot;${test.ant.script.legacy.version}&quot; /&gt;" />
+			</then>
+			<else>
+				<property name="test.ant.script.file.legacy.version" value= " " />
+			</else>
+		</if>
+
+		<if>
 			<isset property="test.ant.script.plugin.hooks" />
 			<then>
 				<property name="test.ant.script.file.plugin.hooks" value="&lt;property name=&quot;hook.plugins.includes&quot; value=&quot;${test.ant.script.plugin.hooks}&quot; /&gt;" />
@@ -288,7 +326,7 @@
 	</target>
 
 	<target name="build-test-ant-scripts">
-		<property name="build-test-ant-scripts.version" value="8" />
+		<property name="build-test-ant-scripts.version" value="3" />
 
 		<if>
 			<available file="portal-web/test-ant-scripts/version" />
@@ -361,6 +399,12 @@
 		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="control-panel-admin" />
 			<param name="test.ant.script.suite" value="ControlPanelAdminTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="control-panel-adt" />
+			<param name="test.ant.script.selenium.implementation" value="webdriver" />
+			<param name="test.ant.script.suite" value="ControlPanelADTTestSuite" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
@@ -960,6 +1004,38 @@
 			<param name="test.ant.script.command" value="ldap-smoke" />
 			<param name="test.ant.script.suite" value="LDAPSmokeTestSuite" />
 			<param name="test.ant.script.template" value="ant-script-ldap.xml" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="legacy-plugins-chat" />
+			<param name="test.ant.script.legacy.plugins" value="chat-portlet" />
+			<param name="test.ant.script.legacy.version" value="6.1.20" />
+			<param name="test.ant.script.suite" value="PluginsChatTestSuite" />
+			<param name="test.ant.script.template" value="ant-script-legacy-plugins.xml" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="legacy-plugins-kaleo" />
+			<param name="test.ant.script.legacy.plugins" value="kaleo-upgrade-hook,kaleo-web" />
+			<param name="test.ant.script.legacy.version" value="6.1.20" />
+			<param name="test.ant.script.suite" value="KaleoWebContentTestSuite" />
+			<param name="test.ant.script.template" value="ant-script-legacy-plugins.xml" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="legacy-plugins-layouttpl" />
+			<param name="test.ant.script.legacy.plugins" value="1-2-1-columns-layouttpl" />
+			<param name="test.ant.script.legacy.version" value="6.1.20" />
+			<param name="test.ant.script.suite" value="SmokeTestSuite" />
+			<param name="test.ant.script.template" value="ant-script-legacy-plugins.xml" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="legacy-plugins-theme" />
+			<param name="test.ant.script.legacy.plugins" value="zoe-brochure-theme" />
+			<param name="test.ant.script.legacy.version" value="6.1.20" />
+			<param name="test.ant.script.suite" value="SmokeTestSuite" />
+			<param name="test.ant.script.template" value="ant-script-legacy-plugins.xml" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
@@ -1564,6 +1640,12 @@
 		</antcall>
 
 		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="portal-web-categories-navigation" />
+			<param name="test.ant.script.selenium.implementation" value="webdriver" />
+			<param name="test.ant.script.suite" value="PortalWebCategoriesNavigationTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="portal-web-currency-converter" />
 			<param name="test.ant.script.suite" value="PortalWebCurrencyConverterTestSuite" />
 		</antcall>
@@ -1726,6 +1808,12 @@
 		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="portal-web-software-catalog" />
 			<param name="test.ant.script.suite" value="PortalWebSoftwareCatalogTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="portal-web-tags-navigation" />
+			<param name="test.ant.script.selenium.implementation" value="webdriver" />
+			<param name="test.ant.script.suite" value="PortalWebTagsNavigationTestSuite" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
@@ -1920,6 +2008,12 @@
 		</antcall>
 
 		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="social-office-home-announcements" />
+			<param name="test.ant.script.social.office" value="true" />
+			<param name="test.ant.script.suite" value="SocialOfficeHomeAnnouncementsTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="social-office-home-activities" />
 			<param name="test.ant.script.social.office" value="true" />
 			<param name="test.ant.script.suite" value="SocialOfficeHomeActivitiesTestSuite" />
@@ -1947,6 +2041,12 @@
 			<param name="test.ant.script.command" value="social-office-home-microblogs" />
 			<param name="test.ant.script.social.office" value="true" />
 			<param name="test.ant.script.suite" value="SocialOfficeHomeMicroblogsTestSuite" />
+		</antcall>
+
+		<antcall target="build-test-ant-script">
+			<param name="test.ant.script.command" value="social-office-home-my-documents" />
+			<param name="test.ant.script.social.office" value="true" />
+			<param name="test.ant.script.suite" value="SocialOfficeHomeMyDocumentsTestSuite" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
@@ -3140,6 +3240,115 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 		</if>
 	</target>
 
+	<target name="prepare-versioned-common">
+		<antcall target="prepare-portal-ext-properties" inheritAll="false" />
+
+		<ant dir="portal-impl" target="deploy-properties" inheritAll="false" />
+
+		<if>
+			<isset property="sql.version" />
+			<then>
+				<property name="sql.dir" value="sql\legacy\${sql.version}\create\" />
+
+				<if>
+					<contains string="${db.type}" substring="db2" />
+					<then>
+						<property name="sql.file" value="create-db2.sql" />
+					</then>
+					<elseif>
+						<contains string="${db.type}" substring="mysql" />
+						<then>
+							<property name="sql.file" value="create-mysql.sql" />
+						</then>
+					</elseif>
+					<elseif>
+						<contains string="${db.type}" substring="oracle" />
+						<then>
+							<property name="sql.file" value="create-oracle.sql" />
+						</then>
+					</elseif>
+					<elseif>
+						<contains string="${db.type}" substring="postgresql" />
+						<then>
+							<property name="sql.file" value="create-postgresql.sql" />
+						</then>
+					</elseif>
+					<elseif>
+						<contains string="${db.type}" substring="sql-server" />
+						<then>
+							<property name="sql.file" value="create-sql-server.sql" />
+						</then>
+					</elseif>
+					<elseif>
+						<contains string="${db.type}" substring="sybase" />
+						<then>
+							<property name="sql.file" value="create-sybase.sql" />
+						</then>
+					</elseif>
+				</if>
+			</then>
+		</if>
+
+		<antcall target="rebuild-database" inheritAll="false">
+			<param name="sql.dir" value="${sql.dir}" />
+			<param name="sql.file" value="${sql.file}" />
+		</antcall>
+	</target>
+
+	<target name="prepare-versioned-db2">
+		<echo file="test.${user.name}.properties">db.type=db2</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-mysql">
+		<echo file="test.${user.name}.properties">db.type=mysql</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-oracle-10">
+		<echo file="test.${user.name}.properties">db.type=oracle-10</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-oracle-11">
+		<echo file="test.${user.name}.properties">db.type=oracle-11</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-postgresql-8.4">
+		<echo file="test.${user.name}.properties">db.type=postgresql-8.4</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-postgresql-9.0">
+		<echo file="test.${user.name}.properties">db.type=postgresql-9.0</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-sql-server-2005">
+		<echo file="test.${user.name}.properties">db.type=sql-server-2005</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-sql-server-2008">
+		<echo file="test.${user.name}.properties">db.type=sql-server-2008</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
+	<target name="prepare-versioned-sybase">
+		<echo file="test.${user.name}.properties">db.type=sybase</echo>
+
+		<antcall target="prepare-versioned-common" inheritAll="false" />
+	</target>
+
 	<target name="prepare-virtual-host-name-properties">
 		<if>
 			<isset property="virtual.host.name" />
@@ -3277,17 +3486,22 @@ file.
 			</then>
 			<else>
 				<if>
-					<or>
+					<and>
 						<not>
-							<available file="sql/legacy" />
+							<isset property="skip.rebuild-legacy" />
 						</not>
-						<not>
-							<uptodate
-								srcfile="${sql.legacy.zip}"
-								targetfile="sql/legacy"
-							/>
-						</not>
-					</or>
+						<or>
+							<not>
+								<available file="sql/legacy" />
+							</not>
+							<not>
+								<uptodate
+									srcfile="${sql.legacy.zip}"
+									targetfile="sql/legacy"
+								/>
+							</not>
+						</or>
+					</and>
 					<then>
 						<delete dir="sql/legacy" failonerror="false" />
 

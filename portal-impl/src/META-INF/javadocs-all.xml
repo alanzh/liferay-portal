@@ -258769,7 +258769,7 @@ which are later inherited by users assigned to the UserGroup
 		</method>
 		<method>
 			<name>checkSystemGroups</name>
-			<comment><![CDATA[Creates systems groups and other related data needed by the system on the very first startup. Also takes care of creating the control panel groups and layouts.]]></comment>
+			<comment><![CDATA[Creates systems groups and other related data needed by the system on the very first startup. Also takes care of creating the Control Panel groups and layouts.]]></comment>
 			<param>
 				<name>companyId</name>
 				<type>long</type>
@@ -259804,6 +259804,29 @@ Useful when paginating results. Returns a maximum of <code>end - start</code> in
 				<name>PortalException</name>
 				<type>com.liferay.portal.kernel.exception.PortalException</type>
 				<comment><![CDATA[if a matching group could not be found]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
+			<name>rebuildTree</name>
+			<comment><![CDATA[Rebuilds the group tree.
+
+<p>
+Only call this method if the tree has become stale through operations other than normal CRUD. Under normal circumstances the tree is automatically rebuilt whenever necessary.
+</p>]]></comment>
+			<param>
+				<name>companyId</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of the group's company]]></comment>
+			</param>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a group with the primary key could not be found]]></comment>
 			</throws>
 			<throws>
 				<name>SystemException</name>

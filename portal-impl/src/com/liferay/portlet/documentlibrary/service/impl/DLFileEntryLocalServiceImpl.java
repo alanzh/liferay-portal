@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.ModelHintsUtil;
+import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
@@ -176,6 +177,30 @@ public class DLFileEntryLocalServiceImpl
 		dlFileEntry.setVersionUserName(user.getFullName());
 		dlFileEntry.setCreateDate(serviceContext.getCreateDate(now));
 		dlFileEntry.setModifiedDate(serviceContext.getModifiedDate(now));
+
+		DLFolder repositoryDLFolder = null;
+
+		if (repositoryId != groupId) {
+			Repository repository = repositoryLocalService.getRepository(
+				repositoryId);
+
+			repositoryDLFolder = dlFolderPersistence.findByPrimaryKey(
+				repository.getDlFolderId());
+		}
+
+		if ((repositoryDLFolder != null) && repositoryDLFolder.isHidden()) {
+			long classNameId = PortalUtil.getClassNameId(
+				(String)serviceContext.getAttribute("className"));
+			long classPK = ParamUtil.getLong(serviceContext, "classPK");
+
+			if (Validator.isNotNull(classNameId) &&
+					Validator.isNotNull(classPK)) {
+
+				dlFileEntry.setClassNameId(classNameId);
+				dlFileEntry.setClassPK(classPK);
+			}
+		}
+
 		dlFileEntry.setRepositoryId(repositoryId);
 		dlFileEntry.setFolderId(folderId);
 		dlFileEntry.setName(name);
@@ -234,10 +259,6 @@ public class DLFileEntryLocalServiceImpl
 			return null;
 		}
 
-		if (!hasFileEntryLock(userId, fileEntryId)) {
-			lockFileEntry(userId, fileEntryId);
-		}
-
 		DLFileEntry dlFileEntry = dlFileEntryPersistence.findByPrimaryKey(
 			fileEntryId);
 
@@ -267,10 +288,6 @@ public class DLFileEntryLocalServiceImpl
 
 		if (!isFileEntryCheckedOut(fileEntryId)) {
 			return;
-		}
-
-		if (!hasFileEntryLock(userId, fileEntryId)) {
-			lockFileEntry(userId, fileEntryId);
 		}
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -908,7 +925,10 @@ public class DLFileEntryLocalServiceImpl
 		DLFileEntry dlFileEntry = dlFileEntryPersistence.findByPrimaryKey(
 			fileEntryId);
 
-		incrementViewCounter(dlFileEntry, incrementCounter, increment);
+		if (incrementCounter) {
+			dlFileEntryLocalService.incrementViewCounter(
+				dlFileEntry, increment);
+		}
 
 		dlAppHelperLocalService.getFileAsStream(
 			userId, new LiferayFileEntry(dlFileEntry), incrementCounter);
@@ -942,7 +962,10 @@ public class DLFileEntryLocalServiceImpl
 		DLFileEntry dlFileEntry = dlFileEntryPersistence.findByPrimaryKey(
 			fileEntryId);
 
-		incrementViewCounter(dlFileEntry, incrementCounter, increment);
+		if (incrementCounter) {
+			dlFileEntryLocalService.incrementViewCounter(
+				dlFileEntry, increment);
+		}
 
 		dlAppHelperLocalService.getFileAsStream(
 			userId, new LiferayFileEntry(dlFileEntry), incrementCounter);
@@ -1184,16 +1207,10 @@ public class DLFileEntryLocalServiceImpl
 		return hasLock;
 	}
 
-	@BufferedIncrement(incrementClass = NumberIncrement.class)
-	public void incrementViewCounter(
-			DLFileEntry dlFileEntry, boolean incrementCounter, int increment)
+	@BufferedIncrement(
+		configuration = "DLFileEntry", incrementClass = NumberIncrement.class)
+	public void incrementViewCounter(DLFileEntry dlFileEntry, int increment)
 		throws SystemException {
-
-		if (!PropsValues.DL_FILE_ENTRY_READ_COUNT_ENABLED ||
-			!incrementCounter) {
-
-			return;
-		}
 
 		dlFileEntry.setReadCount(dlFileEntry.getReadCount() + increment);
 
@@ -1538,7 +1555,7 @@ public class DLFileEntryLocalServiceImpl
 		dlAppHelperLocalService.updateStatus(
 			userId, new LiferayFileEntry(dlFileEntry),
 			new LiferayFileVersion(dlFileVersion), oldStatus, status,
-			workflowContext);
+			workflowContext, serviceContext);
 
 		// Indexer
 
@@ -2316,9 +2333,8 @@ public class DLFileEntryLocalServiceImpl
 			}
 
 			if (autoCheckIn) {
-				checkInFileEntry(
-					userId, fileEntryId, majorVersion, changeLog,
-					serviceContext);
+				dlFileEntryService.checkInFileEntry(
+					fileEntryId, majorVersion, changeLog, serviceContext);
 			}
 			else if (!checkedOut &&
 					 (serviceContext.getWorkflowAction() ==
@@ -2338,14 +2354,14 @@ public class DLFileEntryLocalServiceImpl
 		}
 		catch (PortalException pe) {
 			if (autoCheckIn) {
-				cancelCheckOut(userId, fileEntryId);
+				dlFileEntryService.cancelCheckOut(fileEntryId);
 			}
 
 			throw pe;
 		}
 		catch (SystemException se) {
 			if (autoCheckIn) {
-				cancelCheckOut(userId, fileEntryId);
+				dlFileEntryService.cancelCheckOut(fileEntryId);
 			}
 
 			throw se;

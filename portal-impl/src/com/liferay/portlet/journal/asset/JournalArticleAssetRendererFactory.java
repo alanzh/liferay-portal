@@ -16,6 +16,7 @@ package com.liferay.portlet.journal.asset;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -48,8 +49,6 @@ import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Julio Camarero
@@ -143,16 +142,23 @@ public class JournalArticleAssetRendererFactory
 	}
 
 	@Override
+	public String getTypeName(Locale locale, boolean hasSubtypes) {
+		if (hasSubtypes) {
+			return LanguageUtil.get(locale, "basic-web-content");
+		}
+
+		return super.getTypeName(locale, hasSubtypes);
+	}
+
+	@Override
 	public PortletURL getURLAdd(
 			LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse)
 		throws PortalException, SystemException {
 
-		HttpServletRequest request =
-			liferayPortletRequest.getHttpServletRequest();
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)liferayPortletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		if (!JournalPermission.contains(
 				themeDisplay.getPermissionChecker(),
@@ -174,8 +180,8 @@ public class JournalArticleAssetRendererFactory
 		}
 
 		PortletURL portletURL = PortletURLFactoryUtil.create(
-			request, PortletKeys.JOURNAL, getControlPanelPlid(themeDisplay),
-			PortletRequest.RENDER_PHASE);
+			liferayPortletRequest, PortletKeys.JOURNAL,
+			getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("struts_action", "/journal/edit_article");
 

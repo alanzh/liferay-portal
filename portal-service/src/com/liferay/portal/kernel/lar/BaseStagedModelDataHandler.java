@@ -24,30 +24,62 @@ import com.liferay.portal.model.StagedModel;
 public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
 
-	public void export(
-		T stagedModel, PortletDataContext portletDataContext,
-		Element... elements) {
+	public void exportModelData(
+			T stagedModel, PortletDataContext portletDataContext,
+			Element... elements)
+		throws PortletDataException {
+
+		String path = StagedModelPathUtil.getPath(stagedModel);
+
+		if (portletDataContext.isPathProcessed(path)) {
+			return;
+		}
+
+		try {
+			doExportModelData(stagedModel, portletDataContext, elements);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
 	public abstract String getClassName();
 
-	public void importData(
-		Element stagedModelElement, PortletDataContext portletDataContext) {
+	public void importModelData(
+			Element stagedModelElement, PortletDataContext portletDataContext)
+		throws PortletDataException {
 
 		String path = stagedModelElement.attributeValue("path");
 
 		T stagedModel = (T)portletDataContext.getZipEntryAsObject(
 			stagedModelElement, path);
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
+		importModelData(stagedModel, path, portletDataContext);
+	}
+
+	public void importModelData(
+			T stagedModel, String path, PortletDataContext portletDataContext)
+		throws PortletDataException {
+
+		if (portletDataContext.isPathProcessed(path)) {
 			return;
 		}
 
-		importData(stagedModel, path, portletDataContext);
+		try {
+			doImportModelData(stagedModel, path, portletDataContext);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
-	public void importData(
-		T stagedModel, String path, PortletDataContext portletDataContext) {
-	}
+	protected abstract void doExportModelData(
+			T stagedModel, PortletDataContext portletDataContext,
+			Element... elements)
+		throws Exception;
+
+	protected abstract void doImportModelData(
+			T stagedModel, String path, PortletDataContext portletDataContext)
+		throws Exception;
 
 }

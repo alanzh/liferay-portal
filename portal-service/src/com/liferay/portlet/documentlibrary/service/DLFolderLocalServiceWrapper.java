@@ -297,16 +297,35 @@ public class DLFolderLocalServiceWrapper implements DLFolderLocalService,
 		_dlFolderLocalService.deleteAll(groupId);
 	}
 
-	public void deleteFolder(long folderId)
+	public com.liferay.portlet.documentlibrary.model.DLFolder deleteFolder(
+		com.liferay.portlet.documentlibrary.model.DLFolder dlFolder)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_dlFolderLocalService.deleteFolder(folderId);
+		return _dlFolderLocalService.deleteFolder(dlFolder);
 	}
 
-	public void deleteFolder(long folderId, boolean includeTrashedEntries)
+	public com.liferay.portlet.documentlibrary.model.DLFolder deleteFolder(
+		com.liferay.portlet.documentlibrary.model.DLFolder dlFolder,
+		boolean includeTrashedEntries)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_dlFolderLocalService.deleteFolder(folderId, includeTrashedEntries);
+		return _dlFolderLocalService.deleteFolder(dlFolder,
+			includeTrashedEntries);
+	}
+
+	public com.liferay.portlet.documentlibrary.model.DLFolder deleteFolder(
+		long folderId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _dlFolderLocalService.deleteFolder(folderId);
+	}
+
+	public com.liferay.portlet.documentlibrary.model.DLFolder deleteFolder(
+		long folderId, boolean includeTrashedEntries)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _dlFolderLocalService.deleteFolder(folderId,
+			includeTrashedEntries);
 	}
 
 	public com.liferay.portlet.documentlibrary.model.DLFolder fetchFolder(
@@ -513,6 +532,11 @@ public class DLFolderLocalServiceWrapper implements DLFolderLocalService,
 			parentFolderId);
 	}
 
+	public java.util.List<com.liferay.portlet.documentlibrary.model.DLFolder> getNoAssetFolders()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _dlFolderLocalService.getNoAssetFolders();
+	}
+
 	public void getSubfolderIds(java.util.List<java.lang.Long> folderIds,
 		long groupId, long folderId)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -555,16 +579,17 @@ public class DLFolderLocalServiceWrapper implements DLFolderLocalService,
 	}
 
 	public com.liferay.portlet.documentlibrary.model.DLFolder updateFolderAndFileEntryTypes(
-		long folderId, long parentFolderId, java.lang.String name,
+		long userId, long folderId, long parentFolderId, java.lang.String name,
 		java.lang.String description, long defaultFileEntryTypeId,
 		java.util.List<java.lang.Long> fileEntryTypeIds,
 		boolean overrideFileEntryTypes,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _dlFolderLocalService.updateFolderAndFileEntryTypes(folderId,
-			parentFolderId, name, description, defaultFileEntryTypeId,
-			fileEntryTypeIds, overrideFileEntryTypes, serviceContext);
+		return _dlFolderLocalService.updateFolderAndFileEntryTypes(userId,
+			folderId, parentFolderId, name, description,
+			defaultFileEntryTypeId, fileEntryTypeIds, overrideFileEntryTypes,
+			serviceContext);
 	}
 
 	/**

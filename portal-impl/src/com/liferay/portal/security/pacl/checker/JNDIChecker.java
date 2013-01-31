@@ -14,6 +14,9 @@
 
 package com.liferay.portal.security.pacl.checker;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
 import java.security.Permission;
 
 import java.util.ArrayList;
@@ -56,8 +59,16 @@ public class JNDIChecker extends BaseChecker {
 			Pattern pattern = Pattern.compile(name);
 
 			_patterns.add(pattern);
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Allowing access to JNDI names that match the regular " +
+						"expression " + name);
+			}
 		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(JNDIChecker.class);
 
 	private List<Pattern> _patterns;
 

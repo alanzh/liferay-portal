@@ -369,6 +369,11 @@ public class GroupLocalServiceUtil {
 		getService().checkCompanyGroup(companyId);
 	}
 
+	public static void checkMembershipPolicy(com.liferay.portal.model.User user)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().checkMembershipPolicy(user);
+	}
+
 	/**
 	* Creates systems groups and other related data needed by the system on the
 	* very first startup. Also takes care of creating the Control Panel groups
@@ -1047,6 +1052,26 @@ public class GroupLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().loadGetGroup(companyId, name);
+	}
+
+	/**
+	* Rebuilds the group tree.
+	*
+	* <p>
+	* Only call this method if the tree has become stale through operations
+	* other than normal CRUD. Under normal circumstances the tree is
+	* automatically rebuilt whenever necessary.
+	* </p>
+	*
+	* @param companyId the primary key of the group's company
+	* @throws PortalException if a group with the primary key could not be
+	found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void rebuildTree(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().rebuildTree(companyId);
 	}
 
 	/**

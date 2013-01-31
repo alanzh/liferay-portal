@@ -90,6 +90,8 @@ public class StringPool {
 
 	public static final String DOUBLE_UNDERLINE = "__";
 
+	public static final String[] EMPTY_ARRAY = new String[0];
+
 	public static final String EQUAL = "=";
 
 	public static final String EXCLAMATION = "!";
@@ -179,6 +181,8 @@ public class StringPool {
 	public static final String THREE_SPACES = "   ";
 
 	public static final String TILDE = "~";
+
+	public static final String TRIPLE_PERIOD = "...";
 
 	public static final String TRUE = "true";
 

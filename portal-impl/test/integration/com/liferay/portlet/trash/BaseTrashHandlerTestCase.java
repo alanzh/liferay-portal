@@ -34,11 +34,11 @@ import com.liferay.portal.model.WorkflowedModel;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -97,13 +97,19 @@ public abstract class BaseTrashHandlerTestCase {
 	@Test
 	@Transactional
 	public void testTrashParentAndDeleteParent() throws Exception {
-		trashParentBaseModel(true);
+		trashParentBaseModel(true, false);
+	}
+
+	@Test
+	@Transactional
+	public void testTrashParentAndDeleteTrashEntries() throws Exception {
+		trashParentBaseModel(false, true);
 	}
 
 	@Test
 	@Transactional
 	public void testTrashParentAndRestoreModel() throws Exception {
-		trashParentBaseModel(false);
+		trashParentBaseModel(false, false);
 	}
 
 	@Test
@@ -176,7 +182,7 @@ public abstract class BaseTrashHandlerTestCase {
 		return StringPool.BLANK;
 	}
 
-	protected abstract int getBaseModelsNotInTrashCount(
+	protected abstract int getNotInTrashBaseModelsCount(
 			BaseModel<?> parentBaseModel)
 		throws Exception;
 
@@ -270,8 +276,6 @@ public abstract class BaseTrashHandlerTestCase {
 	protected int searchBaseModelsCount(Class<?> clazz, long groupId)
 		throws Exception {
 
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
-
 		Indexer indexer = IndexerRegistryUtil.getIndexer(clazz);
 
 		SearchContext searchContext = ServiceTestUtil.getSearchContext();
@@ -286,8 +290,6 @@ public abstract class BaseTrashHandlerTestCase {
 	protected int searchTrashEntriesCount(
 			String keywords, ServiceContext serviceContext)
 		throws Exception {
-
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
 		Hits results = TrashEntryLocalServiceUtil.search(
 			serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
@@ -307,7 +309,7 @@ public abstract class BaseTrashHandlerTestCase {
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
 
-		int initialBaseModelsCount = getBaseModelsNotInTrashCount(
+		int initialBaseModelsCount = getNotInTrashBaseModelsCount(
 			parentBaseModel);
 		int initialBaseModelsSearchCount = 0;
 		int initialTrashEntriesCount = getTrashEntriesCount(group.getGroupId());
@@ -326,7 +328,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount + 1,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 
 		if (isIndexableBaseModel()) {
 			if (approved) {
@@ -364,7 +366,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount + 1,
 			getTrashEntriesCount(group.getGroupId()));
@@ -407,7 +409,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 			Assert.assertEquals(
 				initialBaseModelsCount,
-				getBaseModelsNotInTrashCount(parentBaseModel));
+				getNotInTrashBaseModelsCount(parentBaseModel));
 
 			if (isIndexableBaseModel()) {
 				Assert.assertEquals(
@@ -420,14 +422,16 @@ public abstract class BaseTrashHandlerTestCase {
 						getSearchKeywords(), serviceContext));
 			}
 
-			Assert.assertNull(fetchAssetEntry(baseModel));
+			if (isAssetableModel()) {
+				Assert.assertNull(fetchAssetEntry(baseModel));
+			}
 		}
 		else {
 			trashHandler.restoreTrashEntry(getTrashEntryClassPK(baseModel));
 
 			Assert.assertEquals(
 				initialBaseModelsCount + 1,
-				getBaseModelsNotInTrashCount(parentBaseModel));
+				getNotInTrashBaseModelsCount(parentBaseModel));
 
 			if (isIndexableBaseModel()) {
 				if (approved) {
@@ -473,7 +477,7 @@ public abstract class BaseTrashHandlerTestCase {
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
 
-		int initialBaseModelsCount = getBaseModelsNotInTrashCount(
+		int initialBaseModelsCount = getNotInTrashBaseModelsCount(
 			parentBaseModel);
 		int initialTrashEntriesCount = getTrashEntriesCount(group.getGroupId());
 
@@ -485,7 +489,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount + 1,
 			getTrashEntriesCount(group.getGroupId()));
@@ -502,7 +506,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount + 2,
 			getTrashEntriesCount(group.getGroupId()));
@@ -510,7 +514,10 @@ public abstract class BaseTrashHandlerTestCase {
 		Assert.assertTrue(isBaseModelTrashName(duplicateBaseModel));
 	}
 
-	protected void trashParentBaseModel(boolean delete) throws Exception {
+	protected void trashParentBaseModel(
+			boolean delete, boolean deleteTrashEntries)
+		throws Exception {
+
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		serviceContext.setScopeGroupId(group.getGroupId());
@@ -518,7 +525,7 @@ public abstract class BaseTrashHandlerTestCase {
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
 
-		int initialBaseModelsCount = getBaseModelsNotInTrashCount(
+		int initialBaseModelsCount = getNotInTrashBaseModelsCount(
 			parentBaseModel);
 		int initialTrashEntriesCount = getTrashEntriesCount(group.getGroupId());
 
@@ -526,7 +533,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount + 1,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
 
@@ -534,7 +541,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount + 1,
 			getTrashEntriesCount(group.getGroupId()));
@@ -549,20 +556,36 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertTrue(isInTrashContainer(baseModel));
 
-		if (isBaseModelMoveableFromTrash()) {
+		if (deleteTrashEntries) {
+			TrashEntryServiceUtil.deleteEntries(group.getGroupId());
+
+			Assert.assertEquals(0, getTrashEntriesCount(group.getGroupId()));
+		}
+		else if (isBaseModelMoveableFromTrash()) {
 			if (delete) {
-				TrashHandler trashHandler =
+				TrashHandler parentTrashHandler =
 					TrashHandlerRegistryUtil.getTrashHandler(
 						getParentBaseModelClassName());
 
-				trashHandler.deleteTrashEntry(
+				parentTrashHandler.deleteTrashEntry(
 					(Long)parentBaseModel.getPrimaryKeyObj());
 
 				Assert.assertEquals(
 					initialBaseModelsCount,
-					getBaseModelsNotInTrashCount(parentBaseModel));
+					getNotInTrashBaseModelsCount(parentBaseModel));
 				Assert.assertEquals(
 					initialTrashEntriesCount + 1,
+					getTrashEntriesCount(group.getGroupId()));
+
+				TrashHandler trashHandler =
+					TrashHandlerRegistryUtil.getTrashHandler(
+						getBaseModelClassName());
+
+				trashHandler.deleteTrashEntry(
+					(Long)baseModel.getPrimaryKeyObj());
+
+				Assert.assertEquals(
+					initialTrashEntriesCount,
 					getTrashEntriesCount(group.getGroupId()));
 			}
 			else {
@@ -571,7 +594,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 				Assert.assertEquals(
 					initialBaseModelsCount + 1,
-					getBaseModelsNotInTrashCount(newParentBaseModel));
+					getNotInTrashBaseModelsCount(newParentBaseModel));
 				Assert.assertEquals(
 					initialTrashEntriesCount + 1,
 					getTrashEntriesCount(group.getGroupId()));
@@ -587,7 +610,7 @@ public abstract class BaseTrashHandlerTestCase {
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
 
-		int initialBaseModelsCount = getBaseModelsNotInTrashCount(
+		int initialBaseModelsCount = getNotInTrashBaseModelsCount(
 			parentBaseModel);
 		int initialBaseModelsSearchCount = 0;
 		int initialTrashEntriesCount = getTrashEntriesCount(group.getGroupId());
@@ -607,7 +630,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount + 1,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
 
@@ -628,7 +651,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount,
-			getBaseModelsNotInTrashCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel));
 		Assert.assertEquals(
 			initialTrashEntriesCount + 1,
 			getTrashEntriesCount(group.getGroupId()));
@@ -654,7 +677,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 			Assert.assertEquals(
 				initialBaseModelsCount,
-				getBaseModelsNotInTrashCount(parentBaseModel));
+				getNotInTrashBaseModelsCount(parentBaseModel));
 			Assert.assertEquals(
 				initialTrashEntriesCount,
 				getTrashEntriesCount(group.getGroupId()));
@@ -670,14 +693,16 @@ public abstract class BaseTrashHandlerTestCase {
 						getSearchKeywords(), serviceContext));
 			}
 
-			Assert.assertNull(fetchAssetEntry(baseModel));
+			if (isAssetableModel()) {
+				Assert.assertNull(fetchAssetEntry(baseModel));
+			}
 		}
 		else {
 			trashHandler.restoreTrashEntry(getTrashEntryClassPK(baseModel));
 
 			Assert.assertEquals(
 				initialBaseModelsCount + 1,
-				getBaseModelsNotInTrashCount(parentBaseModel));
+				getNotInTrashBaseModelsCount(parentBaseModel));
 			Assert.assertEquals(
 				initialTrashEntriesCount,
 				getTrashEntriesCount(group.getGroupId()));

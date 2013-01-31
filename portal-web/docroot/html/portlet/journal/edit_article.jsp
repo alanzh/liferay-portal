@@ -69,7 +69,7 @@ if (ddmStructureId > 0) {
 
 		ddmStructureGroupId = ddmStructure.getGroupId();
 	}
-	catch (NoSuchStructureException nsse2) {
+	catch (NoSuchStructureException nsse) {
 	}
 }
 else if (Validator.isNotNull(structureId)) {
@@ -163,6 +163,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="privateLayout" type="hidden" value="<%= layout.isPrivateLayout() %>" />
 	<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
 	<aui:input name="classNameId" type="hidden" value="<%= classNameId %>" />
 	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
@@ -195,7 +196,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 					<div class="article-info">
 						<div class="float-container">
 							<c:if test="<%= article.isSmallImage() %>">
-								<img alt="" class="article-image" src="<%= HtmlUtil.escape(_getArticleImage(themeDisplay, article)) %>" width="150" />
+								<img alt="" class="article-image" src="<%= HtmlUtil.escape(article.getArticleImageURL(themeDisplay)) %>" width="150" />
 							</c:if>
 
 							<c:if test="<%= !article.isNew() %>">
@@ -428,21 +429,6 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 </aui:script>
 
 <%!
-private String _getArticleImage(ThemeDisplay themeDisplay, JournalArticle article) {
-	String imageURL = null;
-
-	if (article.isSmallImage()) {
-		if (Validator.isNotNull(article.getSmallImageURL())) {
-			imageURL = article.getSmallImageURL();
-		}
-		else {
-			imageURL = themeDisplay.getPathImage() + "/journal/article?img_id=" + article.getSmallImageId() + "&t=" + WebServerServletTokenUtil.getToken(article.getSmallImageId());
-		}
-	}
-
-	return imageURL;
-}
-
 private String _getSectionJsp(String name) {
 	return TextFormatter.format(name, TextFormatter.N);
 }

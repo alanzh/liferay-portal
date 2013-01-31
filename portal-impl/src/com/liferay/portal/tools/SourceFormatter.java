@@ -739,16 +739,24 @@ public class SourceFormatter {
 		do {
 			String match = matcher.group();
 
-			int x = -1;
+			String s = null;
 
 			if (pattern.equals(_sessionKeyPattern)) {
-				x = match.indexOf(StringPool.COMMA);
+				s = StringPool.COMMA;
 			}
 			else if (pattern.equals(_taglibSessionKeyPattern)) {
-				x = match.indexOf("key=");
+				s = "key=";
 			}
 
-			String substring = match.substring(x + 1).trim();
+			int x = match.indexOf(s);
+
+			if (x == -1) {
+				continue;
+			}
+
+			x = x + s.length();
+
+			String substring = match.substring(x).trim();
 
 			String quote = StringPool.BLANK;
 
@@ -762,10 +770,10 @@ public class SourceFormatter {
 				continue;
 			}
 
-			int y = match.indexOf(quote, x + 1);
+			int y = match.indexOf(quote, x);
 			int z = match.indexOf(quote, y + 1);
 
-			if ((x == -1) || (y == -1) || (z == -1)) {
+			if ((y == -1) || (z == -1)) {
 				continue;
 			}
 
@@ -773,12 +781,18 @@ public class SourceFormatter {
 			String suffix = match.substring(z);
 			String oldKey = match.substring(y + 1, z);
 
-			for (char c : oldKey.toCharArray()) {
-				if (!Validator.isChar(c) || !Validator.isDigit(c) ||
-					(c != CharPool.DASH) || (c != CharPool.UNDERLINE)) {
+			boolean alphaNumericKey = true;
 
-					continue;
+			for (char c : oldKey.toCharArray()) {
+				if (!Validator.isChar(c) && !Validator.isDigit(c) &&
+					(c != CharPool.DASH) && (c != CharPool.UNDERLINE)) {
+
+					alphaNumericKey = false;
 				}
+			}
+
+			if (!alphaNumericKey) {
+				continue;
 			}
 
 			String newKey = TextFormatter.format(oldKey, TextFormatter.O);
@@ -1575,7 +1589,7 @@ public class SourceFormatter {
 								}
 
 								if (excluded == null) {
-									excluded = 
+									excluded =
 										_javaTermSortExclusions.getProperty(
 											fileNameWithForwardSlashes);
 								}
@@ -1707,6 +1721,21 @@ public class SourceFormatter {
 				}
 
 				if (!line.contains(StringPool.QUOTE)) {
+					int pos = line.indexOf(") ");
+
+					if (pos != -1) {
+						String linePart = line.substring(pos + 2);
+
+						if (Character.isLetter(linePart.charAt(0)) &&
+							!linePart.startsWith("default") &&
+							!linePart.startsWith("instanceof") &&
+							!linePart.startsWith("throws")) {
+
+							line = StringUtil.replaceLast(
+								line, StringPool.SPACE + linePart, linePart);
+						}
+					}
+
 					if ((trimmedLine.startsWith("private ") ||
 						 trimmedLine.startsWith("protected ") ||
 						 trimmedLine.startsWith("public ")) &&
@@ -3959,7 +3988,8 @@ public class SourceFormatter {
 			"**\\portal-web\\classes\\**\\*.java",
 			"**\\portal-web\\test\\**\\*Test.java",
 			"**\\portal-web\\test\\**\\*Tests.java",
-			"**\\portlet\\**\\service\\**", "**\\tmp\\**", "**\\tools\\tck\\**"
+			"**\\portlet\\**\\service\\**", "**\\test\\*-generated\\**",
+			"**\\tmp\\**", "**\\tools\\tck\\**"
 		};
 
 		excludes = ArrayUtil.append(excludes, _excludes);

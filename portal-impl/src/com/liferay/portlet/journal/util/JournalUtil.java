@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
@@ -57,9 +58,12 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portal.webserver.WebServerServletTokenUtil;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -113,7 +117,7 @@ public class JournalUtil {
 
 	public static void addAllReservedEls(
 		Element rootElement, Map<String, String> tokens, JournalArticle article,
-		String languageId) {
+		String languageId, ThemeDisplay themeDisplay) {
 
 		JournalUtil.addReservedEl(
 			rootElement, tokens, JournalStructureConstants.RESERVED_ARTICLE_ID,
@@ -160,10 +164,28 @@ public class JournalUtil {
 				article.getDisplayDate());
 		}
 
+		String smallImageURL = StringPool.BLANK;
+
+		if (Validator.isNotNull(article.getSmallImageURL())) {
+			smallImageURL = article.getSmallImageURL();
+		}
+		else if ((themeDisplay != null) && article.isSmallImage()) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(themeDisplay.getPathImage());
+			sb.append("/journal/article?img_id=");
+			sb.append(article.getSmallImageId());
+			sb.append("&t=");
+			sb.append(
+				WebServerServletTokenUtil.getToken(article.getSmallImageId()));
+
+			smallImageURL = sb.toString();
+		}
+
 		JournalUtil.addReservedEl(
 			rootElement, tokens,
 			JournalStructureConstants.RESERVED_ARTICLE_SMALL_IMAGE_URL,
-			article.getSmallImageURL());
+			smallImageURL);
 
 		String[] assetTagNames = new String[0];
 
@@ -433,6 +455,42 @@ public class JournalUtil {
 
 	public static String formatVM(String vm) {
 		return vm;
+	}
+
+	public static String getAbsolutePath(
+			PortletRequest portletRequest, long folderId)
+		throws PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (folderId == JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			return themeDisplay.translate("home");
+		}
+
+		JournalFolder folder = JournalFolderLocalServiceUtil.getFolder(
+			folderId);
+
+		List<JournalFolder> folders = folder.getAncestors();
+
+		Collections.reverse(folders);
+
+		StringBundler sb = new StringBundler((folders.size() * 3) + 5);
+
+		sb.append(themeDisplay.translate("home"));
+		sb.append(StringPool.SPACE);
+
+		for (JournalFolder curFolder : folders) {
+			sb.append(StringPool.RAQUO);
+			sb.append(StringPool.SPACE);
+			sb.append(curFolder.getName());
+		}
+
+		sb.append(StringPool.RAQUO);
+		sb.append(StringPool.SPACE);
+		sb.append(folder.getName());
+
+		return sb.toString();
 	}
 
 	public static OrderByComparator getArticleOrderByComparator(
@@ -802,6 +860,24 @@ public class JournalUtil {
 
 		return PortalUtil.getEmailFromName(
 			preferences, companyId, PropsValues.JOURNAL_EMAIL_FROM_NAME);
+	}
+
+	public static String getJournalControlPanelLink(
+			PortletRequest portletRequest, long folderId)
+		throws PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			portletRequest, PortletKeys.JOURNAL,
+			PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId()),
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter("struts_action", "/journal/view");
+		portletURL.setParameter("folderId", String.valueOf(folderId));
+
+		return portletURL.toString();
 	}
 
 	public static Stack<JournalArticle> getRecentArticles(

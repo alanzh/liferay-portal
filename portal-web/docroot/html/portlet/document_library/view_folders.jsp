@@ -227,6 +227,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 
 					<%
 					for (DLFileEntryType fileEntryType : fileEntryTypes) {
+						request.setAttribute("view_folders.jsp-fileEntryType", fileEntryType);
 					%>
 
 						<liferay-portlet:renderURL varImpl="viewFileEntryTypeURL">
@@ -373,9 +374,6 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 
 				<%
 				for (Folder curFolder : folders) {
-					int foldersCount = DLAppServiceUtil.getFoldersCount(repositoryId, curFolder.getFolderId());
-					int fileEntriesCount = DLAppServiceUtil.getFileEntriesAndFileShortcutsCount(repositoryId, curFolder.getFolderId(), WorkflowConstants.STATUS_APPROVED);
-
 					request.setAttribute("view_entries.jsp-folder", curFolder);
 					request.setAttribute("view_entries.jsp-folderId", String.valueOf(curFolder.getFolderId()));
 					request.setAttribute("view_entries.jsp-repositoryId", String.valueOf(curFolder.getRepositoryId()));
@@ -414,9 +412,9 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 						dataView="<%= dataView %>"
 						entryTitle="<%= curFolder.getName() %>"
 						expandURL="<%= expandViewURL.toString() %>"
-						iconImage='<%= (foldersCount + fileEntriesCount) > 0 ? "folder_full_document" : "folder_empty" %>'
+						iconImage='<%= (DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcutsCount(curFolder.getRepositoryId(), curFolder.getFolderId(), WorkflowConstants.STATUS_APPROVED, true) > 0) ? "folder_full_document" : "folder_empty" %>'
 						selected="<%= (curFolder.getFolderId() == folderId) %>"
-						showExpand="<%= foldersCount > 0 %>"
+						showExpand="<%= DLAppServiceUtil.getFoldersCount(repositoryId, curFolder.getFolderId()) > 0 %>"
 						viewURL="<%= viewURL.toString() %>"
 					/>
 

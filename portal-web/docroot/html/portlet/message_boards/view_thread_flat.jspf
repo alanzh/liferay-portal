@@ -56,8 +56,6 @@ if (threadView.equals(MBThreadConstants.THREAD_VIEW_FLAT)) {
 </c:if>
 
 <%
-boolean editable = true;
-
 int depth = 0;
 
 for (int i = 0; i < messages.size(); i++) {
@@ -80,8 +78,9 @@ for (int i = 0; i < messages.size(); i++) {
 	request.setAttribute("edit_message.jsp-category", category);
 	request.setAttribute("edit_message.jsp-className", className);
 	request.setAttribute("edit_message.jsp-depth", depth);
-	request.setAttribute("edit_message.jsp-editable", editable);
+	request.setAttribute("edit_message.jsp-editable", Boolean.TRUE);
 	request.setAttribute("edit_message.jsp-message", message);
+	request.setAttribute("edit-message.jsp-showPermanentLink", Boolean.TRUE);
 	request.setAttribute("edit_message.jsp-thread", thread);
 %>
 

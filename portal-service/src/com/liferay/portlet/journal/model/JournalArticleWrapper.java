@@ -1360,6 +1360,11 @@ public class JournalArticleWrapper implements JournalArticle,
 		_journalArticle.persist();
 	}
 
+	public java.lang.String getArticleImageURL(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay) {
+		return _journalArticle.getArticleImageURL(themeDisplay);
+	}
+
 	public com.liferay.portlet.journal.model.JournalArticleResource getArticleResource()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {

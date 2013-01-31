@@ -161,21 +161,17 @@ public class ThemeUtil {
 
 		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
 
-		TemplateContextType templateContextType = TemplateContextType.STANDARD;
-
 		if ((pluginClassLoader != null) &&
 			(pluginClassLoader != contextClassLoader)) {
 
 			currentThread.setContextClassLoader(pluginClassLoader);
-
-			templateContextType = TemplateContextType.CLASS_LOADER;
 		}
 
 		try {
 			if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_FTL)) {
 				return doIncludeFTL(
 					servletContext, request, pageContext, path, theme,
-					templateContextType, write);
+					TemplateContextType.STANDARD, write);
 			}
 			else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_JSP)) {
 				doIncludeJSP(servletContext, request, response, path, theme);
@@ -183,7 +179,7 @@ public class ThemeUtil {
 			else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_VM)) {
 				return doIncludeVM(
 					servletContext, request, pageContext, path, theme,
-					templateContextType, write);
+					TemplateContextType.STANDARD, write);
 			}
 
 			return null;
@@ -256,8 +252,7 @@ public class ThemeUtil {
 				TemplateManager.FREEMARKER, resourcePath);
 
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateManager.FREEMARKER, templateResource,
-			TemplateContextType.STANDARD);
+			TemplateManager.FREEMARKER, templateResource, templateContextType);
 
 		// FreeMarker variables
 
@@ -287,7 +282,7 @@ public class ThemeUtil {
 			writer = new UnsyncStringWriter();
 		}
 
-		VelocityTaglib velocityTaglib = new VelocityTaglib(
+		VelocityTaglib velocityTaglib = new VelocityTaglibImpl(
 			servletContext, request,
 			new PipingServletResponse(response, writer), pageContext, template);
 
@@ -317,7 +312,7 @@ public class ThemeUtil {
 		GenericServlet genericServlet = null;
 
 		if (servlet instanceof GenericServlet) {
-			genericServlet = (GenericServlet) servlet;
+			genericServlet = (GenericServlet)servlet;
 		}
 		else {
 			genericServlet = new GenericServlet() {
@@ -475,8 +470,7 @@ public class ThemeUtil {
 		}
 
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateManager.VELOCITY, templateResource,
-			TemplateContextType.STANDARD);
+			TemplateManager.VELOCITY, templateResource, templateContextType);
 
 		// Velocity variables
 
@@ -507,7 +501,7 @@ public class ThemeUtil {
 			writer = new UnsyncStringWriter();
 		}
 
-		VelocityTaglib velocityTaglib = new VelocityTaglib(
+		VelocityTaglib velocityTaglib = new VelocityTaglibImpl(
 			servletContext, request,
 			new PipingServletResponse(response, writer), pageContext, template);
 

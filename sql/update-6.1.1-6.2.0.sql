@@ -291,6 +291,8 @@ alter table DDMTemplate add smallImageURL STRING;
 update DDMTemplate set type_ = 'display' where type_ = 'list';
 update DDMTemplate set type_ = 'form' where type_ = 'detail';
 
+alter table DLFileEntry add classNameId LONG;
+alter table DLFileEntry add classPK LONG;
 alter table DLFileEntry add manualCheckInRequired BOOLEAN;
 
 alter table DLFileRank add active_ BOOLEAN;
@@ -326,6 +328,8 @@ alter table ExpandoRow add modifiedDate DATE null;
 COMMIT_TRANSACTION;
 
 update ExpandoRow set modifiedDate = CURRENT_TIMESTAMP;
+
+alter table Group_ add treePath STRING null;
 
 update Group_ set site = FALSE where name = 'Control Panel';
 
@@ -370,6 +374,8 @@ alter table MBMessage drop column attachments;
 
 drop table OrgGroupPermission;
 
+alter table PasswordPolicy add regex VARCHAR(75) null;
+
 drop index IX_C3A17327 on PasswordPolicyRel;
 drop index IX_ED7CF243 on PasswordPolicyRel;
 
@@ -383,6 +389,7 @@ drop table ResourceCode;
 
 drop index IX_88705859 on ResourcePermission;
 drop index IX_C94C7708 on ResourcePermission;
+drop index IX_8D83D0CE on ResourcePermission;
 drop index IX_4A1F4402 on ResourcePermission;
 drop index IX_8DB864A9 on ResourcePermission;
 

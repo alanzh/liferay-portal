@@ -15,15 +15,20 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.portal.NoSuchUserGroupRoleException;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.security.auth.MembershipPolicy;
+import com.liferay.portal.security.auth.MembershipPolicyFactory;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.base.UserGroupRoleLocalServiceBaseImpl;
 import com.liferay.portal.service.persistence.UserGroupRolePK;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -68,6 +73,52 @@ public class UserGroupRoleLocalServiceImpl
 		}
 
 		PermissionCacheUtil.clearCache();
+	}
+
+	public void checkMembershipPolicy(User user) throws SystemException {
+		MembershipPolicy membershipPolicy =
+			MembershipPolicyFactory.getInstance();
+
+		LinkedHashMap<String, Object> groupParams =
+			new LinkedHashMap<String, Object>();
+
+		groupParams.put("inheritance", Boolean.FALSE);
+		groupParams.put("site", Boolean.TRUE);
+		groupParams.put("usersGroups", user.getUserId());
+
+		List<Group> userGroups = groupLocalService.search(
+			user.getCompanyId(), groupParams, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
+
+		for (Group userGroup : userGroups) {
+			List<Role> mandatoryRoles = membershipPolicy.getMandatoryRoles(
+				userGroup, user);
+
+			for (Role role : mandatoryRoles) {
+				if (!hasUserGroupRole(
+						user.getUserId(), userGroup.getGroupId(),
+						role.getRoleId(), false)) {
+
+					addUserGroupRoles(
+						user.getUserId(), userGroup.getGroupId(),
+						new long[] {role.getRoleId()});
+				}
+			}
+
+			List<Role> forbiddenRoles = membershipPolicy.getForbiddenRoles(
+				userGroup, user);
+
+			for (Role role : forbiddenRoles) {
+				if (hasUserGroupRole(
+						user.getUserId(), userGroup.getGroupId(),
+						role.getRoleId(), false)) {
+
+					deleteUserGroupRoles(
+						user.getUserId(), userGroup.getGroupId(),
+						new long[] {role.getRoleId()});
+				}
+			}
+		}
 	}
 
 	@Override
