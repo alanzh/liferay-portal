@@ -171,6 +171,7 @@ import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.calendar.model.CalEvent;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.expando.ValueDataException;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
@@ -828,7 +829,8 @@ public class PortalImpl implements Portal {
 
 				try {
 					actualURL = getJournalArticleActualURL(
-						groupId, mainPath, friendlyURL, params, requestContext);
+						groupId, privateLayout, mainPath, friendlyURL, params,
+						requestContext);
 				}
 				catch (Exception e) {
 					throw new NoSuchLayoutException(e);
@@ -2230,8 +2232,9 @@ public class PortalImpl implements Portal {
 	}
 
 	public String getJournalArticleActualURL(
-			long groupId, String mainPath, String friendlyURL,
-			Map<String, String[]> params, Map<String, Object> requestContext)
+			long groupId, boolean privateLayout, String mainPath,
+			String friendlyURL, Map<String, String[]> params,
+			Map<String, Object> requestContext)
 		throws PortalException, SystemException {
 
 		String articleUrlTitle = friendlyURL.substring(
@@ -2242,7 +2245,7 @@ public class PortalImpl implements Portal {
 				groupId, articleUrlTitle);
 
 		Layout layout = LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-			journalArticle.getLayoutUuid(), groupId);
+			journalArticle.getLayoutUuid(), groupId, privateLayout);
 
 		String layoutActualURL = getLayoutActualURL(layout, mainPath);
 
@@ -3709,7 +3712,8 @@ public class PortalImpl implements Portal {
 
 					Layout liveGroupLayout =
 						LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-							layout.getUuid(), liveGroup.getGroupId());
+								layout.getUuid(), liveGroup.getGroupId(),
+								layout.isPrivateLayout());
 
 					if ((liveGroupLayout != null) &&
 						liveGroupLayout.hasScopeGroup()) {
@@ -3780,7 +3784,8 @@ public class PortalImpl implements Portal {
 
 				Layout scopeLayout =
 					LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-						scopeLayoutUuid, layout.getGroupId());
+						scopeLayoutUuid, layout.getGroupId(),
+						layout.isPrivateLayout());
 
 				Group scopeGroup = scopeLayout.getScopeGroup();
 
@@ -3865,7 +3870,9 @@ public class PortalImpl implements Portal {
 				scopeGroup.getParentGroupId(), companyGroup.getGroupId()
 			};
 		}
-		else if (scopeGroup.isRegularSite()) {
+		else if (scopeGroup.isLayoutSetPrototype() ||
+				 scopeGroup.isRegularSite()) {
+
 			return new long[] {groupId, companyGroup.getGroupId()};
 		}
 		else {
@@ -4599,6 +4606,8 @@ public class PortalImpl implements Portal {
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.CALENDAR.MODEL.CALEVENT$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.DOCUMENTLIBRARY.MODEL." +
 				"DLFILEENTRY$]",
+			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.DOCUMENTLIBRARY.MODEL." +
+				"DLFOLDER$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.MESSAGEBOARDS.MODEL." +
 				"MBMESSAGE$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.MESSAGEBOARDS.MODEL." +
@@ -4629,9 +4638,9 @@ public class PortalImpl implements Portal {
 			getClassNameId(BlogsEntry.class),
 			getClassNameId(BookmarksEntry.class),
 			getClassNameId(CalEvent.class), getClassNameId(DLFileEntry.class),
-			getClassNameId(MBMessage.class), getClassNameId(MBThread.class),
-			getClassNameId(WikiPage.class), ResourceConstants.SCOPE_COMPANY,
-			ResourceConstants.SCOPE_GROUP,
+			getClassNameId(DLFolder.class), getClassNameId(MBMessage.class),
+			getClassNameId(MBThread.class), getClassNameId(WikiPage.class),
+			ResourceConstants.SCOPE_COMPANY, ResourceConstants.SCOPE_GROUP,
 			ResourceConstants.SCOPE_GROUP_TEMPLATE,
 			ResourceConstants.SCOPE_INDIVIDUAL,
 			SocialRelationConstants.TYPE_BI_COWORKER,
@@ -5800,15 +5809,15 @@ public class PortalImpl implements Portal {
 			return;
 		}
 
-		if (layout.isTypeControlPanel()) {
+		if (portletActions) {
 			ResourceLocalServiceUtil.addResources(
 				companyId, groupId, 0, name, primaryKey, portletActions, true,
-				true);
+				!layout.isPrivateLayout());
 		}
 		else {
 			ResourceLocalServiceUtil.addResources(
 				companyId, groupId, 0, name, primaryKey, portletActions, true,
-				!layout.isPrivateLayout());
+				true);
 		}
 	}
 

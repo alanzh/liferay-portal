@@ -243,8 +243,6 @@ if (parentOrganization != null) {
 
 <aui:script>
 	function <portlet:namespace />openOrganizationSelector() {
-		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_organization" /></portlet:renderURL>';
-
 		<c:choose>
 			<c:when test="<%= organization == null %>">
 				var type = document.<portlet:namespace />fm.<portlet:namespace />type.value;
@@ -254,9 +252,19 @@ if (parentOrganization != null) {
 			</c:otherwise>
 		</c:choose>
 
-		var organizationWindow = window.open(url, 'organization', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
-
-		organizationWindow.focus();
+		Liferay.Util.openWindow(
+			{
+				dialog:{
+					align: Liferay.Util.Window.ALIGN_CENTER,
+					constrain: true,
+					modal: true,
+					width: 600
+				},
+				id: '<portlet:namespace />selectOrganizationDialog',
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "parent-organization")) %>',
+				uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_organization" /></portlet:renderURL>'
+			}
+		);
 	}
 
 	Liferay.provide(

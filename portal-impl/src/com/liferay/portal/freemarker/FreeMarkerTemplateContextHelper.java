@@ -14,7 +14,7 @@
 
 package com.liferay.portal.freemarker;
 
-import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.templateparser.TemplateContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -39,32 +39,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author Raymond Augé
  */
 public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
-
-	@Override
-	public Map<String, Object> getHelperUtilities() {
-		Map<String, Object> helperUtilities = super.getHelperUtilities();
-
-		// Enum util
-
-		helperUtilities.put(
-			"enumUtil", BeansWrapper.getDefaultInstance().getEnumModels());
-
-		// Object util
-
-		helperUtilities.put("objectUtil", new LiferayObjectConstructor());
-
-		// Portlet preferences
-
-		helperUtilities.put(
-			"freeMarkerPortletPreferences", new TemplatePortletPreferences());
-
-		// Static class util
-
-		helperUtilities.put(
-			"staticUtil", BeansWrapper.getDefaultInstance().getStaticModels());
-
-		return helperUtilities;
-	}
 
 	@Override
 	public Set<String> getRestrictedVariables() {
@@ -107,7 +81,7 @@ public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 			templateContext.put(
 				"init",
 				StringPool.SLASH + themeDisplay.getPathContext() +
-					TemplateResource.SERVLET_SEPARATOR +
+					TemplateConstants.SERVLET_SEPARATOR +
 						"/html/themes/_unstyled/templates/init.ftl");
 		}
 
@@ -126,6 +100,30 @@ public class FreeMarkerTemplateContextHelper extends TemplateContextHelper {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void populateExtraHelperUtilities(
+		Map<String, Object> helperUtilities) {
+
+		// Enum util
+
+		helperUtilities.put(
+			"enumUtil", BeansWrapper.getDefaultInstance().getEnumModels());
+
+		// Object util
+
+		helperUtilities.put("objectUtil", new LiferayObjectConstructor());
+
+		// Portlet preferences
+
+		helperUtilities.put(
+			"freeMarkerPortletPreferences", new TemplatePortletPreferences());
+
+		// Static class util
+
+		helperUtilities.put(
+			"staticUtil", BeansWrapper.getDefaultInstance().getStaticModels());
 	}
 
 }

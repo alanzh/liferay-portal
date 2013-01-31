@@ -34,7 +34,7 @@ import java.io.ObjectOutput;
 public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(29);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{groupId=");
 		sb.append(groupId);
@@ -50,6 +50,8 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		sb.append(parentGroupId);
 		sb.append(", liveGroupId=");
 		sb.append(liveGroupId);
+		sb.append(", treePath=");
+		sb.append(treePath);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", description=");
@@ -79,6 +81,13 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		groupImpl.setClassPK(classPK);
 		groupImpl.setParentGroupId(parentGroupId);
 		groupImpl.setLiveGroupId(liveGroupId);
+
+		if (treePath == null) {
+			groupImpl.setTreePath(StringPool.BLANK);
+		}
+		else {
+			groupImpl.setTreePath(treePath);
+		}
 
 		if (name == null) {
 			groupImpl.setName(StringPool.BLANK);
@@ -126,6 +135,7 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		classPK = objectInput.readLong();
 		parentGroupId = objectInput.readLong();
 		liveGroupId = objectInput.readLong();
+		treePath = objectInput.readUTF();
 		name = objectInput.readUTF();
 		description = objectInput.readUTF();
 		type = objectInput.readInt();
@@ -144,6 +154,13 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		objectOutput.writeLong(classPK);
 		objectOutput.writeLong(parentGroupId);
 		objectOutput.writeLong(liveGroupId);
+
+		if (treePath == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(treePath);
+		}
 
 		if (name == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -186,6 +203,7 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 	public long classPK;
 	public long parentGroupId;
 	public long liveGroupId;
+	public String treePath;
 	public String name;
 	public String description;
 	public int type;

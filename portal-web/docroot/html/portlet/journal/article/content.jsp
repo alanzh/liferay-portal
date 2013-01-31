@@ -311,8 +311,8 @@ if (Validator.isNotNull(content)) {
 														data-img="<%= imageURL != null ? imageURL : StringPool.BLANK %>"
 														data-url="<%= editTemplateURL %>"
 														label="<%= HtmlUtil.escape(ddmTemplate.getName(locale)) %>"
-														selected="<%= templateId.equals(ddmTemplate.getTemplateId()) %>"
-														value="<%= ddmTemplate.getTemplateId() %>"
+														selected="<%= templateId.equals(ddmTemplate.getTemplateKey()) %>"
+														value="<%= ddmTemplate.getTemplateKey() %>"
 													/>
 
 												<%
@@ -523,7 +523,7 @@ if (Validator.isNotNull(content)) {
 					Fields ddmFields = null;
 
 					if ((article != null) && Validator.isNotNull(article.getStructureId()) && Validator.isNotNull(content)) {
-						ddmFields = DDMXMLUtil.getFields(ddmStructure, content);
+						ddmFields = JournalConverterUtil.getDDMFields(ddmStructure, content);
 					}
 					%>
 

@@ -14,9 +14,13 @@
 
 package com.liferay.portal.kernel.template;
 
+import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +48,35 @@ public class TemplateManagerUtil {
 		for (TemplateManager templateManager : templateManagers.values()) {
 			templateManager.destroy(classLoader);
 		}
+	}
+
+	public static Set<String> getSupportedLanguageTypes(String propertyKey) {
+		Set<String> supportedLanguageTypes = _supportedLanguageTypes.get(
+			propertyKey);
+
+		if (supportedLanguageTypes != null) {
+			return supportedLanguageTypes;
+		}
+
+		Map<String, TemplateManager> templateManagers = _getTemplateManagers();
+
+		supportedLanguageTypes = new HashSet<String>();
+
+		for (String templateManagerName : templateManagers.keySet()) {
+			String content = PropsUtil.get(
+				propertyKey, new Filter(templateManagerName));
+
+			if (Validator.isNotNull(content)) {
+				supportedLanguageTypes.add(templateManagerName);
+			}
+		}
+
+		supportedLanguageTypes = Collections.unmodifiableSet(
+			supportedLanguageTypes);
+
+		_supportedLanguageTypes.put(propertyKey, supportedLanguageTypes);
+
+		return supportedLanguageTypes;
 	}
 
 	public static Template getTemplate(
@@ -79,9 +112,7 @@ public class TemplateManagerUtil {
 		return templateManagers.get(templateManagerName);
 	}
 
-	public static Set<String> getTemplateManagerNames(
-		String templateManagerName) {
-
+	public static Set<String> getTemplateManagerNames() {
 		Map<String, TemplateManager> templateManagers = _getTemplateManagers();
 
 		return templateManagers.keySet();
@@ -160,6 +191,8 @@ public class TemplateManagerUtil {
 		return _templateManagers;
 	}
 
+	private static Map<String, Set<String>> _supportedLanguageTypes =
+		new ConcurrentHashMap<String, Set<String>>();
 	private static Map<String, TemplateManager> _templateManagers =
 		new ConcurrentHashMap<String, TemplateManager>();
 

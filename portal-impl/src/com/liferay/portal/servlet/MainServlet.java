@@ -73,6 +73,7 @@ import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ThemeLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.servlet.filters.absoluteredirects.AbsoluteRedirectsResponse;
 import com.liferay.portal.servlet.filters.i18n.I18nFilter;
@@ -100,6 +101,7 @@ import com.liferay.util.servlet.EncryptedServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -247,10 +249,10 @@ public class MainServlet extends ActionServlet {
 			_log.debug("Initialize portlets");
 		}
 
-		List<Portlet> portlets = null;
+		List<Portlet> portlets = new ArrayList<Portlet>();
 
 		try {
-			portlets = initPortlets(pluginPackage);
+			portlets.addAll(initPortlets(pluginPackage));
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -542,6 +544,11 @@ public class MainServlet extends ActionServlet {
 		throws IOException, ServletException {
 
 		super.service(request, response);
+	}
+
+	protected void checkMembershipPolicy(User user) throws SystemException {
+		GroupLocalServiceUtil.checkMembershipPolicy(user);
+		UserGroupRoleLocalServiceUtil.checkMembershipPolicy(user);
 	}
 
 	protected void checkPortletRequestProcessor(HttpServletRequest request)
@@ -1011,6 +1018,8 @@ public class MainServlet extends ActionServlet {
 		EventsProcessorUtil.process(
 			PropsKeys.LOGIN_EVENTS_POST, PropsValues.LOGIN_EVENTS_POST, request,
 			response);
+
+		checkMembershipPolicy(user);
 
 		return userId;
 	}

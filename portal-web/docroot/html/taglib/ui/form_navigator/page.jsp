@@ -29,6 +29,12 @@ String jspPath = (String)request.getAttribute("liferay-ui:form-navigator:jspPath
 boolean showButtons = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:form-navigator:showButtons"));
 
 if (Validator.isNull(backURL)) {
+	String redirect = ParamUtil.getString(request, "redirect");
+
+	backURL = redirect;
+}
+
+if (Validator.isNull(backURL)) {
 	PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
 	backURL = portletURL.toString();
@@ -197,19 +203,18 @@ if (Validator.isNotNull(historyKey)) {
 </aui:script>
 
 <aui:script use="aui-base">
-	var modifyLinks = A.all('.modify-link');
+	var portlet = A.one('#<portlet:namespace />sectionsContainer');
 
-	if (modifyLinks) {
-		modifyLinks.on(
-			'click',
-			function() {
-				A.fire(
-					'formNavigator:trackChanges',
-					A.one('.selected .modify-link')
-				);
-			}
-		);
-	}
+	portlet.delegate(
+		'click',
+		function(event) {
+			A.fire(
+				'formNavigator:trackChanges',
+				event.currentTarget
+			);
+		},
+		'.modify-link'
+	);
 </aui:script>
 
 <%!

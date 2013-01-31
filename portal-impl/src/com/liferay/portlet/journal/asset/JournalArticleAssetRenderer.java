@@ -16,6 +16,7 @@ package com.liferay.portlet.journal.asset;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
@@ -52,7 +53,22 @@ import javax.portlet.RenderResponse;
  * @author Sergio González
  * @author Raymond Augé
  */
-public class JournalArticleAssetRenderer extends BaseAssetRenderer {
+public class JournalArticleAssetRenderer
+	extends BaseAssetRenderer implements TrashRenderer {
+
+	public static final String TYPE = "journal_article";
+
+	public static long getClassPK(JournalArticle article) {
+		if ((article.isDraft() || article.isPending()) &&
+			(article.getVersion() !=
+				JournalArticleConstants.VERSION_DEFAULT)) {
+
+			return article.getPrimaryKey();
+		}
+		else {
+			return article.getResourcePrimKey();
+		}
+	}
 
 	public JournalArticleAssetRenderer(JournalArticle article) {
 		_article = article;
@@ -71,16 +87,12 @@ public class JournalArticleAssetRenderer extends BaseAssetRenderer {
 		return _article.getAvailableLocales();
 	}
 
-	public long getClassPK() {
-		if ((_article.isDraft() || _article.isPending()) &&
-			(_article.getVersion() !=
-				JournalArticleConstants.VERSION_DEFAULT)) {
+	public String getClassName() {
+		return JournalArticle.class.getName();
+	}
 
-			return _article.getPrimaryKey();
-		}
-		else {
-			return _article.getResourcePrimKey();
-		}
+	public long getClassPK() {
+		return getClassPK(_article);
 	}
 
 	@Override
@@ -97,12 +109,20 @@ public class JournalArticleAssetRenderer extends BaseAssetRenderer {
 		return _article.getGroupId();
 	}
 
+	public String getPortletId() {
+		return PortletKeys.JOURNAL;
+	}
+
 	public String getSummary(Locale locale) {
 		return _article.getDescription(locale);
 	}
 
 	public String getTitle(Locale locale) {
 		return _article.getTitle(locale);
+	}
+
+	public String getType() {
+		return TYPE;
 	}
 
 	@Override

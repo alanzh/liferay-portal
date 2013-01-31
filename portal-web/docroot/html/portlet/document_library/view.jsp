@@ -94,7 +94,6 @@ request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
 				includeSelectAll="<%= true %>"
 				searchJsp='<%= showFoldersSearch ? "/html/portlet/document_library/file_entry_search.jsp" : StringPool.BLANK %>'
 			>
-
 				<liferay-util:include page="/html/portlet/document_library/toolbar.jsp" />
 			</liferay-ui:app-view-toolbar>
 
@@ -154,6 +153,12 @@ request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
 	</aui:layout>
 </div>
 
+<span id="<portlet:namespace />displayStyleButtonsContainer">
+	<c:if test='<%= !strutsAction.equals("/document_library/search") %>'>
+		<liferay-util:include page="/html/portlet/document_library/display_style_buttons.jsp" />
+	</c:if>
+</span>
+
 <%
 int entriesTotal = GetterUtil.getInteger((String)request.getAttribute("view.jsp-total"));
 int foldersTotal = GetterUtil.getInteger((String)request.getAttribute("view_folders.jsp-total"));
@@ -186,12 +191,6 @@ if (folder != null) {
 
 	<portlet:namespace />toggleActionsButton();
 </aui:script>
-
-<c:if test='<%= !strutsAction.equals("/document_library/search") %>'>
-	<span id="<portlet:namespace />displayStyleButtonsContainer">
-		<liferay-util:include page="/html/portlet/document_library/display_style_buttons.jsp" />
-	</span>
-</c:if>
 
 <aui:script use="liferay-document-library">
 	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" varImpl="mainURL" />

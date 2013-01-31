@@ -23,6 +23,7 @@ String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
 String redirect = ParamUtil.getString(request, "redirect");
+boolean showBackURL = ParamUtil.getBoolean(request, "showBackURL", true);
 
 Group group = (Group)request.getAttribute(WebKeys.GROUP);
 
@@ -48,6 +49,7 @@ tabsURL.setParameter("struts_action", "/sites_admin/edit_site_assignments");
 tabsURL.setParameter("tabs1", tabs1);
 tabsURL.setParameter("tabs2", "current");
 tabsURL.setParameter("redirect", redirect);
+tabsURL.setParameter("showBackURL", String.valueOf(showBackURL));
 
 request.setAttribute("edit_site_assignments.jsp-tabs1", tabs1);
 request.setAttribute("edit_site_assignments.jsp-tabs2", tabs2);
@@ -67,6 +69,7 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 		<liferay-ui:header
 			backURL="<%= redirect %>"
 			localizeTitle="<%= false %>"
+			showBackURL="<%= showBackURL %>"
 			title='<%= group.getDescriptiveName(locale) %>'
 		/>
 
@@ -85,6 +88,7 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 	<c:otherwise>
 		<liferay-ui:header
 			backURL="<%= redirect %>"
+			showBackURL="<%= showBackURL %>"
 			title="roles"
 		/>
 	</c:otherwise>

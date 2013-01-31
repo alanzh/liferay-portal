@@ -25,10 +25,13 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.AssertUtils;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.test.Sync;
+import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.util.BookmarksTestUtil;
@@ -36,48 +39,60 @@ import com.liferay.portlet.bookmarks.util.BookmarksTestUtil;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Brian Wing Shun Chan
  */
-@ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
+@ExecutionTestListeners(
+	listeners = {
+		EnvironmentExecutionTestListener.class,
+		SynchronousDestinationExecutionTestListener.class
+	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
+@Sync
 @Transactional
 public class BookmarksFolderServiceTest {
 
+	@Before
+	public void setUp() throws Exception {
+		_group = ServiceTestUtil.addGroup();
+	}
+
 	@Test
 	public void testAddFolder() throws Exception {
-		BookmarksTestUtil.addFolder();
+		BookmarksTestUtil.addFolder(_group.getGroupId());
 	}
 
 	@Test
 	public void testAddSubfolder() throws Exception {
-		BookmarksFolder folder = BookmarksTestUtil.addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId());
 
-		BookmarksTestUtil.addFolder(folder.getFolderId());
+		BookmarksTestUtil.addFolder(_group.getGroupId(), folder.getFolderId());
 	}
 
 	@Test
 	public void testDeleteFolder() throws Exception {
-		BookmarksFolder folder = BookmarksTestUtil.addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId());
 
 		BookmarksFolderServiceUtil.deleteFolder(folder.getFolderId());
 	}
 
 	@Test
 	public void testGetFolder() throws Exception {
-		BookmarksFolder folder = BookmarksTestUtil.addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder(
+			_group.getGroupId());
 
 		BookmarksFolderServiceUtil.getFolder(folder.getFolderId());
 	}
 
 	@Test
 	public void testSearch() throws Exception {
-		BookmarksEntry entry = BookmarksTestUtil.addEntry();
-
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
+		BookmarksEntry entry = BookmarksTestUtil.addEntry(_group.getGroupId());
 
 		long companyId = entry.getCompanyId();
 		long groupId = entry.getFolder().getGroupId();
@@ -128,20 +143,16 @@ public class BookmarksFolderServiceTest {
 
 		BookmarksFolderLocalServiceUtil.deleteFolder(folderId);
 
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
-
 		hits = indexer.search(searchContext);
 
 		Query query = hits.getQuery();
 
 		Assert.assertEquals(query.toString(), 0, hits.getLength());
 
-		BookmarksTestUtil.addEntry();
-		BookmarksTestUtil.addEntry();
-		BookmarksTestUtil.addEntry();
-		BookmarksTestUtil.addEntry();
-
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
+		BookmarksTestUtil.addEntry(_group.getGroupId());
+		BookmarksTestUtil.addEntry(_group.getGroupId());
+		BookmarksTestUtil.addEntry(_group.getGroupId());
+		BookmarksTestUtil.addEntry(_group.getGroupId());
 
 		searchContext.setEnd(3);
 		searchContext.setFolderIds((long[])null);
@@ -152,5 +163,7 @@ public class BookmarksFolderServiceTest {
 		Assert.assertEquals(4, hits.getLength());
 		Assert.assertEquals(2, hits.getDocs().length);
 	}
+
+	private Group _group;
 
 }

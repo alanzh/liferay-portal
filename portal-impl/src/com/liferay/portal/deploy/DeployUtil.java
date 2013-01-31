@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StreamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -120,7 +121,12 @@ public class DeployUtil {
 	public static void redeployJetty(String context) throws Exception {
 		String contextsDirName = System.getProperty("jetty.home") + "/contexts";
 
-		File contextXml = new File(contextsDirName + "/" + context + ".xml");
+		if (_isPortalContext(context)) {
+			throw new UnsupportedOperationException(
+				"This method is meant for redeploying plugins, not the portal");
+		}
+
+		File contextXml = new File(contextsDirName, context + ".xml");
 
 		if (contextXml.exists()) {
 			FileUtils.touch(contextXml);
@@ -131,13 +137,19 @@ public class DeployUtil {
 			filterMap.put("context", context);
 
 			copyDependencyXml(
-				"jetty-context-configure.xml", contextsDirName,
-				context + ".xml", filterMap, true);
+				"jetty-context-configure.xml", contextXml.getParent(),
+				contextXml.getName(), filterMap, true);
 		}
 	}
 
 	public static void redeployTomcat(String context) throws Exception {
-		File webXml = new File(getAutoDeployDestDir(), "/WEB-INF/web.xml");
+		if (_isPortalContext(context)) {
+			throw new UnsupportedOperationException(
+				"This method is meant for redeploying plugins, not the portal");
+		}
+
+		File webXml = new File(
+			getAutoDeployDestDir(), context + "/WEB-INF/web.xml");
 
 		FileUtils.touch(webXml);
 	}
@@ -223,6 +235,16 @@ public class DeployUtil {
 		if (undeployInterval > 0) {
 			Thread.sleep(undeployInterval);
 		}
+	}
+
+	private static boolean _isPortalContext(String context) {
+		if (Validator.isNull(context) || context.equals(StringPool.SLASH) ||
+			context.equals(PropsValues.PORTAL_CTX)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private DeployUtil() {

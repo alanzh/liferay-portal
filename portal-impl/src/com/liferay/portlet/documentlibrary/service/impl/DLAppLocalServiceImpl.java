@@ -29,6 +29,8 @@ import com.liferay.portal.model.Repository;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
@@ -504,18 +506,19 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 			return localRepository.getFileEntryByUuid(uuid);
 		}
 		catch (NoSuchFileEntryException nsfee) {
-			List<com.liferay.portal.model.Repository> repositories =
-				repositoryPersistence.findByGroupId(groupId);
+		}
 
-			for (Repository repository : repositories) {
-				try {
-					LocalRepository localRepository = getLocalRepository(
-						repository.getRepositoryId());
+		List<com.liferay.portal.model.Repository> repositories =
+			repositoryPersistence.findByGroupId(groupId);
 
-					return localRepository.getFileEntryByUuid(uuid);
-				}
-				catch (NoSuchFileEntryException nsfee2) {
-				}
+		for (Repository repository : repositories) {
+			try {
+				LocalRepository localRepository = getLocalRepository(
+					repository.getRepositoryId());
+
+				return localRepository.getFileEntryByUuid(uuid);
+			}
+			catch (NoSuchFileEntryException nsfee) {
 			}
 		}
 
@@ -702,6 +705,56 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		FileEntry fileEntry = localRepository.getFileEntry(fileEntryId);
 
 		dlAppHelperLocalService.restoreFileEntryFromTrash(userId, fileEntry);
+	}
+
+	public void subscribeFileEntryType(
+			long userId, long groupId, long fileEntryTypeId)
+		throws PortalException, SystemException {
+
+		if (fileEntryTypeId ==
+				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) {
+
+			fileEntryTypeId = groupId;
+		}
+
+		subscriptionLocalService.addSubscription(
+			userId, groupId, DLFileEntryType.class.getName(), fileEntryTypeId);
+	}
+
+	public void subscribeFolder(long userId, long groupId, long folderId)
+		throws PortalException, SystemException {
+
+		if (folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			folderId = groupId;
+		}
+
+		subscriptionLocalService.addSubscription(
+			userId, groupId, Folder.class.getName(), folderId);
+	}
+
+	public void unsubscribeFileEntryType(
+			long userId, long groupId, long fileEntryTypeId)
+		throws PortalException, SystemException {
+
+		if (fileEntryTypeId ==
+				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) {
+
+			fileEntryTypeId = groupId;
+		}
+
+		subscriptionLocalService.deleteSubscription(
+			userId, DLFileEntryType.class.getName(), fileEntryTypeId);
+	}
+
+	public void unsubscribeFolder(long userId, long groupId, long folderId)
+		throws PortalException, SystemException {
+
+		if (folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			folderId = groupId;
+		}
+
+		subscriptionLocalService.deleteSubscription(
+			userId, Folder.class.getName(), folderId);
 	}
 
 	/**

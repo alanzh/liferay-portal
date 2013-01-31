@@ -178,16 +178,6 @@ int total = 0;
 %>
 
 <c:choose>
-	<c:when test="<%= (Validator.isNotNull(keywords) || advancedSearch) %>">
-		<c:choose>
-			<c:when test="<%= PropsValues.JOURNAL_ARTICLES_SEARCH_WITH_INDEX %>">
-				<%@ include file="/html/portlet/journal/article_search_results_index.jspf" %>
-			</c:when>
-			<c:otherwise>
-				<%@ include file="/html/portlet/journal/article_search_results_database.jspf" %>
-			</c:otherwise>
-		</c:choose>
-	</c:when>
 	<c:when test='<%= displayTerms.getNavigation().equals("mine") %>'>
 
 		<%
@@ -364,12 +354,9 @@ for (int i = 0; i < results.size(); i++) {
 		<c:when test="<%= curFolder != null %>">
 
 			<%
-			int foldersCount = JournalFolderServiceUtil.getFoldersCount(scopeGroupId, curFolder.getFolderId());
-			int articlesCount = JournalArticleServiceUtil.getArticlesCount(scopeGroupId, curFolder.getFolderId());
-
 			String folderImage = "folder_empty";
 
-			if ((foldersCount + articlesCount) > 0) {
+			if (JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, curFolder.getFolderId()) > 0) {
 				folderImage = "folder_full_document";
 			}
 			%>

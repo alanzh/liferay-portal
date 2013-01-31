@@ -26,6 +26,12 @@ String typeSelection = ParamUtil.getString(request, "typeSelection", StringPool.
 AssetRendererFactory rendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(typeSelection);
 
 List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<AssetRendererFactory>();
+
+String emailParam = "emailAssetEntryAdded";
+
+String currentLanguageId = LanguageUtil.getLanguageId(request);
+
+String editorParam = emailParam + "Body_" + currentLanguageId;
 %>
 
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
@@ -36,124 +42,186 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="redirect" type="hidden" value="<%= configurationRenderURL.toString() %>" />
 	<aui:input name="groupId" type="hidden" />
-	<aui:input name="assetEntryType" type="hidden" value="<%= typeSelection %>" />
 	<aui:input name="typeSelection" type="hidden" />
 	<aui:input name="assetEntryId" type="hidden" />
-	<aui:input name="assetParentId" type="hidden" />
-	<aui:input name="preferences--assetTitle--" type="hidden" />
 	<aui:input name="assetEntryOrder" type="hidden" value="-1" />
+	<aui:input name="assetEntryType" type="hidden" />
+	<aui:input name="scopeId" type="hidden" />
 
-	<c:if test="<%= typeSelection.equals(StringPool.BLANK) %>">
+	<%
+	String rootPortletId = PortletConstants.getRootPortletId(portletResource);
+	%>
 
-		<%
-		String rootPortletId = PortletConstants.getRootPortletId(portletResource);
-		%>
-
+	<liferay-util:buffer var="selectStyle">
 		<c:choose>
 			<c:when test="<%= rootPortletId.equals(PortletKeys.RELATED_ASSETS) %>">
 				<aui:input name="preferences--selectionStyle--" type="hidden" value="dynamic" />
 			</c:when>
 			<c:otherwise>
-				<aui:select label="asset-selection" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>'>
-					<aui:option label="dynamic" selected='<%= selectionStyle.equals("dynamic") %>'/>
-					<aui:option label="manual" selected='<%= selectionStyle.equals("manual") %>'/>
-				</aui:select>
+				<aui:fieldset label="asset-selection">
+					<aui:input checked='<%= selectionStyle.equals("dynamic") %>' id="selectionStyleDynamic" label="dynamic" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="dynamic" />
+
+					<aui:input checked='<%= selectionStyle.equals("manual") %>' id="selectionStyleManual" label="manual" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="manual" />
+				</aui:fieldset>
 			</c:otherwise>
 		</c:choose>
+	</liferay-util:buffer>
 
-		<liferay-util:buffer var="selectScope">
+	<liferay-util:buffer var="selectScope">
+		<aui:select label="" name="preferences--defaultScope--" onChange='<%= renderResponse.getNamespace() + "selectScope();" %>'>
 
 			<%
-			Set<Group> groups = new HashSet<Group>();
-
-			groups.add(company.getGroup());
-			groups.add(themeDisplay.getScopeGroup());
-
-			for (Layout curLayout : LayoutLocalServiceUtil.getLayouts(layout.getGroupId(), layout.isPrivateLayout())) {
-				if (curLayout.hasScopeGroup()) {
-					groups.add(curLayout.getScopeGroup());
-				}
-			}
-
-			// Left list
-
-			List<KeyValuePair> scopesLeftList = new ArrayList<KeyValuePair>();
-
-			for (long groupId : groupIds) {
-				Group group = GroupLocalServiceUtil.getGroup(groupId);
-
-				scopesLeftList.add(new KeyValuePair(_getScopeId(group, scopeGroupId), _getName(group, locale)));
-			}
-
-			// Right list
-
-			List<KeyValuePair> scopesRightList = new ArrayList<KeyValuePair>();
-
-			Arrays.sort(groupIds);
+			long layoutScopeGroupId = 0;
 			%>
 
-			<aui:select label="" name="preferences--defaultScope--" onChange='<%= renderResponse.getNamespace() + "selectScope();" %>'>
-				<aui:option label='<%= LanguageUtil.get(pageContext,"select-more-than-one") + "..." %>' selected="<%= groupIds.length > 1 %>" value="<%= false %>" />
+			<aui:option label="<%= _getName(themeDisplay, themeDisplay.getScopeGroup()) %>" selected="<%= (groupIds.length == 1) && (themeDisplay.getScopeGroupId() == groupIds[0]) %>" value="<%= true %>" />
 
-				<optgroup label="<liferay-ui:message key="scopes" />">
+			<c:if test="<%= layout.hasScopeGroup() %>">
+
+				<%
+				Group layoutScopeGroup = layout.getScopeGroup();
+
+				layoutScopeGroupId = layoutScopeGroup.getGroupId();
+				%>
+
+				<aui:option label="<%= _getName(themeDisplay, layoutScopeGroup) %>" selected="<%= (groupIds.length == 1) && (layoutScopeGroupId == groupIds[0]) %>" value="<%= AssetPublisherUtil.getScopeId(layoutScopeGroup, themeDisplay.getScopeGroupId()) %>" />
+			</c:if>
+
+			<aui:option label="<%= _getName(themeDisplay, company.getGroup()) %>" selected="<%= (groupIds.length == 1) && (themeDisplay.getCompanyGroupId() == groupIds[0]) %>" value="<%= AssetPublisherUtil.getScopeId(company.getGroup(), themeDisplay.getScopeGroupId()) %>" />
+
+			<optgroup label="----------"></optgroup>
+
+			<aui:option label='<%= LanguageUtil.get(pageContext,"advanced-selection") + StringPool.TRIPLE_PERIOD %>' selected="<%= (groupIds.length > 1) || ((groupIds.length == 1) && (groupIds[0] != themeDisplay.getScopeGroupId()) && (groupIds[0] != layoutScopeGroupId) && (groupIds[0] != themeDisplay.getCompanyGroupId())) %>" value="<%= false %>" />
+		</aui:select>
+
+		<%
+		Set<Group> availableGroups = new HashSet<Group>();
+
+		availableGroups.add(company.getGroup());
+		availableGroups.add(themeDisplay.getScopeGroup());
+
+		for (Layout curLayout : LayoutLocalServiceUtil.getLayouts(layout.getGroupId(), layout.isPrivateLayout())) {
+			if (curLayout.hasScopeGroup()) {
+				availableGroups.add(curLayout.getScopeGroup());
+			}
+		}
+
+		List<Group> selectedGroups = GroupLocalServiceUtil.getGroups(groupIds);
+		%>
+
+		<div class="<%= defaultScope ? "aui-helper-hidden" : "" %>" id="<portlet:namespace />scopesBoxes">
+			<liferay-ui:search-container
+				emptyResultsMessage="no-groups-were-found"
+				iteratorURL="<%= configurationRenderURL %>"
+			>
+				<liferay-ui:search-container-results
+					results="<%= selectedGroups %>"
+					total="<%= selectedGroups.size() %>"
+				/>
+
+				<liferay-ui:search-container-row
+					className="com.liferay.portal.model.Group"
+					modelVar="group"
+				>
 
 					<%
-					for (Group group : groups) {
-						if (Arrays.binarySearch(groupIds, group.getGroupId()) < 0) {
-							scopesRightList.add(new KeyValuePair(_getScopeId(group, scopeGroupId), _getName(group, locale)));
+					group = group.toEscapedModel();
+					%>
+
+					<liferay-ui:search-container-column-text
+						name="name"
+					>
+						<liferay-ui:icon
+							label="<%= true %>"
+							message="<%= _getName(themeDisplay, group) %>"
+							src="<%= group.getIconURL(themeDisplay) %>"
+						/>
+					</liferay-ui:search-container-column-text>
+
+					<liferay-ui:search-container-column-text
+						name="type"
+						value="<%= LanguageUtil.get(pageContext, _getType(themeDisplay, group)) %>"
+					/>
+
+					<liferay-ui:search-container-column-text
+						align="right"
+					>
+						<liferay-portlet:actionURL portletConfiguration="true" var="deleteURL">
+							<portlet:param name="<%= Constants.CMD %>" value="remove-scope" />
+							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="scopeId" value="<%= AssetPublisherUtil.getScopeId(group, scopeGroupId) %>" />
+						</liferay-portlet:actionURL>
+
+						<liferay-ui:icon-delete
+							url="<%= deleteURL %>"
+						/>
+					</liferay-ui:search-container-column-text>
+				</liferay-ui:search-container-row>
+
+				<liferay-ui:search-iterator paginate="<%= false %>" />
+			</liferay-ui:search-container>
+
+			<div class="select-asset-selector">
+				<liferay-ui:icon-menu align="left" cssClass="select-existing-selector" icon='<%= themeDisplay.getPathThemeImages() + "/common/add.png" %>' message="select" showWhenSingleIcon="<%= true %>">
+
+					<%
+					for (Group group : availableGroups) {
+						if (ArrayUtil.contains(groupIds, group.getGroupId())) {
+							continue;
 						}
 					%>
 
-						<aui:option label="<%= _getName(group, locale) %>" selected="<%= (groupIds.length == 1) && (group.getGroupId() == groupIds[0]) %>" value="<%= _getScopeId(group, scopeGroupId) %>" />
+						<liferay-portlet:actionURL portletConfiguration="true" var="addScopeURL">
+							<portlet:param name="<%= Constants.CMD %>" value="add-scope" />
+							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="scopeId" value="<%= AssetPublisherUtil.getScopeId(group, scopeGroupId) %>" />
+						</liferay-portlet:actionURL>
+
+						<liferay-ui:icon id='<%= "scope" + group.getGroupId() %>' message="<%= _getName(themeDisplay, group) %>" method="post" src="<%= group.getIconURL(themeDisplay) %>" url="<%= addScopeURL %>" />
 
 					<%
 					}
 					%>
 
-				</optgroup>
-			</aui:select>
+					<%
+					PortletURL siteBrowserURL = PortletURLFactoryUtil.create(request, PortletKeys.SITE_BROWSER, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);
 
-			<aui:input name="preferences--scopeIds--" type="hidden" />
+					siteBrowserURL.setParameter("struts_action", "/site_browser/view");
+					siteBrowserURL.setParameter("callback", liferayPortletResponse.getNamespace() + "selectGroup");
+					siteBrowserURL.setPortletMode(PortletMode.VIEW);
+					siteBrowserURL.setWindowState(LiferayWindowState.POP_UP);
 
-			<%
-			scopesRightList = ListUtil.sort(scopesRightList, new KeyValuePairComparator(false, true));
-			%>
+					String siteBrowserURLString = HttpUtil.addParameter(siteBrowserURL.toString(), "doAsGroupId", scopeGroupId);
 
-			<div class="<%= defaultScope ? "aui-helper-hidden" : "" %>" id="<portlet:namespace />scopesBoxes">
-				<liferay-ui:input-move-boxes
-					leftBoxName="currentScopeIds"
-					leftList="<%= scopesLeftList %>"
-					leftReorder="true"
-					leftTitle="selected"
-					rightBoxName="availableScopeIds"
-					rightList="<%= scopesRightList %>"
-					rightTitle="available"
-				/>
+					String taglibURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" + liferayPortletResponse.getNamespace() + "selectGroup', title: '" + LanguageUtil.get(pageContext, "select-site") + "', uri:'" + HtmlUtil.escapeURL(siteBrowserURLString.toString()) + "'});";
+					%>
+
+					<liferay-ui:icon cssClass="highlited" image="add" message='<%= LanguageUtil.get(pageContext, "site") + StringPool.TRIPLE_PERIOD %>' url="<%= taglibURL %>" />
+				</liferay-ui:icon-menu>
 			</div>
-		</liferay-util:buffer>
+		</div>
+	</liferay-util:buffer>
 
-		<%
-		request.setAttribute("configuration.jsp-classTypesAssetRendererFactories", classTypesAssetRendererFactories);
-		request.setAttribute("configuration.jsp-configurationRenderURL", configurationRenderURL);
-		request.setAttribute("configuration.jsp-redirect", redirect);
-		request.setAttribute("configuration.jsp-rootPortletId", rootPortletId);
-		request.setAttribute("configuration.jsp-selectScope", selectScope);
-		%>
+	<%
+	request.setAttribute("configuration.jsp-classTypesAssetRendererFactories", classTypesAssetRendererFactories);
+	request.setAttribute("configuration.jsp-configurationRenderURL", configurationRenderURL);
+	request.setAttribute("configuration.jsp-editorParam", editorParam);
+	request.setAttribute("configuration.jsp-emailParam", emailParam);
+	request.setAttribute("configuration.jsp-redirect", redirect);
+	request.setAttribute("configuration.jsp-rootPortletId", rootPortletId);
+	request.setAttribute("configuration.jsp-selectScope", selectScope);
+	request.setAttribute("configuration.jsp-selectStyle", selectStyle);
+	%>
 
-		<c:choose>
-			<c:when test='<%= selectionStyle.equals("manual") %>'>
-				<liferay-util:include page="/html/portlet/asset_publisher/configuration_manual.jsp" />
-			</c:when>
-			<c:when test='<%= selectionStyle.equals("dynamic") %>'>
-				<liferay-util:include page="/html/portlet/asset_publisher/configuration_dynamic.jsp" />
-			</c:when>
-		</c:choose>
-	</c:if>
+	<c:choose>
+		<c:when test='<%= selectionStyle.equals("manual") %>'>
+			<liferay-util:include page="/html/portlet/asset_publisher/configuration_manual.jsp" />
+		</c:when>
+		<c:when test='<%= selectionStyle.equals("dynamic") %>'>
+			<liferay-util:include page="/html/portlet/asset_publisher/configuration_dynamic.jsp" />
+		</c:when>
+	</c:choose>
 </aui:form>
-
-<c:if test="<%= Validator.isNotNull(typeSelection) %>">
-	<%@ include file="/html/portlet/asset_publisher/select_asset.jspf" %>
-</c:if>
 
 <aui:script>
 	function <portlet:namespace />chooseSelectionStyle() {
@@ -176,10 +244,17 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 		submitForm(document.<portlet:namespace />fm);
 	}
 
-	function <portlet:namespace />selectAsset(assetEntryId, assetEntryOrder) {
+	function <portlet:namespace />selectAsset(assetEntryId, assetClassName, assetType, assetEntryTitle, groupName) {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'add-selection';
 		document.<portlet:namespace />fm.<portlet:namespace />assetEntryId.value = assetEntryId;
-		document.<portlet:namespace />fm.<portlet:namespace />assetEntryOrder.value = assetEntryOrder;
+		document.<portlet:namespace />fm.<portlet:namespace />assetEntryType.value = assetClassName;
+
+		submitForm(document.<portlet:namespace />fm);
+	}
+
+	function <portlet:namespace />selectGroup(groupId, name, scopeId, target) {
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'add-scope';
+		document.<portlet:namespace />fm.<portlet:namespace />scopeId.value = scopeId;
 
 		submitForm(document.<portlet:namespace />fm);
 	}
@@ -196,10 +271,6 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 		window,
 		'<portlet:namespace />saveSelectBoxes',
 		function() {
-			if (document.<portlet:namespace />fm.<portlet:namespace />scopeIds) {
-				document.<portlet:namespace />fm.<portlet:namespace />scopeIds.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentScopeIds);
-			}
-
 			if (document.<portlet:namespace />fm.<portlet:namespace />classNameIds) {
 				document.<portlet:namespace />fm.<portlet:namespace />classNameIds.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentClassNameIds);
 			}
@@ -218,21 +289,7 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 			%>
 
 			document.<portlet:namespace />fm.<portlet:namespace />metadataFields.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentMetadataFields);
-
-			submitForm(document.<portlet:namespace />fm);
-		},
-		['liferay-util-list-fields']
-	);
-
-	Liferay.provide(
-		window,
-		'<portlet:namespace />selectScopes',
-		function() {
-			if (document.<portlet:namespace />fm.<portlet:namespace />scopeIds) {
-				document.<portlet:namespace />fm.<portlet:namespace />scopeIds.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentScopeIds);
-			}
-
-			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'select-scope';
+			document.<portlet:namespace />fm.<portlet:namespace /><%= editorParam %>.value = window.<portlet:namespace />editor.getHTML();
 
 			submitForm(document.<portlet:namespace />fm);
 		},
@@ -243,46 +300,54 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 	Liferay.Util.toggleSelectBox('<portlet:namespace />defaultScope','false','<portlet:namespace />scopesBoxes');
 
 	Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />selectionStyle);
-
-	Liferay.after(
-		'inputmoveboxes:moveItem',
-		function(event) {
-			if ((event.fromBox.get('id') == '<portlet:namespace />currentScopeIds') || ( event.toBox.get('id') == '<portlet:namespace />currentScopeIds')) {
-				<portlet:namespace />selectScopes();
-			}
-		}
-	);
 </aui:script>
 
 <%!
-private String _getName(Group group, Locale locale) throws Exception {
+private String _getName(ThemeDisplay themeDisplay, Group group) throws Exception {
 	String name = null;
 
-	if (group.isLayoutPrototype()) {
-		name = LanguageUtil.get(locale, "default");
+	if (group.getGroupId() == themeDisplay.getScopeGroupId()) {
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "current-site"));
+		sb.append(StringPool.SPACE);
+		sb.append(StringPool.OPEN_PARENTHESIS);
+		sb.append(HtmlUtil.escape(group.getDescriptiveName(themeDisplay.getLocale())));
+		sb.append(StringPool.CLOSE_PARENTHESIS);
+
+		name = sb.toString();
+	}
+	else if (group.isLayout() && (group.getClassPK() == themeDisplay.getPlid())) {
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "current-page"));
+		sb.append(StringPool.SPACE);
+		sb.append(StringPool.OPEN_PARENTHESIS);
+		sb.append(HtmlUtil.escape(group.getDescriptiveName(themeDisplay.getLocale())));
+		sb.append(StringPool.CLOSE_PARENTHESIS);
+
+		name = sb.toString();
+	}
+	else if (group.isLayoutPrototype()) {
+		name = LanguageUtil.get(themeDisplay.getLocale(), "default");
 	}
 	else {
-		name = HtmlUtil.escape(group.getDescriptiveName(locale));
+		name = HtmlUtil.escape(group.getDescriptiveName(themeDisplay.getLocale()));
 	}
 
 	return name;
 }
 
-private String _getScopeId(Group group, long scopeGroupId) throws Exception {
-	String key = null;
+private String _getType(ThemeDisplay themeDisplay, Group group) {
+	String type = "site";
 
-	if (group.isLayout()) {
-		Layout layout = LayoutLocalServiceUtil.getLayout(group.getClassPK());
-
-		key = AssetPublisherUtil.SCOPE_ID_LAYOUT_PREFIX + layout.getLayoutId();
+	if (group.getGroupId() == themeDisplay.getCompanyGroupId()) {
+		type = "global";
 	}
-	else if (group.isLayoutPrototype() || (group.getGroupId() == scopeGroupId)) {
-		key = AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX + GroupConstants.DEFAULT;
-	}
-	else {
-		key = AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX + group.getGroupId();
+	else if (group.isLayout()) {
+		type = "page";
 	}
 
-	return key;
+	return type;
 }
 %>

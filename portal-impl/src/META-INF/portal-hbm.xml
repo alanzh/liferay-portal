@@ -331,6 +331,7 @@
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="parentGroupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="liveGroupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="treePath" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="type_" />
@@ -618,6 +619,7 @@
 		<property name="minNumbers" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="minSymbols" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="minUpperCase" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="regex" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="history" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="historyCount" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="expireable" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
@@ -1418,6 +1420,8 @@
 		<property name="versionUserName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="createDate" type="org.hibernate.type.TimestampType" />
 		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
+		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="repositoryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="folderId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />

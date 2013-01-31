@@ -54,11 +54,11 @@ if (groupId <= 0) {
 }
 
 String articleId = ParamUtil.getString(renderRequest, "articleId");
-String templateId = ParamUtil.getString(renderRequest, "templateId");
+String ddmTemplateKey = ParamUtil.getString(renderRequest, "ddmTemplateKey");
 
 if (Validator.isNull(articleId)) {
 	articleId = GetterUtil.getString(preferences.getValue("articleId", StringPool.BLANK));
-	templateId = GetterUtil.getString(preferences.getValue("templateId", StringPool.BLANK));
+	ddmTemplateKey = GetterUtil.getString(preferences.getValue("ddmTemplateKey", StringPool.BLANK));
 }
 
 boolean showAvailableLocales = GetterUtil.getBoolean(preferences.getValue("showAvailableLocales", StringPool.BLANK));
@@ -68,7 +68,7 @@ boolean enableRelatedAssets = GetterUtil.getBoolean(preferences.getValue("enable
 boolean enableRatings = GetterUtil.getBoolean(preferences.getValue("enableRatings", null));
 boolean enableComments = PropsValues.JOURNAL_ARTICLE_COMMENTS_ENABLED && GetterUtil.getBoolean(preferences.getValue("enableComments", null));
 boolean enableCommentRatings = GetterUtil.getBoolean(preferences.getValue("enableCommentRatings", null));
-boolean enableViewCountIncrement = GetterUtil.getBoolean(preferences.getValue("enableViewCountIncrement", null), PropsValues.ASSET_ENTRY_INCREMENT_VIEW_COUNTER_ENABLED);
+boolean enableViewCountIncrement = GetterUtil.getBoolean(preferences.getValue("enableViewCountIncrement", null), PropsValues.ASSET_ENTRY_BUFFERED_INCREMENT_ENABLED);
 
 String[] conversions = DocumentConversionUtil.getConversions("html");
 

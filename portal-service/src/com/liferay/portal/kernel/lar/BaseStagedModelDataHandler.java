@@ -24,30 +24,59 @@ import com.liferay.portal.model.StagedModel;
 public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
 
-	public void export(
-		T stagedModel, PortletDataContext portletDataContext,
-		Element... elements) {
+	public void exportStagedModel(
+			PortletDataContext portletDataContext, Element element,
+			T stagedModel)
+		throws PortletDataException {
+
+		exportStagedModel(
+			portletDataContext, new Element[] {element}, stagedModel);
+	}
+
+	public void exportStagedModel(
+			PortletDataContext portletDataContext, Element[] elements,
+			T stagedModel)
+		throws PortletDataException {
+
+		String path = StagedModelPathUtil.getPath(stagedModel);
+
+		if (portletDataContext.isPathProcessed(path)) {
+			return;
+		}
+
+		try {
+			doExportStagedModel(portletDataContext, elements, stagedModel);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
 	public abstract String getClassName();
 
-	public void importData(
-		Element stagedModelElement, PortletDataContext portletDataContext) {
+	public void importStagedModel(
+			PortletDataContext portletDataContext, String path, T stagedModel)
+		throws PortletDataException {
 
-		String path = stagedModelElement.attributeValue("path");
-
-		T stagedModel = (T)portletDataContext.getZipEntryAsObject(
-			stagedModelElement, path);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
+		if (portletDataContext.isPathProcessed(path)) {
 			return;
 		}
 
-		importData(stagedModel, path, portletDataContext);
+		try {
+			doImportStagedModel(portletDataContext, path, stagedModel);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
-	public void importData(
-		T stagedModel, String path, PortletDataContext portletDataContext) {
-	}
+	protected abstract void doExportStagedModel(
+			PortletDataContext portletDataContext, Element[] elements,
+			T stagedModel)
+		throws Exception;
+
+	protected abstract void doImportStagedModel(
+			PortletDataContext portletDataContext, String path, T stagedModel)
+		throws Exception;
 
 }

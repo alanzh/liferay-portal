@@ -329,6 +329,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return false;
 	}
 
+	public boolean isDeletable() {
+		return true;
+	}
+
 	/**
 	 * @throws PortalException
 	 * @throws SystemException if a system exception occurred
@@ -387,6 +391,14 @@ public abstract class BaseTrashHandler implements TrashHandler {
 			getClass().getName());
 
 		throw new SystemException();
+	}
+
+	/**
+	 * @throws PortalException
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void restoreRelatedTrashEntry(String className, long classPK)
+		throws PortalException, SystemException {
 	}
 
 	public void restoreTrashEntry(long classPK)

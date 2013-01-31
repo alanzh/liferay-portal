@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -90,7 +91,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
-import com.liferay.portlet.usersadmin.search.GroupSearchTerms;
 
 import java.io.File;
 import java.io.InputStream;
@@ -120,6 +120,18 @@ import javax.servlet.http.HttpServletResponse;
 public class SitesUtil {
 
 	public static final String ANALYTICS_PREFIX = "analytics_";
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_DEFAULT_VALUE = -1;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_DISABLED = 0;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_DISABLED_BY_DEFAULT =
+		1;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_ENABLED = 3;
+
+	public static final int CONTENT_SHARING_WITH_CHILDREN_ENABLED_BY_DEFAULT =
+		2;
 
 	public static final String LAST_MERGE_TIME = "last-merge-time";
 
@@ -500,7 +512,7 @@ public class SitesUtil {
 
 		if (newPlid <= 0) {
 			Layout firstLayout = LayoutLocalServiceUtil.fetchFirstLayout(
-				layoutSet.getGroupId(), layoutSet.getPrivateLayout(),
+				layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			if (firstLayout != null) {
@@ -555,7 +567,8 @@ public class SitesUtil {
 			Group group = layoutSetPrototype.getGroup();
 
 			return LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layout.getSourcePrototypeLayoutUuid(), group.getGroupId());
+				layout.getSourcePrototypeLayoutUuid(), group.getGroupId(),
+				true);
 		}
 		catch (Exception e) {
 			_log.error(
@@ -665,8 +678,8 @@ public class SitesUtil {
 
 			if (LayoutLocalServiceUtil.hasLayoutSetPrototypeLayout(
 					layoutSet.getLayoutSetPrototypeUuid(),
-					layout.getSourcePrototypeLayoutUuid(),
-					layout.getCompanyId())) {
+					layout.getCompanyId(),
+					layout.getSourcePrototypeLayoutUuid())) {
 
 				return false;
 			}
@@ -782,7 +795,7 @@ public class SitesUtil {
 
 	public static boolean isOrganizationUser(
 			long companyId, Group group, User user,
-			GroupSearchTerms searchTerms, List<String> organizationNames)
+			List<String> organizationNames)
 		throws Exception {
 
 		boolean organizationUser = false;
@@ -791,13 +804,15 @@ public class SitesUtil {
 			new LinkedHashMap<String, Object>();
 
 		organizationParams.put(
+			"groupOrganization", new Long(group.getGroupId()));
+		organizationParams.put(
 			"organizationsGroups", new Long(group.getGroupId()));
 
 		List<Organization> organizationsGroups =
 			OrganizationLocalServiceUtil.search(
 				companyId, OrganizationConstants.ANY_PARENT_ORGANIZATION_ID,
-				searchTerms.getKeywords(), null, null, null, organizationParams,
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+				null, null, null, null, organizationParams, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
 
 		for (Organization organization : organizationsGroups) {
 			for (long userOrganizationId : user.getOrganizationIds()) {
@@ -852,8 +867,8 @@ public class SitesUtil {
 		userGroupParams.put("userGroupsGroups", new Long(group.getGroupId()));
 
 		List<UserGroup> userGroupsGroups = UserGroupLocalServiceUtil.search(
-			companyId, null, null, userGroupParams, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+			companyId, null, userGroupParams, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, (OrderByComparator)null);
 
 		for (UserGroup userGroup : userGroupsGroups) {
 			for (long userGroupId : user.getUserGroupIds()) {
@@ -884,7 +899,7 @@ public class SitesUtil {
 			Layout sourcePrototypeLayout =
 				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
 					sourcePrototypeLayoutUuid,
-					layoutSetPrototypeGroup.getGroupId());
+					layoutSetPrototypeGroup.getGroupId(), true);
 
 			doMergeLayoutPrototypeLayout(
 				layoutSetPrototypeGroup, sourcePrototypeLayout);
@@ -1075,7 +1090,8 @@ public class SitesUtil {
 
 		Layout targetScopeLayout =
 			LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-				targetLayout.getUuid(), targetLayout.getGroupId());
+				targetLayout.getUuid(), targetLayout.getGroupId(),
+				targetLayout.isPrivateLayout());
 
 		if (!targetScopeLayout.hasScopeGroup()) {
 			GroupLocalServiceUtil.addGroup(

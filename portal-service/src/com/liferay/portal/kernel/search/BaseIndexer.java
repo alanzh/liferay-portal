@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.search.facet.ScopeFacet;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -66,12 +67,14 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portlet.expando.util.ExpandoBridgeIndexerUtil;
+import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
@@ -98,6 +101,10 @@ public abstract class BaseIndexer implements Indexer {
 
 	public static final int INDEX_FILTER_SEARCH_LIMIT = GetterUtil.getInteger(
 		PropsUtil.get(PropsKeys.INDEX_FILTER_SEARCH_LIMIT));
+
+	public void addRelatedEntryFields(Document document, Object obj)
+		throws Exception {
+	}
 
 	public void delete(long companyId, String uid) throws SearchException {
 		try {
@@ -186,8 +193,28 @@ public abstract class BaseIndexer implements Indexer {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			searchContext.setEntryClassNames(
-				new String[] {getClassName(searchContext)});
+			String[] entryClassNames = getClassNames();
+
+			if (searchContext.isIncludeAttachments()) {
+				entryClassNames = ArrayUtil.append(
+					entryClassNames, DLFileEntry.class.getName());
+			}
+
+			if (searchContext.isIncludeDiscussions()) {
+				entryClassNames = ArrayUtil.append(
+					entryClassNames, MBMessage.class.getName());
+
+				searchContext.setAttribute("discussion", true);
+			}
+
+			searchContext.setEntryClassNames(entryClassNames);
+
+			if (searchContext.isIncludeAttachments() ||
+				searchContext.isIncludeDiscussions()) {
+
+				searchContext.setAttribute(
+					"relatedEntryClassNames", getClassNames());
+			}
 
 			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
 				searchContext);
@@ -195,7 +222,9 @@ public abstract class BaseIndexer implements Indexer {
 			addSearchAssetCategoryIds(contextQuery, searchContext);
 			addSearchAssetTagNames(contextQuery, searchContext);
 			addSearchEntryClassNames(contextQuery, searchContext);
+			addSearchFolderId(contextQuery, searchContext);
 			addSearchGroupId(contextQuery, searchContext);
+			addSearchUserId(contextQuery, searchContext);
 
 			BooleanQuery fullQuery = createFullQuery(
 				contextQuery, searchContext);
@@ -420,6 +449,8 @@ public abstract class BaseIndexer implements Indexer {
 				hits = filterSearch(hits, permissionChecker, searchContext);
 			}
 
+			processHits(searchContext, hits);
+
 			return hits;
 		}
 		catch (SearchException se) {
@@ -452,6 +483,45 @@ public abstract class BaseIndexer implements Indexer {
 		throws Exception {
 
 		addSearchLocalizedTerm(searchQuery, searchContext, field, like);
+	}
+
+	protected void addRelatedClassNames(
+			BooleanQuery contextQuery, SearchContext searchContext)
+		throws Exception {
+
+		String[] relatedEntryClassNames = (String[])searchContext.getAttribute(
+			"relatedEntryClassNames");
+
+		if ((relatedEntryClassNames == null) ||
+			(relatedEntryClassNames.length == 0)) {
+
+			return;
+		}
+
+		BooleanQuery relatedQueries = BooleanQueryFactoryUtil.create(
+			searchContext);
+
+		for (String relatedEntryClassName : relatedEntryClassNames) {
+			Indexer indexer = IndexerRegistryUtil.getIndexer(
+				relatedEntryClassName);
+
+			if (indexer == null) {
+				continue;
+			}
+
+			BooleanQuery relatedQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			indexer.postProcessContextQuery(relatedQuery, searchContext);
+
+			relatedQuery.addRequiredTerm(
+				Field.CLASS_NAME_ID,
+				PortalUtil.getClassNameId(relatedEntryClassName));
+
+			relatedQueries.add(relatedQuery, BooleanClauseOccur.SHOULD);
+		}
+
+		contextQuery.add(relatedQueries, BooleanClauseOccur.MUST);
 	}
 
 	protected void addSearchArrayQuery(
@@ -692,6 +762,18 @@ public abstract class BaseIndexer implements Indexer {
 		}
 	}
 
+	protected void addSearchFolderId(
+			BooleanQuery contextQuery, SearchContext searchContext)
+		throws Exception {
+
+		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
+
+		multiValueFacet.setFieldName(Field.FOLDER_ID);
+		multiValueFacet.setStatic(true);
+
+		searchContext.addFacet(multiValueFacet);
+	}
+
 	protected void addSearchGroupId(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
@@ -777,6 +859,18 @@ public abstract class BaseIndexer implements Indexer {
 		else {
 			searchQuery.addTerm(field, value, like);
 		}
+	}
+
+	protected void addSearchUserId(
+			BooleanQuery contextQuery, SearchContext searchContext)
+		throws Exception {
+
+		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
+
+		multiValueFacet.setFieldName(Field.USER_ID);
+		multiValueFacet.setStatic(true);
+
+		searchContext.addFacet(multiValueFacet);
 	}
 
 	protected void addStagingGroupKeyword(Document document, long groupId)
@@ -1059,7 +1153,9 @@ public abstract class BaseIndexer implements Indexer {
 			catch (Exception e) {
 			}
 
-			if (paginationType.equals("more") && (docs.size() > end)) {
+			if (paginationType.equals("more") && (end > 0) &&
+				(docs.size() > end)) {
+
 				hasMore = true;
 
 				break;
@@ -1203,12 +1299,6 @@ public abstract class BaseIndexer implements Indexer {
 	protected String getClassName(SearchContext searchContext) {
 		String[] classNames = getClassNames();
 
-		if (classNames.length != 1) {
-			throw new UnsupportedOperationException(
-				"Search method needs to be manually implemented for " +
-					"indexers with more than one class name");
-		}
-
 		return classNames[0];
 	}
 
@@ -1327,6 +1417,17 @@ public abstract class BaseIndexer implements Indexer {
 	protected void postProcessFullQuery(
 			BooleanQuery fullQuery, SearchContext searchContext)
 		throws Exception {
+	}
+
+	protected void processHits(SearchContext searchContext, Hits hits)
+		throws SearchException {
+
+		HitsProcessor hitsProcessor =
+			HitsProcessorRegistryUtil.getDefaultHitsProcessor();
+
+		if (hitsProcessor != null) {
+			hitsProcessor.process(searchContext, hits);
+		}
 	}
 
 	protected void setFilterSearch(boolean filterSearch) {

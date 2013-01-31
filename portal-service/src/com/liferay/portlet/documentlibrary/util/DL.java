@@ -20,11 +20,15 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.portlet.PortletPreferences;
@@ -89,8 +93,39 @@ public interface DL {
 			PortletRequest portletRequest, long folderId)
 		throws PortalException, SystemException;
 
+	public Map<Locale, String> getEmailFileEntryAddedBodyMap(
+		PortletPreferences preferences);
+
+	public boolean getEmailFileEntryAddedEnabled(
+		PortletPreferences preferences);
+
+	public Map<Locale, String> getEmailFileEntryAddedSubjectMap(
+		PortletPreferences preferences);
+
+	public Map<Locale, String> getEmailFileEntryUpdatedBodyMap(
+		PortletPreferences preferences);
+
+	public boolean getEmailFileEntryUpdatedEnabled(
+		PortletPreferences preferences);
+
+	public Map<Locale, String> getEmailFileEntryUpdatedSubjectMap(
+		PortletPreferences preferences);
+
+	public String getEmailFromAddress(
+			PortletPreferences preferences, long companyId)
+		throws SystemException;
+
+	public String getEmailFromName(
+			PortletPreferences preferences, long companyId)
+		throws SystemException;
+
+	public List<Object> getEntries(Hits hits);
+
 	public String getFileEntryImage(
 		FileEntry fileEntry, ThemeDisplay themeDisplay);
+
+	public Set<Long> getFileEntryTypeSubscriptionClassPKs(long userId)
+		throws SystemException;
 
 	public String getFileIcon(String extension);
 
@@ -163,5 +198,18 @@ public interface DL {
 		String ddmStructureKey);
 
 	public abstract boolean isOfficeExtension(String extension);
+
+	public boolean isSubscribedToFileEntryType(
+			long companyId, long groupId, long userId, long fileEntryTypeId)
+		throws SystemException;
+
+	public boolean isSubscribedToFolder(
+			long companyId, long groupId, long userId, long folderId)
+		throws PortalException, SystemException;
+
+	public boolean isSubscribedToFolder(
+			long companyId, long groupId, long userId, long folderId,
+			boolean recursive)
+		throws PortalException, SystemException;
 
 }

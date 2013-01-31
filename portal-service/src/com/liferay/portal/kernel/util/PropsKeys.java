@@ -103,8 +103,6 @@ public interface PropsKeys {
 
 	public static final String ASSET_CATEGORIES_SELECTOR_MAX_ENTRIES = "asset.categories.selector.max.entries";
 
-	public static final String ASSET_ENTRY_INCREMENT_VIEW_COUNTER_ENABLED = "asset.entry.increment.view.counter.enabled";
-
 	public static final String ASSET_ENTRY_VALIDATOR = "asset.entry.validator";
 
 	public static final String ASSET_FILTER_SEARCH_LIMIT = "asset.filter.search.limit";
@@ -116,6 +114,16 @@ public interface PropsKeys {
 	public static final String ASSET_PUBLISHER_DISPLAY_TEMPLATES_CONFIG = "asset.publisher.display.templates.config";
 
 	public static final String ASSET_PUBLISHER_DISPLAY_TEMPLATES_HELP = "asset.publisher.display.templates.help";
+
+	public static final String ASSET_PUBLISHER_EMAIL_ASSET_ENTRY_ADDED_BODY = "asset.publisher.email.asset.entry.added.body";
+
+	public static final String ASSET_PUBLISHER_EMAIL_ASSET_ENTRY_ADDED_ENABLED = "asset.publisher.email.asset.entry.added.enabled";
+
+	public static final String ASSET_PUBLISHER_EMAIL_ASSET_ENTRY_ADDED_SUBJECT = "asset.publisher.email.asset.entry.added.subject";
+
+	public static final String ASSET_PUBLISHER_EMAIL_FROM_ADDRESS = "asset.publisher.email.from.address";
+
+	public static final String ASSET_PUBLISHER_EMAIL_FROM_NAME = "asset.publisher.email.from.name";
 
 	public static final String ASSET_RENDERER_ENABLED = "asset.renderer.enabled.";
 
@@ -299,9 +307,15 @@ public interface PropsKeys {
 
 	public static final String BROWSER_LAUNCHER_URL = "browser.launcher.url";
 
-	public static final String BUFFERED_INCREMENT_PARALLEL_QUEUE_SIZE = "buffered.increment.parallel.queue.size";
+	public static final String BUFFERED_INCREMENT_ENABLED = "buffered.increment.enabled";
 
-	public static final String BUFFERED_INCREMENT_SERIAL_QUEUE_SIZE = "buffered.increment.serial.queue.size";
+	public static final String BUFFERED_INCREMENT_STANDBY_QUEUE_THRESHOLD = "buffered.increment.standby.queue.threshold";
+
+	public static final String BUFFERED_INCREMENT_STANDBY_TIME_UPPER_LIMIT = "buffered.increment.standby.time.upper.limit";
+
+	public static final String BUFFERED_INCREMENT_THREADPOOL_KEEP_ALIVE_TIME = "buffered.increment.threadpool.keep.alive.time";
+
+	public static final String BUFFERED_INCREMENT_THREADPOOL_MAX_SIZE = "buffered.increment.threadpool.max.size";
 
 	public static final String CACHE_CONTENT_THRESHOLD_SIZE = "cache.content.threshold.size";
 
@@ -585,6 +599,22 @@ public interface PropsKeys {
 
 	public static final String DL_DISPLAY_VIEWS = "dl.display.views";
 
+	public static final String DL_EMAIL_FILE_ENTRY_ADDED_BODY = "dl.email.file.entry.added.body";
+
+	public static final String DL_EMAIL_FILE_ENTRY_ADDED_ENABLED = "dl.email.file.entry.added.enabled";
+
+	public static final String DL_EMAIL_FILE_ENTRY_ADDED_SUBJECT = "dl.email.file.entry.added.subject";
+
+	public static final String DL_EMAIL_FILE_ENTRY_UPDATED_BODY = "dl.email.file.entry.updated.body";
+
+	public static final String DL_EMAIL_FILE_ENTRY_UPDATED_ENABLED = "dl.email.file.entry.updated.enabled";
+
+	public static final String DL_EMAIL_FILE_ENTRY_UPDATED_SUBJECT = "dl.email.file.entry.updated.subject";
+
+	public static final String DL_EMAIL_FROM_ADDRESS = "dl.email.from.address";
+
+	public static final String DL_EMAIL_FROM_NAME = "dl.email.from.name";
+
 	public static final String DL_FILE_ENTRY_COMMENTS_ENABLED = "dl.file.entry.comments.enabled";
 
 	public static final String DL_FILE_ENTRY_CONVERSIONS_ENABLED = "dl.file.entry.conversions.enabled";
@@ -640,8 +670,6 @@ public interface PropsKeys {
 	public static final String DL_FILE_ENTRY_PROCESSORS = "dl.file.entry.processors";
 
 	public static final String DL_FILE_ENTRY_PROCESSORS_TRIGGER_SYNCHRONOUSLY = "dl.file.entry.processors.trigger.synchronously";
-
-	public static final String DL_FILE_ENTRY_READ_COUNT_ENABLED = "dl.file.entry.read.count.enabled";
 
 	public static final String DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT = "dl.file.entry.thumbnail.custom1.max.height";
 
@@ -725,6 +753,8 @@ public interface PropsKeys {
 
 	public static final String DOCKBAR_ADD_PORTLETS = "dockbar.add.portlets";
 
+	public static final String DOCKBAR_ADMINISTRATIVE_LINKS_SHOW_IN_POP_UP = "dockbar.administrative.links.show.in.pop.up";
+
 	public static final String DYNAMIC_DATA_LISTS_ERROR_TEMPLATE_FREEMARKER = "dynamic.data.lists.error.template.freemarker";
 
 	public static final String DYNAMIC_DATA_LISTS_ERROR_TEMPLATE_VELOCITY = "dynamic.data.lists.error.template.velocity";
@@ -752,8 +782,6 @@ public interface PropsKeys {
 	public static final String DYNAMIC_DATA_MAPPING_STRUCTURE_PRIVATE_FIELD_REPEATABLE = "dynamic.data.mapping.structure.private.field.repeatable";
 
 	public static final String DYNAMIC_DATA_MAPPING_TEMPLATE_LANGUAGE_CONTENT = "dynamic.data.mapping.template.language.content";
-
-	public static final String DYNAMIC_DATA_MAPPING_TEMPLATE_LANGUAGE_TYPES = "dynamic.data.mapping.template.language.types";
 
 	public static final String DYNAMIC_RESOURCE_SERVLET_ALLOWED_PATHS = "dynamic.resource.servlet.allowed.paths";
 
@@ -920,6 +948,10 @@ public interface PropsKeys {
 	public static final String INDEX_SEARCH_HIGHLIGHT_SNIPPET_SIZE = "index.search.highlight.snippet.size";
 
 	public static final String INDEX_SEARCH_LIMIT = "index.search.limit";
+
+	public static final String INDEX_SEARCH_QUERY_SUGGESTION_ENABLED = "index.search.query.suggestion.enabled";
+
+	public static final String INDEX_SEARCH_QUERY_SUGGESTION_SCORING_THRESHOLD = "index.search.query.suggestion.scoring.threshold";
 
 	public static final String INDEX_SEARCH_SCORING_ENABLED = "index.search.scoring.enabled";
 
@@ -1090,8 +1122,6 @@ public interface PropsKeys {
 	public static final String JOURNAL_TEMPLATE_LANGUAGE_CONTENT = "journal.template.language.content";
 
 	public static final String JOURNAL_TEMPLATE_LANGUAGE_PARSER = "journal.template.language.parser";
-
-	public static final String JOURNAL_TEMPLATE_LANGUAGE_TYPES = "journal.template.language.types";
 
 	public static final String JOURNAL_TEMPLATE_VELOCITY_RESTRICTED_VARIABLES = "journal.template.velocity.restricted.variables";
 
@@ -1541,19 +1571,35 @@ public interface PropsKeys {
 
 	public static final String MODEL_HINTS_CONFIGS = "model.hints.configs";
 
+	public static final String MODULE_FRAMEWORK_AUTO_DEPLOY_DIRS = "module.framework.auto.deploy.dirs";
+
+	public static final String MODULE_FRAMEWORK_AUTO_DEPLOY_INTERVAL = "module.framework.auto.deploy.interval";
+
+	public static final String MODULE_FRAMEWORK_BASE_DIR = "module.framework.base.dir";
+
 	public static final String MODULE_FRAMEWORK_BEGINNING_START_LEVEL = "module.framework.beginning.start.level";
+
+	public static final String MODULE_FRAMEWORK_CORE_DIR = "module.framework.core.dir";
 
 	public static final String MODULE_FRAMEWORK_ENABLED = "module.framework.enabled";
 
+	public static final String MODULE_FRAMEWORK_INITIAL_BUNDLES = "module.framework.initial.bundles";
+
 	public static final String MODULE_FRAMEWORK_LIB_DIR = "module.framework.lib.dir";
+
+	public static final String MODULE_FRAMEWORK_PROPERTIES = "module.framework.properties.";
 
 	public static final String MODULE_FRAMEWORK_REGISTER_LIFERAY_SERVICES = "module.framework.register.liferay.services";
 
 	public static final String MODULE_FRAMEWORK_RUNTIME_START_LEVEL = "module.framework.runtime.start.level";
 
+	public static final String MODULE_FRAMEWORK_SERVICES_IGNORED_INTERFACES = "module.framework.services.ignored.interfaces";
+
 	public static final String MODULE_FRAMEWORK_STATE_DIR = "module.framework.state.dir";
 
 	public static final String MODULE_FRAMEWORK_SYSTEM_BUNDLE_EXPORT_PACKAGES = "module.framework.system.bundle.export.packages";
+
+	public static final String MODULE_FRAMEWORK_SYSTEM_BUNDLE_IGNORED_FRAGMENTS = "module.framework.system.bundle.ignored.fragments";
 
 	public static final String MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = "module.framework.system.packages.extra";
 
@@ -1736,6 +1782,8 @@ public interface PropsKeys {
 	public static final String PASSWORDS_DEFAULT_POLICY_MIN_UPPERCASE = "passwords.default.policy.min.uppercase";
 
 	public static final String PASSWORDS_DEFAULT_POLICY_NAME = "passwords.default.policy.name";
+
+	public static final String PASSWORDS_DEFAULT_POLICY_REGEX = "passwords.default.policy.regex";
 
 	public static final String PASSWORDS_DEFAULT_POLICY_RESET_FAILURE_COUNT = "passwords.default.policy.reset.failure.count";
 
@@ -2101,6 +2149,8 @@ public interface PropsKeys {
 
 	public static final String SITEMINDER_USER_HEADER = "siteminder.user.header";
 
+	public static final String SITES_CONTENT_SHARING_WITH_CHILDREN_ENABLED = "sites.content.sharing.with.children.enabled";
+
 	public static final String SITES_CONTROL_PANEL_MEMBERS_VISIBLE = "sites.control.panel.members.visible";
 
 	public static final String SITES_EMAIL_FROM_ADDRESS = "sites.email.from.address";
@@ -2330,6 +2380,8 @@ public interface PropsKeys {
 	public static final String USERS_LAST_NAME_REQUIRED = "users.last.name.required";
 
 	public static final String USERS_LIST_VIEWS = "users.list.views";
+
+	public static final String USERS_MEMBERSHIP_POLICY = "users.membership.policy";
 
 	public static final String USERS_REMINDER_QUERIES_CUSTOM_QUESTION_ENABLED = "users.reminder.queries.custom.question.enabled";
 

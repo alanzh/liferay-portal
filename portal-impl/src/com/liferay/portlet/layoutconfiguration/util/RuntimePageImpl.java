@@ -22,8 +22,8 @@ import com.liferay.portal.kernel.servlet.PipingServletResponse;
 import com.liferay.portal.kernel.servlet.PluginContextListener;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.template.Template;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateContextType;
-import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -48,7 +48,9 @@ import com.liferay.portlet.layoutconfiguration.util.xml.ActionURLLogic;
 import com.liferay.portlet.layoutconfiguration.util.xml.PortletLogic;
 import com.liferay.portlet.layoutconfiguration.util.xml.RenderURLLogic;
 import com.liferay.portlet.layoutconfiguration.util.xml.RuntimeLogic;
+import com.liferay.taglib.util.DummyVelocityTaglib;
 import com.liferay.taglib.util.VelocityTaglib;
+import com.liferay.taglib.util.VelocityTaglibImpl;
 
 import java.io.Closeable;
 
@@ -257,25 +259,21 @@ public class RuntimePageImpl implements RuntimePage {
 			PACLClassLoaderUtil.getContextClassLoader();
 
 		try {
-			TemplateContextType templateContextType =
-				TemplateContextType.STANDARD;
-
 			if ((pluginClassLoader != null) &&
 				(pluginClassLoader != contextClassLoader)) {
 
 				PACLClassLoaderUtil.setContextClassLoader(pluginClassLoader);
-
-				templateContextType = TemplateContextType.CLASS_LOADER;
 			}
 
 			if (processTemplate) {
 				return doProcessTemplate(
 					pageContext, portletId, templateResource,
-					templateContextType);
+					TemplateContextType.STANDARD);
 			}
 			else {
 				doProcessCustomizationSettings(
-					pageContext, templateResource, templateContextType);
+					pageContext, templateResource,
+					TemplateContextType.STANDARD);
 
 				return null;
 			}
@@ -296,15 +294,13 @@ public class RuntimePageImpl implements RuntimePage {
 
 		HttpServletRequest request =
 			(HttpServletRequest)pageContext.getRequest();
-		HttpServletResponse response =
-			(HttpServletResponse)pageContext.getResponse();
 
 		CustomizationSettingsProcessor processor =
 			new CustomizationSettingsProcessor(pageContext);
 
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateManager.VELOCITY, templateResource,
-			TemplateContextType.STANDARD);
+			TemplateConstants.LANG_TYPE_VM, templateResource,
+			templateContextType);
 
 		template.put("processor", processor);
 
@@ -314,9 +310,7 @@ public class RuntimePageImpl implements RuntimePage {
 
 		// liferay:include tag library
 
-		VelocityTaglib velocityTaglib = new VelocityTaglib(
-			pageContext.getServletContext(), request, response, pageContext,
-			template);
+		VelocityTaglib velocityTaglib = new DummyVelocityTaglib();
 
 		template.put("taglibLiferay", velocityTaglib);
 		template.put("theme", velocityTaglib);
@@ -346,7 +340,8 @@ public class RuntimePageImpl implements RuntimePage {
 			request, response, portletId);
 
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateManager.VELOCITY, templateResource, templateContextType);
+			TemplateConstants.LANG_TYPE_VM, templateResource,
+			templateContextType);
 
 		template.put("processor", processor);
 
@@ -358,7 +353,7 @@ public class RuntimePageImpl implements RuntimePage {
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
-		VelocityTaglib velocityTaglib = new VelocityTaglib(
+		VelocityTaglib velocityTaglib = new VelocityTaglibImpl(
 			pageContext.getServletContext(), request,
 			new PipingServletResponse(response, unsyncStringWriter),
 			pageContext, template);

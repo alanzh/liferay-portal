@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.lar.ImportExportThreadLocal;
+import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
@@ -99,7 +99,8 @@ import com.liferay.portal.theme.ThemeLoaderFactory;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.journal.lar.JournalPortletDataHandlerImpl;
+import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler;
+import com.liferay.portlet.journal.lar.JournalPortletDataHandler;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
@@ -140,12 +141,12 @@ public class LayoutImporter {
 		throws Exception {
 
 		try {
-			ImportExportThreadLocal.setLayoutImportInProcess(true);
+			ExportImportThreadLocal.setLayoutImportInProcess(true);
 
 			doImportLayouts(userId, groupId, privateLayout, parameterMap, file);
 		}
 		finally {
-			ImportExportThreadLocal.setLayoutImportInProcess(false);
+			ExportImportThreadLocal.setLayoutImportInProcess(false);
 
 			CacheUtil.clearCache();
 			JournalContentUtil.clearCache();
@@ -528,7 +529,7 @@ public class LayoutImporter {
 			}
 			else {
 				LayoutSetLocalServiceUtil.updateLogo(
-					groupId, privateLayout, false, (File) null);
+					groupId, privateLayout, false, (File)null);
 			}
 		}
 
@@ -605,9 +606,9 @@ public class LayoutImporter {
 					continue;
 				}
 
-				Layout sourcePrototypeLayout = LayoutUtil.fetchByUUID_G(
+				Layout sourcePrototypeLayout = LayoutUtil.fetchByUUID_G_P(
 					sourcePrototypeLayoutUuid,
-					layoutSetPrototypeGroup.getGroupId());
+					layoutSetPrototypeGroup.getGroupId(), true);
 
 				if (sourcePrototypeLayout == null) {
 					LayoutLocalServiceUtil.deleteLayout(
@@ -916,27 +917,27 @@ public class LayoutImporter {
 			return;
 		}
 
-		JournalPortletDataHandlerImpl.importReferencedData(
+		JournalPortletDataHandler.importReferencedData(
 			portletDataContext, layoutElement);
 
 		Element structureElement = layoutElement.element("structure");
 
 		if (structureElement != null) {
-			JournalPortletDataHandlerImpl.importStructure(
+			DDMPortletDataHandler.importStructure(
 				portletDataContext, structureElement);
 		}
 
 		Element templateElement = layoutElement.element("template");
 
 		if (templateElement != null) {
-			JournalPortletDataHandlerImpl.importTemplate(
+			DDMPortletDataHandler.importTemplate(
 				portletDataContext, templateElement);
 		}
 
 		Element articleElement = layoutElement.element("article");
 
 		if (articleElement != null) {
-			JournalPortletDataHandlerImpl.importArticle(
+			JournalPortletDataHandler.importArticle(
 				portletDataContext, articleElement);
 		}
 
@@ -979,7 +980,7 @@ public class LayoutImporter {
 
 		if (deleteLayout) {
 			Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layoutUuid, groupId);
+				layoutUuid, groupId, privateLayout);
 
 			if (layout != null) {
 				newLayoutsMap.put(oldLayoutId, layout);
@@ -1055,8 +1056,8 @@ public class LayoutImporter {
 			// The default behaviour of import mode is
 			// PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_UUID
 
-			existingLayout = LayoutUtil.fetchByUUID_G(
-				layout.getUuid(), groupId);
+			existingLayout = LayoutUtil.fetchByUUID_G_P(
+				layout.getUuid(), groupId, privateLayout);
 
 			if (existingLayout == null) {
 				existingLayout = LayoutUtil.fetchByG_P_F(
@@ -1170,7 +1171,7 @@ public class LayoutImporter {
 		else if (Validator.isNotNull(parentLayoutUuid)) {
 			Layout parentLayout =
 				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					parentLayoutUuid, groupId);
+					parentLayoutUuid, groupId, privateLayout);
 
 			parentLayoutId = parentLayout.getLayoutId();
 		}
@@ -1228,7 +1229,7 @@ public class LayoutImporter {
 
 					typeSettingsProperties.setProperty(
 						"privateLayout",
-						String.valueOf(linkedLayout.getPrivateLayout()));
+						String.valueOf(linkedLayout.isPrivateLayout()));
 					typeSettingsProperties.setProperty(
 						"linkToLayoutId",
 						String.valueOf(linkedLayout.getLayoutId()));

@@ -69,6 +69,8 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.UserPersonalSite;
 import com.liferay.portal.model.impl.LayoutImpl;
+import com.liferay.portal.security.auth.MembershipPolicy;
+import com.liferay.portal.security.auth.MembershipPolicyFactory;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
@@ -303,6 +305,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setClassPK(classPK);
 		group.setParentGroupId(parentGroupId);
 		group.setLiveGroupId(liveGroupId);
+		group.setTreePath(group.buildTreePath());
 		group.setName(name);
 		group.setDescription(description);
 		group.setType(type);
@@ -463,6 +466,38 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				Company.class.getName(), companyId,
 				GroupConstants.DEFAULT_LIVE_GROUP_ID, GroupConstants.GLOBAL,
 				null, 0, GroupConstants.GLOBAL_FRIENDLY_URL, false, true, null);
+		}
+	}
+
+	public void checkMembershipPolicy(User user) throws SystemException {
+		MembershipPolicy membershipPolicy =
+			MembershipPolicyFactory.getInstance();
+
+		LinkedHashMap<String, Object> groupParams =
+			new LinkedHashMap<String, Object>();
+
+		groupParams.put("inherit", Boolean.FALSE);
+		groupParams.put("site", Boolean.TRUE);
+		groupParams.put("usersGroups", user.getUserId());
+
+		List<Group> userGroups = search(
+			user.getCompanyId(), groupParams, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
+
+		for (Group userGroup : userGroups) {
+			if (!membershipPolicy.isMembershipAllowed(userGroup, user)) {
+				unsetUserGroups(
+					user.getUserId(), new long[] {userGroup.getGroupId()});
+			}
+		}
+
+		List<Group> groups = membershipPolicy.getMandatoryGroups(user);
+
+		for (Group group : groups) {
+			if (!hasUserGroup(user.getUserId(), group.getGroupId(), false)) {
+				addUserGroups(
+					user.getUserId(), new long[] {group.getGroupId()});
+			}
 		}
 	}
 
@@ -706,7 +741,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		// Resources
 
 		List<ResourcePermission> resourcePermissions =
-			resourcePermissionPersistence.findByC_P(
+			resourcePermissionPersistence.findByC_LikeP(
 				group.getCompanyId(), String.valueOf(group.getGroupId()));
 
 		for (ResourcePermission resourcePermission : resourcePermissions) {
@@ -1648,6 +1683,34 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return groupPersistence.findByC_N(companyId, name);
+	}
+
+	/**
+	 * Rebuilds the group tree.
+	 *
+	 * <p>
+	 * Only call this method if the tree has become stale through operations
+	 * other than normal CRUD. Under normal circumstances the tree is
+	 * automatically rebuilt whenever necessary.
+	 * </p>
+	 *
+	 * @param  companyId the primary key of the group's company
+	 * @throws PortalException if a group with the primary key could not be
+	 *         found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void rebuildTree(long companyId)
+		throws PortalException, SystemException {
+
+		List<Group> groups = groupPersistence.findByCompanyId(companyId);
+
+		for (Group group : groups) {
+			String treePath = group.buildTreePath();
+
+			group.setTreePath(treePath);
+
+			groupPersistence.update(group);
+		}
 	}
 
 	/**
@@ -2952,6 +3015,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			group.getClassPK(), friendlyURL);
 
 		group.setParentGroupId(parentGroupId);
+		group.setTreePath(group.buildTreePath());
 		group.setName(name);
 		group.setDescription(description);
 		group.setType(type);

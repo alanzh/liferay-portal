@@ -259,42 +259,24 @@ public class DDMXMLImpl implements DDMXML {
 	}
 
 	protected void appendField(Element element, Field field) {
-		int dynamicElementCount = 0;
+		Element dynamicElementElement = element.addElement("dynamic-element");
+
+		dynamicElementElement.addAttribute(
+			"default-language-id",
+			LocaleUtil.toLanguageId(field.getDefaultLocale()));
+		dynamicElementElement.addAttribute("name", field.getName());
 
 		for (Locale locale : field.getAvailableLocales()) {
 			List<Serializable> values = field.getValues(locale);
 
-			if (dynamicElementCount < values.size()) {
-				dynamicElementCount = values.size();
-			}
-		}
-
-		for (int i = 0; i < dynamicElementCount; i++) {
-			Element dynamicElementElement = element.addElement(
-				"dynamic-element");
-
-			dynamicElementElement.addAttribute(
-				"default-language-id",
-				LocaleUtil.toLanguageId(field.getDefaultLocale()));
-			dynamicElementElement.addAttribute("name", field.getName());
-
-			for (Locale locale : field.getAvailableLocales()) {
-				List<Serializable> values = field.getValues(locale);
-
-				if (i >= values.size()) {
-					continue;
-				}
-
+			for (Serializable value : values) {
 				Element dynamicContentElement =
 					dynamicElementElement.addElement("dynamic-content");
 
 				dynamicContentElement.addAttribute(
 					"language-id", LocaleUtil.toLanguageId(locale));
 
-				Serializable value = field.getValue(locale, i);
-
-				updateField(
-					dynamicContentElement, locale, field.getName(), value);
+				updateField(dynamicContentElement, value);
 			}
 		}
 	}
@@ -346,8 +328,7 @@ public class DDMXMLImpl implements DDMXML {
 	}
 
 	protected void updateField(
-		Element dynamicContentElement, Locale locale, String fieldName,
-		Serializable fieldValue) {
+		Element dynamicContentElement, Serializable fieldValue) {
 
 		dynamicContentElement.clearContent();
 

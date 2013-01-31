@@ -90,6 +90,8 @@ public class DDMImpl implements DDM {
 
 	public static final String TYPE_DDM_FILEUPLOAD = "ddm-fileupload";
 
+	public static final String TYPE_DDM_LINK_TO_PAGE = "ddm-link-to-page";
+
 	public static final String TYPE_RADIO = "radio";
 
 	public static final String TYPE_SELECT = "select";
@@ -157,6 +159,29 @@ public class DDMImpl implements DDM {
 		throws PortalException, SystemException {
 
 		return getFields(ddmStructureId, 0, fieldNamespace, serviceContext);
+	}
+
+	public String[] getFieldsDisplayValues(Field fieldsDisplayField)
+		throws Exception {
+
+		DDMStructure ddmStructure = fieldsDisplayField.getDDMStructure();
+
+		List<String> fieldsDisplayValues = new ArrayList<String>();
+
+		String[] values = StringUtil.split(
+			(String)fieldsDisplayField.getValue());
+
+		for (String value : values) {
+			String fieldName = StringUtil.extractFirst(
+				value, DDMImpl.INSTANCE_SEPARATOR);
+
+			if (ddmStructure.hasField(fieldName)) {
+				fieldsDisplayValues.add(fieldName);
+			}
+		}
+
+		return fieldsDisplayValues.toArray(
+			new String[fieldsDisplayValues.size()]);
 	}
 
 	public String getFileUploadPath(BaseModel<?> baseModel) {

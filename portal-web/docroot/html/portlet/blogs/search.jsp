@@ -35,100 +35,73 @@ String keywords = ParamUtil.getString(request, "keywords");
 		title="search"
 	/>
 
+	<span class="aui-search-bar">
+		<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-entries" type="text" value="<%= keywords %>" />
+
+		<aui:button type="submit" value="search" />
+	</span>
+
 	<%
 	PortletURL portletURL = renderResponse.createRenderURL();
 
 	portletURL.setParameter("struts_action", "/blogs/search");
 	portletURL.setParameter("redirect", redirect);
 	portletURL.setParameter("keywords", keywords);
+	%>
 
-	List<String> headerNames = new ArrayList<String>();
+	<liferay-ui:search-container
+		emptyResultsMessage='<%= LanguageUtil.format(pageContext, "no-entries-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>'
+		iteratorURL="<%= portletURL %>"
+	>
 
-	headerNames.add("#");
-	headerNames.add("entry");
-
-	SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, portletURL, headerNames, LanguageUtil.format(pageContext, "no-entries-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>"));
-
-	searchContainer.setDelta(pageDelta);
-	searchContainer.setDeltaConfigurable(false);
-
-	try {
+		<%
 		Indexer indexer = IndexerRegistryUtil.getIndexer(BlogsEntry.class);
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 		searchContext.setAttribute("paginationType", "regular");
 		searchContext.setEnd(searchContainer.getEnd());
+		searchContext.setIncludeDiscussions(true);
 		searchContext.setKeywords(keywords);
 		searchContext.setStart(searchContainer.getStart());
 
-		Hits results = indexer.search(searchContext);
+		Hits hits = indexer.search(searchContext);
+		%>
 
-		int total = results.getLength();
+		<liferay-ui:search-container-results
+			results="<%= SearchResultUtil.getSearchResults(hits) %>"
+			total="<%= hits.getLength() %>"
+		/>
 
-		searchContainer.setTotal(total);
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.search.SearchResult"
+			modelVar="searchResult"
+		>
 
-		List resultRows = searchContainer.getResultRows();
+			<%
+			BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(searchResult.getClassPK());
 
-		for (int i = 0; i < results.getDocs().length; i++) {
-			Document doc = results.doc(i);
+			entry = entry.toEscapedModel();
+			%>
 
-			ResultRow row = new ResultRow(doc, i, i);
+			<portlet:renderURL var="rowURL">
+				<portlet:param name="struts_action" value="/blogs/view_entry" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+			</portlet:renderURL>
 
-			// Position
+			<liferay-ui:app-view-search-entry
+				cssClass='<%= MathUtil.isEven(index) ? "search" : "search alt" %>'
+				description="<%= entry.getDescription() %>"
+				mbMessages="<%= searchResult.getMBMessages() %>"
+				queryTerms="<%= hits.getQueryTerms() %>"
+				title="<%= entry.getTitle() %>"
+				url="<%= rowURL %>"
+			/>
+		</liferay-ui:search-container-row>
 
-			row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
-
-			// Entry
-
-			long entryId = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
-
-			BlogsEntry entry = null;
-
-			try {
-				entry = BlogsEntryLocalServiceUtil.getEntry(entryId);
-
-				entry = entry.toEscapedModel();
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Blogs search index is stale and contains entry " + entryId);
-				}
-
-				continue;
-			}
-
-			PortletURL rowURL = renderResponse.createRenderURL();
-
-			rowURL.setParameter("struts_action", "/blogs/view_entry");
-			rowURL.setParameter("redirect", currentURL);
-			rowURL.setParameter("urlTitle", entry.getUrlTitle());
-
-			row.addText(entry.getTitle(), rowURL);
-
-			// Add result row
-
-			resultRows.add(row);
-		}
-	%>
-
-		<span class="aui-search-bar">
-			<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-entries" type="text" value="<%= keywords %>" />
-
-			<aui:button type="submit" value="search" />
-		</span>
-
-		<br /><br />
-
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
-
-	<%
-	}
-	catch (Exception e) {
-		_log.error(e.getMessage());
-	}
-	%>
-
+		<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+	</liferay-ui:search-container>
 </aui:form>
 
 <c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
@@ -141,8 +114,4 @@ String keywords = ParamUtil.getString(request, "keywords");
 if (Validator.isNotNull(keywords)) {
 	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "search") + ": " + keywords, currentURL);
 }
-%>
-
-<%!
-private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.blogs.search_jsp");
 %>

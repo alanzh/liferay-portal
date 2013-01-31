@@ -55,6 +55,12 @@ String keywords = ParamUtil.getString(request, "keywords");
 		title="search"
 	/>
 
+	<span class="aui-search-bar">
+		<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-messages" type="text" value="<%= keywords %>" />
+
+		<aui:button type="submit" value="search" />
+	</span>
+
 	<%
 	PortletURL portletURL = renderResponse.createRenderURL();
 
@@ -65,18 +71,14 @@ String keywords = ParamUtil.getString(request, "keywords");
 	portletURL.setParameter("searchCategoryId", String.valueOf(searchCategoryId));
 	portletURL.setParameter("threadId", String.valueOf(threadId));
 	portletURL.setParameter("keywords", keywords);
+	%>
 
-	List<String> headerNames = new ArrayList<String>();
+	<liferay-ui:search-container
+		emptyResultsMessage='<%= LanguageUtil.format(pageContext, "no-messages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>'
+		iteratorURL="<%= portletURL %>"
+	>
 
-	headerNames.add("#");
-	headerNames.add("category");
-	headerNames.add("message");
-	headerNames.add("thread-posts");
-	headerNames.add("thread-views");
-
-	SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, portletURL, headerNames, LanguageUtil.format(pageContext, "no-messages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>"));
-
-	try {
+		<%
 		Indexer indexer = IndexerRegistryUtil.getIndexer(MBMessage.class);
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
@@ -84,114 +86,48 @@ String keywords = ParamUtil.getString(request, "keywords");
 		searchContext.setAttribute("paginationType", "more");
 		searchContext.setCategoryIds(categoryIdsArray);
 		searchContext.setEnd(searchContainer.getEnd());
+		searchContext.setIncludeAttachments(true);
 		searchContext.setKeywords(keywords);
 		searchContext.setStart(searchContainer.getStart());
 
-		Hits results = indexer.search(searchContext);
+		Hits hits = indexer.search(searchContext);
+		%>
 
-		int total = results.getLength();
+		<liferay-ui:search-container-results
+			results="<%= SearchResultUtil.getSearchResults(hits) %>"
+			total="<%= hits.getLength() %>"
+		/>
 
-		searchContainer.setTotal(total);
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.search.SearchResult"
+			modelVar="searchResult"
+		>
 
-		List resultRows = searchContainer.getResultRows();
+			<%
+			MBMessage message = MBMessageLocalServiceUtil.getMessage(searchResult.getClassPK());
+			%>
 
-		for (int i = 0; i < results.getDocs().length; i++) {
-			Document doc = results.doc(i);
+			<portlet:renderURL var="rowURL">
+				<portlet:param name="struts_action" value="/message_boards/view_message" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
+			</portlet:renderURL>
 
-			ResultRow row = new ResultRow(doc, i, i);
+			<liferay-ui:app-view-search-entry
+				containerIcon="../common/conversation"
+				containerName="<%= MBUtil.getAbsolutePath(renderRequest, message.getCategoryId()) %>"
+				containerType='<%= LanguageUtil.get(locale, "category") %>'
+				cssClass='<%= MathUtil.isEven(index) ? "search alt" : "search" %>'
+				description="<%= StringPool.BLANK %>"
+				fileEntries="<%= searchResult.getFileEntries() %>"
+				queryTerms="<%= hits.getQueryTerms() %>"
+				title="<%= HtmlUtil.escape(message.getSubject()) %>"
+				url="<%= rowURL %>"
+			/>
+		</liferay-ui:search-container-row>
 
-			// Position
-
-			row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
-
-			// Category
-
-			long categoryId = GetterUtil.getLong(doc.get("categoryId"));
-
-			MBCategory category = null;
-
-			try {
-				category = MBCategoryLocalServiceUtil.getCategory(categoryId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Message boards search index is stale and contains category " + categoryId);
-				}
-
-				continue;
-			}
-
-			PortletURL categoryUrl = renderResponse.createRenderURL();
-
-			categoryUrl.setParameter("struts_action", "/message_boards/view");
-			categoryUrl.setParameter("redirect", currentURL);
-			categoryUrl.setParameter("mbCategoryId", String.valueOf(categoryId));
-
-			row.addText(HtmlUtil.escape(category.getName()), categoryUrl);
-
-			// Thread and message
-
-			long curThreadId = GetterUtil.getLong(doc.get("threadId"));
-			long messageId = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
-
-			MBThread thread = null;
-
-			try {
-				thread = MBThreadLocalServiceUtil.getThread(curThreadId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Message boards search index is stale and contains thread " + curThreadId);
-				}
-
-				continue;
-			}
-
-			MBMessage message = null;
-
-			try {
-				message = MBMessageLocalServiceUtil.getMessage(messageId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Message boards search index is stale and contains message " + messageId);
-				}
-
-				continue;
-			}
-
-			PortletURL rowURL = renderResponse.createRenderURL();
-
-			rowURL.setParameter("struts_action", "/message_boards/view_message");
-			rowURL.setParameter("redirect", currentURL);
-			rowURL.setParameter("messageId", String.valueOf(messageId));
-
-			row.addText(HtmlUtil.escape(message.getSubject()), rowURL);
-			row.addText(String.valueOf(thread.getMessageCount()), rowURL);
-			row.addText(String.valueOf(thread.getViewCount()), rowURL);
-
-			// Add result row
-
-			resultRows.add(row);
-		}
-	%>
-
-		<span class="aui-search-bar">
-			<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-messages" type="text" value="<%= keywords %>" />
-
-			<aui:button type="submit" value="search" />
-		</span>
-
-		<br /><br />
-
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" type="more" />
-
-	<%
-	}
-	catch (Exception e) {
-		_log.error(e.getMessage());
-	}
-	%>
+		<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+	</liferay-ui:search-container>
 
 </aui:form>
 
@@ -207,8 +143,4 @@ if (breadcrumbsCategoryId > 0) {
 }
 
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "search") + ": " + keywords, currentURL);
-%>
-
-<%!
-private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.message_boards.search_jsp");
 %>

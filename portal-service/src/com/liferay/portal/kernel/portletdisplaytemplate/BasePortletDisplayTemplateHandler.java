@@ -52,15 +52,16 @@ public abstract class BasePortletDisplayTemplateHandler
 	}
 
 	public String getTemplatesHelpPath(String language) {
-		return PropsUtil.get(getTemplatesHelpKey(), new Filter(language));
+		return PropsUtil.get(
+			getTemplatesHelpPropertyKey(), new Filter(language));
+	}
+
+	public String getTemplatesHelpPropertyKey() {
+		return PropsKeys.PORTLET_DISPLAY_TEMPLATES_HELP;
 	}
 
 	protected String getTemplatesConfigPath() {
 		return null;
-	}
-
-	protected String getTemplatesHelpKey() {
-		return PropsKeys.PORTLET_DISPLAY_TEMPLATES_HELP;
 	}
 
 }

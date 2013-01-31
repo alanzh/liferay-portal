@@ -1221,7 +1221,11 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	public boolean isPathNotProcessed(String path) {
-		return !addPrimaryKey(String.class, path);
+		return !isPathProcessed(path);
+	}
+
+	public boolean isPathProcessed(String path) {
+		return addPrimaryKey(String.class, path);
 	}
 
 	public boolean isPerformDirectBinaryImport() {
@@ -1471,6 +1475,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_xStream.alias("RatingsEntry", RatingsEntryImpl.class);
 		_xStream.alias("WikiNode", WikiNodeImpl.class);
 		_xStream.alias("WikiPage", WikiPageImpl.class);
+
+		_xStream.omitField(HashMap.class, "cache_bitmask");
 	}
 
 	protected boolean isResourceMain(ClassedModel classedModel) {

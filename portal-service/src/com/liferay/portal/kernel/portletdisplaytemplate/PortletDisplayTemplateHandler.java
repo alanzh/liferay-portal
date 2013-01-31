@@ -70,4 +70,13 @@ public interface PortletDisplayTemplateHandler {
 	 */
 	public String getTemplatesHelpPath(String language);
 
+	/**
+	 * Returns the name of the property in portal.properties that defines the
+	 * path to the help of template.
+	 *
+	 * @return the name of the property in portal.properties that defines the
+	 *         path to the help template of the portlet display.
+	 */
+	public String getTemplatesHelpPropertyKey();
+
 }

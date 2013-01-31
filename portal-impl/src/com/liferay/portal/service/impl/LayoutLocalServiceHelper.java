@@ -152,8 +152,8 @@ public class LayoutLocalServiceHelper implements IdentifiableBean {
 
 		Group group = layoutSetPrototype.getGroup();
 
-		Layout layout = layoutPersistence.fetchByUUID_G(
-			layoutUuid, group.getGroupId());
+		Layout layout = layoutPersistence.fetchByUUID_G_P(
+			layoutUuid, group.getGroupId(), true);
 
 		if (layout != null) {
 			return true;

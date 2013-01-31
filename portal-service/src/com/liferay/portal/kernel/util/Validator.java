@@ -653,7 +653,7 @@ public class Validator {
 	/**
 	 * Returns <code>true</code> if the file extension is valid.
 	 *
-	 * @param  fileExtension file extension
+	 * @param  fileExtension string to check
 	 * @return <code>true</code> if the extension is valid; <code>false</code>
 	 *         otherwise
 	 */
@@ -834,14 +834,53 @@ public class Validator {
 	}
 
 	/**
+	 * Returns <code>true</code> if the string is a valid IPv4 or IPv6 IP
+	 * address.
+	 *
+	 * @param  ipAddress the string to check
+	 * @return <code>true</code> if the string is a valid IPv4 or IPv6 IP
+	 *         address; <code>false</code> otherwise
+	 */
+	public static boolean isIPAddress(String ipAddress) {
+		if (isIPv4Address(ipAddress) || isIPv6Address(ipAddress)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns <code>true</code> if the string is a valid IPv4 IP address.
 	 *
 	 * @param  ipAddress the string to check
-	 * @return <code>true</code> if the string is an IPv4 IP address;
+	 * @return <code>true</code> if the string is a valid IPv4 IP address;
 	 *         <code>false</code> otherwise
 	 */
-	public static boolean isIPAddress(String ipAddress) {
-		Matcher matcher = _ipAddressPattern.matcher(ipAddress);
+	public static boolean isIPv4Address(String ipAddress) {
+		Matcher matcher = _ipv4AddressPattern.matcher(ipAddress);
+
+		return matcher.matches();
+	}
+
+	/**
+	 * Returns <code>true</code> if the string is a valid IPv6 IP address.
+	 *
+	 * @param  ipAddress the string to check
+	 * @return <code>true</code> if the string is a valid IPv6 IP address;
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean isIPv6Address(String ipAddress) {
+		if (isNull(ipAddress)) {
+			return false;
+		}
+
+		if (StringUtil.startsWith(ipAddress, CharPool.OPEN_BRACKET) &&
+			StringUtil.endsWith(ipAddress, CharPool.CLOSE_BRACKET)) {
+
+			ipAddress = ipAddress.substring(1, ipAddress.length() - 1);
+		}
+
+		Matcher matcher = _ipv6AddressPattern.matcher(ipAddress);
 
 		return matcher.matches();
 	}
@@ -852,8 +891,8 @@ public class Validator {
 	 * @param  month the month (0-based, meaning 0 for January)
 	 * @param  day the day of the month
 	 * @param  year the year
-	 * @return <code>true</code> if the date is valid; <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if the date is valid in the Julian calendar;
+	 *         <code>false</code> otherwise
 	 */
 	public static boolean isJulianDate(int month, int day, int year) {
 		if ((month < 0) || (month > 11)) {
@@ -1136,7 +1175,7 @@ public class Validator {
 	 * is at least four characters long and contains only letters and decimal
 	 * digits.
 	 *
-	 * @param  password the password to check
+	 * @param  password the string to check
 	 * @return <code>true</code> if the string is a valid password;
 	 *         <code>false</code> otherwise
 	 */
@@ -1306,13 +1345,38 @@ public class Validator {
 	private static Pattern _emailAddressPattern = Pattern.compile(
 		"[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@" +
 		"(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?");
-	private static Pattern _ipAddressPattern = Pattern.compile(
-		"\\b" +
-		"((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\." +
-		"((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\." +
-		"((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\." +
-		"((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])" +
-		"\\b");
+	private static Pattern _ipv4AddressPattern = Pattern.compile(
+		"^" +
+		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
+		"$");
+	private static Pattern _ipv6AddressPattern = Pattern.compile(
+		"^" +
+		"\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|" +
+		"(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|" +
+		"((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
+		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|" +
+		"(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:" +
+		"((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
+		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|" +
+		"(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|" +
+		"((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
+		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
+		"(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|" +
+		"((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
+		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
+		"(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|" +
+		"((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
+		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
+		"(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|" +
+		"((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
+		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
+		"(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:" +
+		"((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\." +
+		"(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?\\s*" +
+		"$");
 	private static Pattern _variableNamePattern = Pattern.compile(
 		"[_a-zA-Z]+[_a-zA-Z0-9]*");
 
