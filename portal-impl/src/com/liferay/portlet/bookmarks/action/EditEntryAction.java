@@ -243,7 +243,13 @@ public class EditEntryAction extends PortletAction {
 		long groupId = themeDisplay.getScopeGroupId();
 		long folderId = ParamUtil.getLong(actionRequest, "folderId");
 		String name = ParamUtil.getString(actionRequest, "name");
+
 		String url = ParamUtil.getString(actionRequest, "url");
+
+		if (url.startsWith("http:")) {
+			url = url.replaceFirst("http", "https");
+		}
+
 		String description = ParamUtil.getString(actionRequest, "description");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
