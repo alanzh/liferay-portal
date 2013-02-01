@@ -73,6 +73,10 @@ public class BookmarksEntryLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
+		if (url.startsWith("http:")) {
+			url = url.replaceFirst("http", "https");
+		}
+
 		if (Validator.isNull(name)) {
 			name = url;
 		}
@@ -396,6 +400,10 @@ public class BookmarksEntryLocalServiceImpl
 
 		BookmarksEntry entry = bookmarksEntryPersistence.findByPrimaryKey(
 			entryId);
+
+		if (url.startsWith("http:")) {
+			url = url.replaceFirst("http", "https");
+		}
 
 		if (Validator.isNull(name)) {
 			name = url;
