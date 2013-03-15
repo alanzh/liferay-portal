@@ -22,6 +22,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.polls.DuplicateChoiceException;
 import com.liferay.portlet.polls.QuestionChoiceException;
 import com.liferay.portlet.polls.QuestionDescriptionException;
 import com.liferay.portlet.polls.QuestionExpirationDateException;
@@ -31,6 +32,7 @@ import com.liferay.portlet.polls.model.PollsQuestion;
 import com.liferay.portlet.polls.service.base.PollsQuestionLocalServiceBaseImpl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -313,12 +315,22 @@ public class PollsQuestionLocalServiceImpl
 			throw new QuestionChoiceException();
 		}
 
+		Map<String, String> map = new HashMap<String, String>();
+
 		if (choices != null) {
 			for (PollsChoice choice : choices) {
 				String choiceDescription = choice.getDescription(locale);
+				String choiceName = choice.getName();
 
 				if (Validator.isNull(choiceDescription)) {
 					throw new QuestionChoiceException();
+				}
+
+				if (map.containsKey(choiceDescription.trim())) {
+					throw new DuplicateChoiceException();
+				}
+				else {
+					map.put(choiceDescription.trim(), choiceName);
 				}
 			}
 		}
