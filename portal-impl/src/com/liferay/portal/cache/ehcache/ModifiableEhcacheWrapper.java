@@ -311,7 +311,7 @@ public class ModifiableEhcacheWrapper implements Ehcache {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.1.0
 	 */
 	public boolean isClusterCoherent() {
 		return _ehcache.isClusterCoherent();
@@ -354,7 +354,7 @@ public class ModifiableEhcacheWrapper implements Ehcache {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.1.0
 	 */
 	public boolean isNodeCoherent() {
 		return _ehcache.isNodeCoherent();
@@ -584,7 +584,7 @@ public class ModifiableEhcacheWrapper implements Ehcache {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.1.0
 	 */
 	public void setNodeCoherent(boolean nodeCoherent)
 		throws UnsupportedOperationException {
@@ -645,7 +645,7 @@ public class ModifiableEhcacheWrapper implements Ehcache {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.1.0
 	 */
 	public void waitUntilClusterCoherent()
 		throws UnsupportedOperationException {

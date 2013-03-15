@@ -115,7 +115,7 @@ public class TrashImpl implements Trash {
 
 		for (String attachmentFileName : attachmentFileNames) {
 			String trashTime = TrashUtil.getTrashTime(
-				attachmentFileName, TrashUtil.TRASH_TIME_SEPARATOR);
+				attachmentFileName, TRASH_TIME_SEPARATOR);
 
 			long timestamp = GetterUtil.getLong(trashTime);
 
@@ -286,25 +286,15 @@ public class TrashImpl implements Trash {
 		UnicodeProperties typeSettingsProperties =
 			group.getParentLiveGroupTypeSettingsProperties();
 
-		int companyTrashEnabled = PrefsPropsUtil.getInteger(
+		boolean companyTrashEnabled = PrefsPropsUtil.getBoolean(
 			group.getCompanyId(), PropsKeys.TRASH_ENABLED);
 
-		if (companyTrashEnabled == TrashUtil.TRASH_DISABLED) {
+		if (!companyTrashEnabled) {
 			return false;
 		}
 
-		int groupTrashEnabled = GetterUtil.getInteger(
-			typeSettingsProperties.getProperty("trashEnabled"),
-			TrashUtil.TRASH_DEFAULT_VALUE);
-
-		if ((groupTrashEnabled == TrashUtil.TRASH_ENABLED) ||
-			((companyTrashEnabled == TrashUtil.TRASH_ENABLED_BY_DEFAULT) &&
-			 (groupTrashEnabled == TrashUtil.TRASH_DEFAULT_VALUE))) {
-
-			return true;
-		}
-
-		return false;
+		return GetterUtil.getBoolean(
+			typeSettingsProperties.getProperty("trashEnabled"), true);
 	}
 
 	protected void addBreadcrumbEntries(

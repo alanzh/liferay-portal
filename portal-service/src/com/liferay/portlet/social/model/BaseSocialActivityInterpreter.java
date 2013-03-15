@@ -44,6 +44,10 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class BaseSocialActivityInterpreter
 	implements SocialActivityInterpreter {
 
+	public long getActivitySetId(long activityId) {
+		return 0;
+	}
+
 	public String getSelector() {
 		return StringPool.BLANK;
 	}
@@ -83,7 +87,7 @@ public abstract class BaseSocialActivityInterpreter
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.2.0
 	 */
 	protected String cleanContent(String content) {
 		return StringUtil.shorten(HtmlUtil.extractText(content), 200);

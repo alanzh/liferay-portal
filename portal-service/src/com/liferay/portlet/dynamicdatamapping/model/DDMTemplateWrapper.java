@@ -968,12 +968,27 @@ public class DDMTemplateWrapper implements DDMTemplate,
 		return _ddmTemplate.getSmallImageType();
 	}
 
+	/**
+	* Returns the WebDAV URL to access the template.
+	*
+	* @param themeDisplay the theme display needed to build the URL. It can
+	set HTTPS access, the server name, the server port, the path
+	context, and the scope group.
+	* @param webDAVToken the WebDAV token for the URL
+	* @return the WebDAV URL
+	*/
+	public java.lang.String getWebDavURL(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay,
+		java.lang.String webDAVToken) {
+		return _ddmTemplate.getWebDavURL(themeDisplay, webDAVToken);
+	}
+
 	public void setSmallImageType(java.lang.String smallImageType) {
 		_ddmTemplate.setSmallImageType(smallImageType);
 	}
 
 	/**
-	 * @deprecated Renamed to {@link #getWrappedModel}
+	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedModel}
 	 */
 	public DDMTemplate getWrappedDDMTemplate() {
 		return _ddmTemplate;

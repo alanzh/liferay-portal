@@ -39,24 +39,33 @@ public class SeleniumBuilderFileUtil {
 	}
 
 	public String getClassName(String fileName) {
-		int x = fileName.indexOf(CharPool.PERIOD);
-
-		String fileSuffix = fileName.substring(x + 1);
-
-		String classSuffix = StringUtil.upperCaseFirstLetter(fileSuffix);
+		String classSuffix = getClassSuffix(fileName);
 
 		return getClassName(fileName, classSuffix);
 	}
 
 	public String getClassName(String fileName, String classSuffix) {
-		int x = fileName.lastIndexOf(StringPool.SLASH);
+		return
+			getPackageName(fileName) + "." +
+				getSimpleClassName(fileName, classSuffix);
+	}
 
-		String packagePath = StringUtil.replace(
-			fileName.substring(0, x + 1), StringPool.SLASH, StringPool.PERIOD);
+	public String getClassSuffix(String fileName) {
+		int x = fileName.indexOf(CharPool.PERIOD);
 
-		String simpleClassName = getName(fileName) + classSuffix;
+		return StringUtil.upperCaseFirstLetter(fileName.substring(x + 1));
+	}
 
-		return packagePath + simpleClassName;
+	public String getJavaFileName(String fileName) {
+		String classSuffix = getClassSuffix(fileName);
+
+		return getJavaFileName(fileName, classSuffix);
+	}
+
+	public String getJavaFileName(String fileName, String classSuffix) {
+		return
+			getPackagePath(fileName) + "/" +
+				getSimpleClassName(fileName, classSuffix) + ".java";
 	}
 
 	public String getName(String fileName) {
@@ -80,6 +89,19 @@ public class SeleniumBuilderFileUtil {
 		return content;
 	}
 
+	public String getPackageName(String fileName) {
+		String packagePath = getPackagePath(fileName);
+
+		return StringUtil.replace(
+			packagePath, StringPool.SLASH, StringPool.PERIOD);
+	}
+
+	public String getPackagePath(String fileName) {
+		int x = fileName.lastIndexOf(StringPool.SLASH);
+
+		return fileName.substring(0, x);
+	}
+
 	public String getReturnType(String name) {
 		if (name.startsWith("Is")) {
 			return "boolean";
@@ -100,11 +122,23 @@ public class SeleniumBuilderFileUtil {
 		return rootElement;
 	}
 
+	public String getSimpleClassName(String fileName) {
+		String classSuffix = getClassSuffix(fileName);
+
+		return getSimpleClassName(fileName, classSuffix);
+	}
+
+	public String getSimpleClassName(String fileName, String classSuffix) {
+		return getName(fileName) + classSuffix;
+	}
+
 	public int getTargetCount(Element rootElement) {
 		String xml = rootElement.asXML();
 
-		for (int i = 1;; i++) {
-			if (xml.contains("${target" + i +"}")) {
+		for (int i = 1;;) {
+			if (xml.contains("${target" + i + "}")) {
+				i++;
+
 				continue;
 			}
 

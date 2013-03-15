@@ -34,6 +34,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface Trash {
 
+	public static final String TRASH_TIME_SEPARATOR = "_TRASH_TIME_";
+
 	public void addBaseModelBreadcrumbEntries(
 			HttpServletRequest request, String className, long classPK,
 			PortletURL containerModelURL)

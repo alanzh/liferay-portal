@@ -405,7 +405,7 @@
 
 		<reference package-path="com.liferay.portal" entity="Group" />
 	</entity>
-	<entity name="MBThread" human-name="message boards thread" local-service="true" remote-service="true">
+	<entity name="MBThread" human-name="message boards thread" uuid="true" local-service="true" remote-service="true">
 
 		<!-- PK fields -->
 
@@ -418,6 +418,10 @@
 		<!-- Audit fields -->
 
 		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
 
 		<!-- Other fields -->
 
@@ -507,15 +511,22 @@
 		<reference package-path="com.liferay.portlet.social" entity="SocialActivityCounter" />
 		<reference package-path="com.liferay.portlet.trash" entity="TrashEntry" />
 	</entity>
-	<entity name="MBThreadFlag" human-name="message boards thread flag" local-service="true" remote-service="false">
+	<entity name="MBThreadFlag" human-name="message boards thread flag" uuid="true" local-service="true" remote-service="false">
 
 		<!-- PK fields -->
 
 		<column name="threadFlagId" type="long" primary="true" />
 
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
 		<!-- Audit fields -->
 
+		<column name="companyId" type="long" />
 		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
 		<column name="modifiedDate" type="Date" />
 
 		<!-- Other fields -->

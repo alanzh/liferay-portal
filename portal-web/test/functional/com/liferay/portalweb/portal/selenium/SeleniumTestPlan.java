@@ -15,9 +15,15 @@
 package com.liferay.portalweb.portal.selenium;
 
 import com.liferay.portalweb.portal.BaseTestSuite;
+import com.liferay.portalweb.portal.selenium.alerts.AlertsTestPlan;
 import com.liferay.portalweb.portal.selenium.assertions.AssertionsTestPlan;
+import com.liferay.portalweb.portal.selenium.browsercommands.BrowserCommandsTestPlan;
 import com.liferay.portalweb.portal.selenium.clicking.ClickingTestPlan;
+import com.liferay.portalweb.portal.selenium.javascript.JavascriptTestPlan;
+import com.liferay.portalweb.portal.selenium.list.ListTestPlan;
+import com.liferay.portalweb.portal.selenium.selection.SelectionTestPlan;
 import com.liferay.portalweb.portal.selenium.typing.TypingTestPlan;
+import com.liferay.portalweb.portal.selenium.waitfor.WaitForTestPlan;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -30,9 +36,15 @@ public class SeleniumTestPlan extends BaseTestSuite {
 	public static Test suite() {
 		TestSuite testSuite = new TestSuite();
 
+		testSuite.addTest(AlertsTestPlan.suite());
 		testSuite.addTest(AssertionsTestPlan.suite());
+		testSuite.addTest(BrowserCommandsTestPlan.suite());
 		testSuite.addTest(ClickingTestPlan.suite());
+		testSuite.addTest(JavascriptTestPlan.suite());
+		testSuite.addTest(ListTestPlan.suite());
+		testSuite.addTest(SelectionTestPlan.suite());
 		testSuite.addTest(TypingTestPlan.suite());
+		testSuite.addTest(WaitForTestPlan.suite());
 
 		return testSuite;
 	}

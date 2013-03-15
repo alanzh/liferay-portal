@@ -302,7 +302,8 @@ public class DLFileEntryLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated {@link #checkInFileEntry(long, long, String, ServiceContext)}
+	* @deprecated As of 6.2.0, replaced by {@link #checkInFileEntry(long, long,
+	String, ServiceContext)}
 	*/
 	public static void checkInFileEntry(long userId, long fileEntryId,
 		java.lang.String lockUuid)
@@ -321,7 +322,8 @@ public class DLFileEntryLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated {@link #checkOutFileEntry(long, long, ServiceContext)}
+	* @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
+	long, ServiceContext)}
 	*/
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntry checkOutFileEntry(
 		long userId, long fileEntryId)
@@ -340,8 +342,8 @@ public class DLFileEntryLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated {@link #checkOutFileEntry(long, long, String, long,
-	ServiceContext)}
+	* @deprecated As of 6.2.0, replaced by {@link #checkOutFileEntry(long,
+	long, String, long, ServiceContext)}
 	*/
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntry checkOutFileEntry(
 		long userId, long fileEntryId, java.lang.String owner,
@@ -414,11 +416,11 @@ public class DLFileEntryLocalServiceUtil {
 		return getService().deleteFileEntry(userId, fileEntryId);
 	}
 
-	public static void deleteFileVersion(long userId, long fileEntryId,
-		java.lang.String version)
+	public static com.liferay.portlet.documentlibrary.model.DLFileEntry deleteFileVersion(
+		long userId, long fileEntryId, java.lang.String version)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteFileVersion(userId, fileEntryId, version);
+		return getService().deleteFileVersion(userId, fileEntryId, version);
 	}
 
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntry fetchFileEntry(
@@ -729,7 +731,7 @@ public class DLFileEntryLocalServiceUtil {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated As of 6.2.0
 	 */
 	public void setService(DLFileEntryLocalService service) {
 	}
