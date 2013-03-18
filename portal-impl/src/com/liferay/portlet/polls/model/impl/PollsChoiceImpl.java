@@ -15,6 +15,7 @@
 package com.liferay.portlet.polls.model.impl;
 
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portlet.polls.service.PollsVoteLocalServiceUtil;
 
 /**
@@ -23,6 +24,10 @@ import com.liferay.portlet.polls.service.PollsVoteLocalServiceUtil;
 public class PollsChoiceImpl extends PollsChoiceBaseImpl {
 
 	public PollsChoiceImpl() {
+	}
+
+	public String[] getAvailableLocales() {
+		return LocalizationUtil.getAvailableLocales(getDescription());
 	}
 
 	public int getVotesCount() throws SystemException {
