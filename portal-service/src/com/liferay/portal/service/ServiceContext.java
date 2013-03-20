@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.Group;
@@ -33,6 +34,7 @@ import com.liferay.portal.model.PortletPreferencesIds;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 import java.io.Serializable;
@@ -629,6 +631,14 @@ public class ServiceContext implements Cloneable, Serializable {
 	 */
 	public long getScopeGroupId() {
 		return _scopeGroupId;
+	}
+
+	public ThemeDisplay getThemeDisplay() {
+		if (_request == null) {
+			return null;
+		}
+
+		return (ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY);
 	}
 
 	/**

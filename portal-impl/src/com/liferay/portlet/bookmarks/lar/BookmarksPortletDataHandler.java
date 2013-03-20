@@ -31,6 +31,8 @@ import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryActionableDynamicQuery;
 import com.liferay.portlet.bookmarks.service.persistence.BookmarksFolderActionableDynamicQuery;
 
+import java.util.List;
+
 import javax.portlet.PortletPreferences;
 
 /**
@@ -169,14 +171,18 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 
 		Element foldersElement = rootElement.element("folders");
 
-		for (Element folderElement : foldersElement.elements("folder")) {
+		List<Element> folderElements = foldersElement.elements("folder");
+
+		for (Element folderElement : folderElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, folderElement);
 		}
 
 		Element entriesElement = rootElement.element("entries");
 
-		for (Element entryElement : entriesElement.elements("entry")) {
+		List<Element> entryElements = entriesElement.elements("entry");
+
+		for (Element entryElement : entryElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, entryElement);
 		}

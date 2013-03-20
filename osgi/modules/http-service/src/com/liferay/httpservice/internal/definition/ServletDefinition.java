@@ -14,6 +14,7 @@
 
 package com.liferay.httpservice.internal.definition;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,13 +62,13 @@ public class ServletDefinition {
 		_servlet = servlet;
 	}
 
-	public void setURLPattern(List<String> urlPatterns) {
+	public void setURLPatterns(List<String> urlPatterns) {
 		_urlPatterns = urlPatterns;
 	}
 
 	private Map<String, String> _initParameters = new HashMap<String, String>();
 	private String _name;
 	private Servlet _servlet;
-	private List<String> _urlPatterns;
+	private List<String> _urlPatterns = new ArrayList<String>();
 
 }

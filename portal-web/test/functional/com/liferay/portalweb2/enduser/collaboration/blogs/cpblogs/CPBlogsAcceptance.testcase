@@ -1,9 +1,14 @@
-<test-case-definition name="CPBlogsAcceptance">
-	<test-case-command name="AddBlogsEntry">
+<definition name="CPBlogsAcceptance">
+	<set-up>
+		<execute macro="CPBlogs#advancedSearch" />
+	</set-up>
+	<command name="AddBlogsEntry">
 		<execute macro="BlogsEntry#cpAdd" />
-	</test-case-command>
-	
-	<test-case-command name="DeleteBlogsEntry">
+	</command>
+	<command name="DeleteBlogsEntry">
 		<execute macro="BlogsEntry#cpAdd" />
-	</test-case-command>
-</test-case-definition>
+	</command>
+	<tear-down>
+		<execute macro="BlogsEntry#cpTearDown" />
+	</tear-down>
+</definition>

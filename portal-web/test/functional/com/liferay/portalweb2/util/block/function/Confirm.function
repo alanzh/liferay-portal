@@ -1,9 +1,8 @@
-<function-definition>
-	<function-command name="assertConfirmation">
+<definition>
+	<command name="assertConfirmation">
 		<execute selenium="assertConfirmation" />
-	</function-command>
-
-	<function-command name="waitForConfirmation">
+	</command>
+	<command name="waitForConfirmation">
 		<execute selenium="waitForConfirmation" />
-	</function-command>
-</function-definition>
+	</command>
+</definition>

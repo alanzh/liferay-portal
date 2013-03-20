@@ -1,17 +1,15 @@
-<function-definition>
-	<function-command name="clickAt">
+<definition>
+	<command name="clickAt">
 		<execute selenium="waitForVisible" />
 
 		<execute selenium="clickAt" />
-	</function-command>
-
-	<function-command name="clickAtAndWait">
+	</command>
+	<command name="clickAtAndWait">
 		<execute selenium="waitForVisible" />
 
 		<execute selenium="clickAtAndWait" />
-	</function-command>
-
-	<function-command name="textClickAt">
+	</command>
+	<command name="textClickAt">
 		<execute selenium="waitForVisible" />
 
 		<execute selenium="waitForText" />
@@ -19,9 +17,17 @@
 		<execute selenium="assertText" />
 
 		<execute selenium="clickAt" />
-	</function-command>
+	</command>
+	<command name="textClickAtAndWait">
+		<execute selenium="waitForVisible" />
 
-	<function-command name="textClickAtClickDockbar">
+		<execute selenium="waitForText" />
+
+		<execute selenium="assertText" />
+
+		<execute selenium="clickAtAndWait" />
+	</command>
+	<command name="textClickAtClickDockbar">
 		<execute selenium="pause" argument1="1000" />
 
 		<execute selenium="clickAt" argument1="//div[@id='dockbar']" argument2="" />
@@ -29,9 +35,8 @@
 		<execute selenium="waitForElementPresent" argument1="//script[contains(@src,'/aui/aui-button-item/aui-button-item-min.js')]" />
 
 		<execute function="Click#textClickAt" />
-	</function-command>
-
-	<function-command name="valueClickAtAndWait">
+	</command>
+	<command name="valueClickAtAndWait">
 		<execute selenium="waitForVisible" />
 
 		<execute selenium="waitForValue" />
@@ -39,5 +44,5 @@
 		<execute selenium="assertValue" />
 
 		<execute selenium="clickAtAndWait" />
-	</function-command>
-</function-definition>
+	</command>
+</definition>

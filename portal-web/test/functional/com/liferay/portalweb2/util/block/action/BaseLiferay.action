@@ -1,28 +1,35 @@
-<action-definition>
-	<action-command name="AssertElementNotPresent">
+<definition>
+	<command name="AssertElementNotPresent">
 		<default>
 			<execute function="AssertElementNotPresent#assertElementNotPresent" />
 		</default>
-	</action-command>
-
-	<action-command name="Click">
+	</command>
+	<command name="Click">
 		<case comparator="contains" locator="/input">
 			<execute function="Click#clickAtAndWait" />
 		</case>
 		<default>
 			<execute function="Click#clickAt" />
 		</default>
-	</action-command>
-
-	<action-command name="Confirm">
+	</command>
+	<command name="Confirm">
 		<default>
 			<execute function="Confirm#assertConfirmation" />
 		</default>
-	</action-command>
-
-	<action-command name="DragAndDrop">
+	</command>
+	<command name="DragAndDrop">
 		<default>
 			<execute function="DragAndDrop#dragAndDrop" />
 		</default>
-	</action-command>
-</action-definition>
+	</command>
+	<command name="IsElementPresent">
+		<default>
+			<execute function="IsElementPresent#isElementPresent" />
+		</default>
+	</command>
+	<command name="Type">
+		<default>
+			<execute function="Type#type" />
+		</default>
+	</command>
+</definition>
