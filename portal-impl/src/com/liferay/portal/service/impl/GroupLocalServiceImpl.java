@@ -642,6 +642,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		membershipRequestLocalService.deleteMembershipRequests(
 			group.getGroupId());
 
+		// Repositories
+
+		repositoryLocalService.deleteRepositories(group.getGroupId());
+
 		// Subscriptions
 
 		subscriptionLocalService.deleteSubscriptions(
@@ -824,6 +828,15 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		return groupLocalService.loadFetchGroup(companyId, name);
 	}
 
+	/**
+	 * Returns the group with the matching UUID and company.
+	 *
+	 * @param  uuid the UUID
+	 * @param  companyId the primary key of the company
+	 * @return the matching group, or <code>null</code> if a matching group
+	 *         could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
 	public Group fetchGroupByUuidandCompanyId(String uuid, long companyId)
 		throws SystemException {
 
@@ -1375,6 +1388,29 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		}
 
 		return organizationGroups;
+	}
+
+	/**
+	 * Returns the group followed by all its parent groups ordered by closest
+	 * ancestor.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @return the group followed by all its parent groups ordered by closest
+	 *         ancestor
+	 * @throws PortalException if a group with the primary key could not be
+	 *         found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Group> getParentGroups(long groupId)
+		throws PortalException, SystemException {
+
+		if (groupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+			return new ArrayList<Group>();
+		}
+
+		Group group = groupPersistence.findByPrimaryKey(groupId);
+
+		return group.getAncestors();
 	}
 
 	/**
@@ -3462,6 +3498,29 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		setRolePermissions(group, role, "com.liferay.portlet.wiki");
 	}
 
+	protected boolean isParentGroup(long parentGroupId, long groupId)
+			throws PortalException, SystemException {
+
+		// Return true if parentGroupId is among the parent groups of groupId
+
+		if (groupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+			return false;
+		}
+
+		Group group = groupPersistence.findByPrimaryKey(groupId);
+
+		String treePath = group.getTreePath();
+
+		if (treePath.contains(
+				StringPool.SLASH + parentGroupId + StringPool.SLASH)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	protected boolean isStaging(ServiceContext serviceContext) {
 		if (serviceContext != null) {
 			return ParamUtil.getBoolean(serviceContext, "staging");
@@ -3680,6 +3739,17 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		if (group == null) {
 			return;
+		}
+
+		if ((groupId > 0) &&
+			(parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID)) {
+
+			// Prevent circular groupal references
+
+			if (isParentGroup(groupId, parentGroupId)) {
+				throw new GroupParentException(
+					GroupParentException.CHILD_DESCENDANT);
+			}
 		}
 
 		Group parentGroup = groupLocalService.getGroup(parentGroupId);

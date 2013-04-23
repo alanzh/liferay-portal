@@ -14,9 +14,6 @@
 
 package com.liferay.portal.model;
 
-import com.liferay.portal.model.GroupedModel;
-import com.liferay.portal.model.StagedModel;
-
 /**
  * @author Michael C. Han
  */

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -61,6 +62,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerImpl;
 import com.liferay.portlet.journal.model.JournalArticle;
 
 import java.util.ArrayList;
@@ -363,6 +365,12 @@ public class AssetUtil {
 
 		assetSearcher.setAssetEntryQuery(assetEntryQuery);
 
+		Layout layout = assetEntryQuery.getLayout();
+
+		if (layout != null) {
+			searchContext.setAttribute(Field.LAYOUT_UUID, layout.getUuid());
+		}
+
 		String ddmStructureFieldName = (String)assetEntryQuery.getAttribute(
 			"ddmStructureFieldName");
 		String ddmStructureFieldValue = (String)assetEntryQuery.getAttribute(
@@ -374,12 +382,18 @@ public class AssetUtil {
 			searchContext.setAttribute(
 				"ddmStructureFieldName", ddmStructureFieldName);
 			searchContext.setAttribute(
-				"ddmStructureFieldValue", ddmStructureFieldValue);
+				"ddmStructureFieldValue",
+				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
 		}
 
 		searchContext.setClassTypeIds(assetEntryQuery.getClassTypeIds());
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
+
+		if (Validator.isNotNull(assetEntryQuery.getKeywords())) {
+			searchContext.setLike(true);
+		}
+
 		searchContext.setSorts(
 			getSorts(assetEntryQuery, searchContext.getLocale()));
 		searchContext.setStart(start);
@@ -474,31 +488,35 @@ public class AssetUtil {
 	}
 
 	protected static Sort getSort(
-		String orderByType, String sortField, Locale locale) {
+			String orderByType, String sortField, Locale locale)
+		throws Exception {
 
 		if (Validator.isNull(orderByType)) {
 			orderByType = "asc";
 		}
 
-		int sortType = Sort.STRING_TYPE;
+		int sortType = getSortType(sortField);
 
-		if (sortField.equals(Field.CREATE_DATE) ||
-			sortField.equals(Field.EXPIRATION_DATE) ||
-			sortField.equals(Field.PUBLISH_DATE) ||
-			sortField.equals("modifiedDate")) {
+		if (sortField.startsWith(
+				DDMIndexerImpl.DDM_FIELD_NAMESPACE +
+					StringPool.FORWARD_SLASH)) {
 
-			sortType = Sort.LONG_TYPE;
+			String[] sortFields = sortField.split(StringPool.FORWARD_SLASH);
+
+			long ddmStructureId = GetterUtil.getLong(sortFields[1]);
+			String fieldName = sortFields[2];
+
+			DDMStructure ddmStructure =
+				DDMStructureLocalServiceUtil.getStructure(ddmStructureId);
+
+			String fieldType = ddmStructure.getFieldType(fieldName);
+
+			sortType = getSortType(fieldType);
+
+			sortField = sortField.concat(StringPool.UNDERLINE).concat(
+				LocaleUtil.toLanguageId(locale));
 		}
-		else if (sortField.equals(Field.PRIORITY) ||
-				 sortField.equals(Field.RATINGS)) {
-
-			sortType = Sort.DOUBLE_TYPE;
-		}
-		else if (sortField.equals(Field.VIEW_COUNT)) {
-			sortType = Sort.INT_TYPE;
-		}
-
-		if (sortField.equals("modifiedDate")) {
+		else if (sortField.equals("modifiedDate")) {
 			sortField = Field.MODIFIED_DATE;
 		}
 		else if (sortField.equals("title")) {
@@ -522,6 +540,33 @@ public class AssetUtil {
 			locale);
 
 		return new Sort[] {sort1, sort2};
+	}
+
+	protected static int getSortType(String sortField) {
+		int sortType = Sort.STRING_TYPE;
+
+		if (sortField.equals(Field.CREATE_DATE) ||
+			sortField.equals(Field.EXPIRATION_DATE) ||
+			sortField.equals(Field.PUBLISH_DATE) ||
+			sortField.equals("ddm-date") ||
+			sortField.equals("modifiedDate")) {
+
+			sortType = Sort.LONG_TYPE;
+		}
+		else if (sortField.equals(Field.PRIORITY) ||
+				 sortField.equals(Field.RATINGS) ||
+				 sortField.equals("ddm-decimal") ||
+				 sortField.equals("ddm-number")) {
+
+			sortType = Sort.DOUBLE_TYPE;
+		}
+		else if (sortField.equals(Field.VIEW_COUNT) ||
+				 sortField.equals("ddm-integer")) {
+
+			sortType = Sort.INT_TYPE;
+		}
+
+		return sortType;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(AssetUtil.class);

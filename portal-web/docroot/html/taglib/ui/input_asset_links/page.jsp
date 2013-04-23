@@ -55,11 +55,10 @@ long controlPanelPlid = PortalUtil.getControlPanelPlid(company.getCompanyId());
 
 PortletURL assetBrowserURL = PortletURLFactoryUtil.create(request, PortletKeys.ASSET_BROWSER, controlPanelPlid, PortletRequest.RENDER_PHASE);
 
-assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
-assetBrowserURL.setPortletMode(PortletMode.VIEW);
-
 assetBrowserURL.setParameter("struts_action", "/asset_browser/view");
 assetBrowserURL.setParameter("groupId", scopeGroupId.toString());
+assetBrowserURL.setPortletMode(PortletMode.VIEW);
+assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
 %>
 
 <liferay-ui:icon-menu align="left" cssClass="select-existing-selector" icon='<%= themeDisplay.getPathThemeImages() + "/common/search.png" %>' id='<%= randomNamespace + "inputAssetLinks" %>' message="select" showWhenSingleIcon="<%= true %>">
@@ -185,11 +184,11 @@ assetBrowserURL.setParameter("groupId", scopeGroupId.toString());
 
 			var entryLink = '<a class="modify-link" data-rowId="' + entryId + '" href="javascript:;"><%= UnicodeFormatter.toString(removeLinkIcon) %></a>';
 
-			searchContainer.addRow([entryType, entryTitle, entryScope, entryLink], entryId);
+			searchContainer.addRow([entryType, A.Escape.html(entryTitle), A.Escape.html(entryScope), entryLink], entryId);
 
 			searchContainer.updateDataStore();
 		},
-		['liferay-search-container']
+		['liferay-search-container', 'escape']
 	);
 
 </aui:script>

@@ -183,6 +183,7 @@ create index IX_4FBAC092 on DDMStructure (companyId, classNameId);
 create index IX_C8419FBE on DDMStructure (groupId);
 create index IX_B6ED5E50 on DDMStructure (groupId, classNameId);
 create unique index IX_C8785130 on DDMStructure (groupId, classNameId, structureKey);
+create index IX_43395316 on DDMStructure (groupId, parentStructureId);
 create index IX_20FDE04C on DDMStructure (structureKey);
 create index IX_E61809C8 on DDMStructure (uuid_);
 create index IX_F9FB8D60 on DDMStructure (uuid_, companyId);
@@ -804,6 +805,10 @@ create index IX_926CDD04 on SocialActivityCounter (groupId, classNameId, classPK
 create index IX_B15863FA on SocialActivityLimit (classNameId, classPK);
 create unique index IX_F1C1A617 on SocialActivityLimit (groupId, userId, classNameId, classPK, activityType, activityCounterName);
 create index IX_6F9EDE9F on SocialActivityLimit (userId);
+
+create index IX_4460FA14 on SocialActivitySet (classNameId, classPK, type_);
+create index IX_F71071BD on SocialActivitySet (groupId, userId, type_);
+create index IX_62AC101A on SocialActivitySet (userId, classNameId, classPK, type_);
 
 create index IX_8BE5F230 on SocialActivitySetting (groupId);
 create index IX_384788CD on SocialActivitySetting (groupId, activityType);

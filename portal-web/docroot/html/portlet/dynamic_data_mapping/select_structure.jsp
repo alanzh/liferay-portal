@@ -30,6 +30,8 @@ String eventName = ParamUtil.getString(request, "eventName", "selectStructure");
 
 <liferay-portlet:renderURL varImpl="portletURL">
 	<portlet:param name="struts_action" value="/dynamic_data_mapping/select_structure" />
+	<portlet:param name="classPK" value="<%= String.valueOf(classPK) %>" />
+	<portlet:param name="eventName" value="<%= eventName %>" />
 </liferay-portlet:renderURL>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="selectStructureFm">
@@ -80,7 +82,7 @@ String eventName = ParamUtil.getString(request, "eventName", "selectStructure");
 			/>
 
 			<liferay-ui:search-container-column-text>
-				<c:if test="<%= structure.getStructureId() != classPK %>">
+				<c:if test="<%= (structure.getStructureId() != classPK) && ((classPK == 0) || (structure.getParentStructureId() == 0) || (structure.getParentStructureId() != classPK)) %>">
 
 					<%
 					Map<String, Object> data = new HashMap<String, Object>();

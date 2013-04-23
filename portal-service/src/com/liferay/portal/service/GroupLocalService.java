@@ -805,6 +805,15 @@ public interface GroupLocalService extends BaseLocalService,
 		java.lang.String name)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	* Returns the group with the matching UUID and company.
+	*
+	* @param uuid the UUID
+	* @param companyId the primary key of the company
+	* @return the matching group, or <code>null</code> if a matching group
+	could not be found
+	* @throws SystemException if a system exception occurred
+	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.model.Group fetchGroupByUuidandCompanyId(
 		java.lang.String uuid, long companyId)
@@ -1168,6 +1177,23 @@ public interface GroupLocalService extends BaseLocalService,
 	public java.util.List<com.liferay.portal.model.Group> getOrganizationsRelatedGroups(
 		java.util.List<com.liferay.portal.model.Organization> organizations)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the group followed by all its parent groups ordered by closest
+	* ancestor.
+	*
+	* @param groupId the primary key of the group
+	* @return the group followed by all its parent groups ordered by closest
+	ancestor
+	* @throws PortalException if a group with the primary key could not be
+	found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portal.model.Group> getParentGroups(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
 	* Returns the staging group.

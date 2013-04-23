@@ -52,7 +52,8 @@ if (!portletName.equals(PortletKeys.PORTLET_DISPLAY_TEMPLATES)) {
 <liferay-portlet:renderURL varImpl="portletURL">
 	<portlet:param name="struts_action" value="/dynamic_data_mapping/select_template" />
 	<portlet:param name="classNameId" value="<%= String.valueOf(classNameId) %>" />
-	<portlet:param name="clasPK" value="<%= String.valueOf(classPK) %>" />
+	<portlet:param name="classPK" value="<%= String.valueOf(classPK) %>" />
+	<portlet:param name="eventName" value="<%= eventName %>" />
 </liferay-portlet:renderURL>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="selectTemplateFm">

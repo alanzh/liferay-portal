@@ -646,24 +646,32 @@ public class SeleniumBuilderTest {
 	public void testFunctionIfElement1001_1() throws Exception {
 		test(
 			"FunctionIfElement1001_1.function",
-			"Error 1001: Missing (condition|then) child element in " +
-				_DIR_NAME + "/FunctionIfElement1001_1.function:3");
+			"Error 1001: Missing (condition) child element in " + _DIR_NAME +
+				"/FunctionIfElement1001_1.function:3");
 	}
 
 	@Test
 	public void testFunctionIfElement1001_2() throws Exception {
 		test(
 			"FunctionIfElement1001_2.function",
-			"Error 1001: Missing (condition|then) child element in " +
-				_DIR_NAME + "/FunctionIfElement1001_2.function:3");
+			"Error 1001: Missing (then) child element in " + _DIR_NAME +
+				"/FunctionIfElement1001_2.function:3");
 	}
 
 	@Test
 	public void testFunctionIfElement1001_3() throws Exception {
 		test(
 			"FunctionIfElement1001_3.function",
-			"Error 1001: Missing (condition|then) child element in " +
-				_DIR_NAME + "/FunctionIfElement1001_3.function:3");
+			"Error 1001: Missing (condition) child element in " + _DIR_NAME +
+				"/FunctionIfElement1001_3.function:3");
+	}
+
+	@Test
+	public void testFunctionIfElement1001_4() throws Exception {
+		test(
+			"FunctionIfElement1001_4.function",
+			"Error 1001: Missing (condition) child element in " + _DIR_NAME +
+				"/FunctionIfElement1001_4.function:3");
 	}
 
 	@Test
@@ -715,8 +723,8 @@ public class SeleniumBuilderTest {
 	public void testMacroCommandElement1001() throws Exception {
 		test(
 			"MacroCommandElement1001.macro",
-			"Error 1001: Missing (execute|if|var|while) child element in " +
-				_DIR_NAME + "/MacroCommandElement1001.macro:2");
+			"Error 1001: Missing (echo|execute|fail|if|var|while) child " +
+				"element in " + _DIR_NAME + "/MacroCommandElement1001.macro:2");
 	}
 
 	@Test
@@ -763,7 +771,7 @@ public class SeleniumBuilderTest {
 	public void testMacroConditionElement1002_1() throws Exception {
 		test(
 			"MacroConditionElement1002_1.macro",
-			"Error 1002: Invalid fail element in " + _DIR_NAME +
+			"Error 1002: Invalid var element in " + _DIR_NAME +
 				"/MacroConditionElement1002_1.macro:5");
 	}
 
@@ -771,7 +779,7 @@ public class SeleniumBuilderTest {
 	public void testMacroConditionElement1002_2() throws Exception {
 		test(
 			"MacroConditionElement1002_2.macro",
-			"Error 1002: Invalid fail element in " + _DIR_NAME +
+			"Error 1002: Invalid var element in " + _DIR_NAME +
 				"/MacroConditionElement1002_2.macro:5");
 	}
 
@@ -888,6 +896,62 @@ public class SeleniumBuilderTest {
 	}
 
 	@Test
+	public void testMacroContainsElement1002() throws Exception {
+		test(
+			"MacroContainsElement1002.macro",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/MacroContainsElement1002.macro:5");
+	}
+
+	@Test
+	public void testMacroContainsElement1004_1() throws Exception {
+		test(
+			"MacroContainsElement1004_1.macro",
+			"Error 1004: Missing (string|substring) attribute in " + _DIR_NAME +
+				"/MacroContainsElement1004_1.macro:4");
+	}
+
+	@Test
+	public void testMacroContainsElement1004_2() throws Exception {
+		test(
+			"MacroContainsElement1004_2.macro",
+			"Error 1004: Missing (string|substring) attribute in " + _DIR_NAME +
+				"/MacroContainsElement1004_2.macro:4");
+	}
+
+	@Test
+	public void testMacroContainsElement1004_3() throws Exception {
+		test(
+			"MacroContainsElement1004_3.macro",
+			"Error 1004: Missing (string|substring) attribute in " + _DIR_NAME +
+				"/MacroContainsElement1004_3.macro:4");
+	}
+
+	@Test
+	public void testMacroContainsElement1005() throws Exception {
+		test(
+			"MacroContainsElement1005.macro",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/MacroContainsElement1005.macro:4");
+	}
+
+	@Test
+	public void testMacroContainsElement1006_1() throws Exception {
+		test(
+			"MacroContainsElement1006_1.macro",
+			"Error 1006: Invalid string attribute value in " + _DIR_NAME +
+				"/MacroContainsElement1006_1.macro:4");
+	}
+
+	@Test
+	public void testMacroContainsElement1006_2() throws Exception {
+		test(
+			"MacroContainsElement1006_2.macro",
+			"Error 1006: Invalid substring attribute value in " + _DIR_NAME +
+				"/MacroContainsElement1006_2.macro:4");
+	}
+
+	@Test
 	public void testMacroDefinitionElement1000() throws Exception {
 		test(
 			"MacroDefinitionElement1000.macro",
@@ -920,18 +984,34 @@ public class SeleniumBuilderTest {
 	}
 
 	@Test
+	public void testMacroEchoElement1005() throws Exception {
+		test(
+			"MacroEchoElement1005.macro",
+			"Error 1005: Invalid message-fail attribute in " + _DIR_NAME +
+				"/MacroEchoElement1005.macro:3");
+	}
+
+	@Test
+	public void testMacroEchoElement1006() throws Exception {
+		test(
+			"MacroEchoElement1006.macro",
+			"Error 1006: Invalid message attribute value in " + _DIR_NAME +
+				"/MacroEchoElement1006.macro:3");
+	}
+
+	@Test
 	public void testMacroElseElement1001() throws Exception {
 		test(
 			"MacroElseElement1001.macro",
-			"Error 1001: Missing (execute|if|var|while) child element in " +
-				_DIR_NAME + "/MacroElseElement1001.macro:8");
+			"Error 1001: Missing (echo|execute|fail|if|var|while) child " +
+				"element in " + _DIR_NAME + "/MacroElseElement1001.macro:8");
 	}
 
 	@Test
 	public void testMacroElseElement1002() throws Exception {
 		test(
 			"MacroElseElement1002.macro",
-			"Error 1002: Invalid fail element in " + _DIR_NAME +
+			"Error 1002: Invalid execute-fail element in " + _DIR_NAME +
 				"/MacroElseElement1002.macro:9");
 	}
 
@@ -941,6 +1021,96 @@ public class SeleniumBuilderTest {
 			"MacroElseElement1007.macro",
 			"Error 1007: Poorly formed XML in " + _DIR_NAME +
 				"/MacroElseElement1007.macro");
+	}
+
+	@Test
+	public void testMacroElseifElement1001_1() throws Exception {
+		test(
+			"MacroElseifElement1001_1.macro",
+			"Error 1001: Missing (condition|contains|equals|isset) child " +
+				"element in " + _DIR_NAME +
+				"/MacroElseifElement1001_1.macro:8");
+	}
+
+	@Test
+	public void testMacroElseifElement1001_2() throws Exception {
+		test(
+			"MacroElseifElement1001_2.macro",
+			"Error 1001: Missing (then) child element in " + _DIR_NAME +
+				"/MacroElseifElement1001_2.macro:8");
+	}
+
+	@Test
+	public void testMacroElseifElement1001_3() throws Exception {
+		test(
+			"MacroElseifElement1001_3.macro",
+			"Error 1001: Missing (condition|contains|equals|isset) child " +
+				"element in " + _DIR_NAME +
+				"/MacroElseifElement1001_3.macro:8");
+	}
+
+	@Test
+	public void testMacroElseifElement1002() throws Exception {
+		test(
+			"MacroElseifElement1002.macro",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/MacroElseifElement1002.macro:13");
+	}
+
+	@Test
+	public void testMacroEqualsElement1002() throws Exception {
+		test(
+			"MacroEqualsElement1002.macro",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/MacroEqualsElement1002.macro:5");
+	}
+
+	@Test
+	public void testMacroEqualsElement1004_1() throws Exception {
+		test(
+			"MacroEqualsElement1004_1.macro",
+			"Error 1004: Missing (arg1|arg2) attribute in " + _DIR_NAME +
+				"/MacroEqualsElement1004_1.macro:4");
+	}
+
+	@Test
+	public void testMacroEqualsElement1004_2() throws Exception {
+		test(
+			"MacroEqualsElement1004_2.macro",
+			"Error 1004: Missing (arg1|arg2) attribute in " + _DIR_NAME +
+				"/MacroEqualsElement1004_2.macro:4");
+	}
+
+	@Test
+	public void testMacroEqualsElement1004_3() throws Exception {
+		test(
+			"MacroEqualsElement1004_3.macro",
+			"Error 1004: Missing (arg1|arg2) attribute in " + _DIR_NAME +
+				"/MacroEqualsElement1004_3.macro:4");
+	}
+
+	@Test
+	public void testMacroEqualsElement1005() throws Exception {
+		test(
+			"MacroEqualsElement1005.macro",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/MacroEqualsElement1005.macro:4");
+	}
+
+	@Test
+	public void testMacroEqualsElement1006_1() throws Exception {
+		test(
+			"MacroEqualsElement1006_1.macro",
+			"Error 1006: Invalid arg1 attribute value in " + _DIR_NAME +
+				"/MacroEqualsElement1006_1.macro:4");
+	}
+
+	@Test
+	public void testMacroEqualsElement1006_2() throws Exception {
+		test(
+			"MacroEqualsElement1006_2.macro",
+			"Error 1006: Invalid arg2 attribute value in " + _DIR_NAME +
+				"/MacroEqualsElement1006_2.macro:4");
 	}
 
 	@Test
@@ -1048,27 +1218,43 @@ public class SeleniumBuilderTest {
 	}
 
 	@Test
+	public void testMacroFailElement1005() throws Exception {
+		test(
+			"MacroFailElement1005.macro",
+			"Error 1005: Invalid message-fail attribute in " + _DIR_NAME +
+				"/MacroFailElement1005.macro:3");
+	}
+
+	@Test
+	public void testMacroFailElement1006() throws Exception {
+		test(
+			"MacroFailElement1006.macro",
+			"Error 1006: Invalid message attribute value in " + _DIR_NAME +
+				"/MacroFailElement1006.macro:3");
+	}
+
+	@Test
 	public void testMacroIfElement1001_1() throws Exception {
 		test(
 			"MacroIfElement1001_1.macro",
-			"Error 1001: Missing (condition|then) child element in " +
-				_DIR_NAME + "/MacroIfElement1001_1.macro:3");
+			"Error 1001: Missing (condition|contains|equals|isset) child " +
+				"element in " + _DIR_NAME + "/MacroIfElement1001_1.macro:3");
 	}
 
 	@Test
 	public void testMacroIfElement1001_2() throws Exception {
 		test(
 			"MacroIfElement1001_2.macro",
-			"Error 1001: Missing (condition|then) child element in " +
-				_DIR_NAME + "/MacroIfElement1001_2.macro:3");
+			"Error 1001: Missing (then) child element in " + _DIR_NAME +
+				"/MacroIfElement1001_2.macro:3");
 	}
 
 	@Test
 	public void testMacroIfElement1001_3() throws Exception {
 		test(
 			"MacroIfElement1001_3.macro",
-			"Error 1001: Missing (condition|then) child element in " +
-				_DIR_NAME + "/MacroIfElement1001_3.macro:3");
+			"Error 1001: Missing (condition|contains|equals|isset) child " +
+				"element in " + _DIR_NAME + "/MacroIfElement1001_3.macro:3");
 	}
 
 	@Test
@@ -1088,18 +1274,50 @@ public class SeleniumBuilderTest {
 	}
 
 	@Test
+	public void testMacroIssetElement1002() throws Exception {
+		test(
+			"MacroIssetElement1002.macro",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/MacroIssetElement1002.macro:5");
+	}
+
+	@Test
+	public void testMacroIssetElement1004() throws Exception {
+		test(
+			"MacroIssetElement1004.macro",
+			"Error 1004: Missing (var) attribute in " + _DIR_NAME +
+				"/MacroIssetElement1004.macro:4");
+	}
+
+	@Test
+	public void testMacroIssetElement1005() throws Exception {
+		test(
+			"MacroIssetElement1005.macro",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/MacroIssetElement1005.macro:4");
+	}
+
+	@Test
+	public void testMacroIssetElement1006() throws Exception {
+		test(
+			"MacroIssetElement1006.macro",
+			"Error 1006: Invalid var attribute value in " + _DIR_NAME +
+				"/MacroIssetElement1006.macro:4");
+	}
+
+	@Test
 	public void testMacroThenElement1001() throws Exception {
 		test(
 			"MacroThenElement1001.macro",
-			"Error 1001: Missing (execute|if|var|while) child element in " +
-				_DIR_NAME + "/MacroThenElement1001.macro:5");
+			"Error 1001: Missing (echo|execute|fail|if|var|while) child " +
+				"element in " + _DIR_NAME + "/MacroThenElement1001.macro:5");
 	}
 
 	@Test
 	public void testMacroThenElement1002() throws Exception {
 		test(
 			"MacroThenElement1002.macro",
-			"Error 1002: Invalid fail element in " + _DIR_NAME +
+			"Error 1002: Invalid execute-fail element in " + _DIR_NAME +
 				"/MacroThenElement1002.macro:6");
 	}
 
@@ -1768,6 +1986,9 @@ public class SeleniumBuilderTest {
 		finally {
 			if (expectException) {
 				Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
+			}
+			else {
+				Assert.assertEquals(null, actualErrorMessage);
 			}
 		}
 	}

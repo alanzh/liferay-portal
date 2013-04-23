@@ -2,10 +2,15 @@
 
 <#macro insertAssetEntry
 	_entry
+	_currentIndex = -1
 >
 	<#local assetEntry = dataFactory.newAssetEntry(_entry)>
 
 	insert into AssetEntry values (${assetEntry.entryId}, ${assetEntry.groupId}, ${assetEntry.companyId}, ${assetEntry.userId}, '${assetEntry.userName}', '${dataFactory.getDateString(assetEntry.createDate)}', '${dataFactory.getDateString(assetEntry.modifiedDate)}', ${assetEntry.classNameId}, ${assetEntry.classPK}, '${assetEntry.classUuid}', ${assetEntry.classTypeId}, ${assetEntry.visible?string}, '${dataFactory.getDateString(assetEntry.startDate)}', '${dataFactory.getDateString(assetEntry.endDate)}', '${dataFactory.getDateString(assetEntry.publishDate)}', '${dataFactory.getDateString(assetEntry.expirationDate)}', '${assetEntry.mimeType}', '${assetEntry.title}', '${assetEntry.description}', '${assetEntry.summary}', '${assetEntry.url}', '${assetEntry.layoutUuid}', ${assetEntry.height}, ${assetEntry.width}, ${assetEntry.priority}, ${assetEntry.viewCount});
+
+	<#if (maxAssetCategoryCount > 0) && (_currentIndex != -1)>
+		insert into AssetEntries_AssetCategories values (${assetEntry.entryId}, ${dataFactory.getAssetCategoryId(assetEntry.groupId, _currentIndex)});
+	</#if>
 </#macro>
 
 <#macro insertDDMContent
@@ -63,6 +68,7 @@
 
 					<@insertAssetEntry
 						_entry = dlFileEntry
+						_currentIndex = dlFolderCount * maxDLFileEntryCount + dlFileEntryCount
 					/>
 
 					<#local ddmStorageLinkId = counter.get()>
@@ -124,7 +130,7 @@
 	_group
 	_publicPageCount
 >
-	insert into Group_ values (${_group.groupId}, ${_group.companyId}, ${_group.creatorUserId}, ${_group.classNameId}, ${_group.classPK}, ${_group.parentGroupId}, ${_group.liveGroupId}, '${_group.treePath}', '${_group.name}', '${_group.description}', ${_group.type}, '${_group.typeSettings}', '${_group.friendlyURL}', ${_group.site?string}, ${_group.active?string});
+	insert into Group_ values ('${_group.uuid}', ${_group.groupId}, ${_group.companyId}, ${_group.creatorUserId}, ${_group.classNameId}, ${_group.classPK}, ${_group.parentGroupId}, ${_group.liveGroupId}, '${_group.treePath}', '${_group.name}', '${_group.description}', ${_group.type}, '${_group.typeSettings}', '${_group.friendlyURL}', ${_group.site?string}, ${_group.active?string});
 
 	<#local layoutSets = dataFactory.newLayoutSets(_group.groupId, _publicPageCount)>
 
@@ -138,9 +144,8 @@
 >
 	insert into Layout values ('${_layout.uuid}', ${_layout.plid}, ${_layout.groupId}, ${_layout.companyId}, '${dataFactory.getDateString(_layout.createDate)}', '${dataFactory.getDateString(_layout.modifiedDate)}', ${_layout.privateLayout?string}, ${_layout.layoutId}, ${_layout.parentLayoutId}, '${_layout.name}', '${_layout.title}', '${_layout.description}', '${_layout.keywords}', '${_layout.robots}', '${_layout.type}', '${_layout.typeSettings}', ${_layout.hidden?string}, '${_layout.friendlyURL}', ${_layout.iconImage?string}, ${_layout.iconImageId}, '${_layout.themeId}', '${_layout.colorSchemeId}', '${_layout.wapThemeId}', '${_layout.wapColorSchemeId}', '${_layout.css}', ${_layout.priority}, '${_layout.layoutPrototypeUuid}', ${_layout.layoutPrototypeLinkEnabled?string}, '${_layout.sourcePrototypeLayoutUuid}');
 
-	<@insertResourcePermission
-		_resourceName = "com.liferay.portal.model.Layout"
-		_resourcePrimkey = stringUtil.valueOf(_layout.plid)
+	<@insertResourcePermissions
+		_entry = _layout
 	/>
 </#macro>
 
@@ -188,33 +193,19 @@
 </#macro>
 
 <#macro insertPortletPreferences
-	_entry
-	_plid
-	_portletId = 'null'
+	_portletPreferences
 >
-	<#if (_portletId = 'null')>
-		<#local portletPreferencesList = dataFactory.newPortletPreferences(_plid, _entry)>
-	<#else>
-		<#local portletPreferencesList = dataFactory.newPortletPreferences(_plid, _portletId, _entry)>
-	</#if>
+	insert into PortletPreferences values (${_portletPreferences.portletPreferencesId}, ${_portletPreferences.ownerId}, ${_portletPreferences.ownerType}, ${_portletPreferences.plid}, '${_portletPreferences.portletId}', '${_portletPreferences.preferences}');
 
-	<#list portletPreferencesList as portletPreferences>
-		insert into PortletPreferences values (${portletPreferences.portletPreferencesId}, ${portletPreferences.ownerId}, ${portletPreferences.ownerType}, ${portletPreferences.plid}, '${portletPreferences.portletId}', '${portletPreferences.preferences}');
-
-		<#local primKey = dataFactory.getPortletPermissionPrimaryKey(layout.plid, portletPreferences.portletId)>
-
-		<@insertResourcePermission
-			_resourceName = portletPreferences.portletId
-			_resourcePrimkey = primKey
-		/>
-	</#list>
+	<@insertResourcePermissions
+		_entry = _portletPreferences
+	/>
 </#macro>
 
-<#macro insertResourcePermission
-	_resourceName
-	_resourcePrimkey
+<#macro insertResourcePermissions
+	_entry
 >
-	<#local resourcePermissions = dataFactory.newResourcePermission(_resourceName, _resourcePrimkey)>
+	<#local resourcePermissions = dataFactory.newResourcePermissions(_entry)>
 
 	<#list resourcePermissions as resourcePermission>
 		insert into ResourcePermission values (${resourcePermission.resourcePermissionId}, ${resourcePermission.companyId}, '${resourcePermission.name}', ${resourcePermission.scope}, '${resourcePermission.primKey}', ${resourcePermission.roleId}, ${resourcePermission.ownerId}, ${resourcePermission.actionIds});
