@@ -197,7 +197,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 		.nav > li > a {
 			margin: 3px 0;
-			padding: 2px 15px;
+			padding: 3px 15px;
 		}
 
 		.navbar-inner {
@@ -257,10 +257,10 @@ $dockbarOpenGradientStart: #0EA6F9;
 					> li.open > .dropdown-toggle {
 						background-color: $dockbarOpenGradientEnd;
 						margin: 0;
-						padding: 5px 15px;
+						padding: 6px 15px;
 
 						@include respond-to(phone, tablet) {
-							margin: 5px 0 5px 10px;
+							margin: 5px 0 3px 5px;
 							padding: 12px 15px;
 						}
 					}
@@ -531,6 +531,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 			padding: 0 10px 13px;
 			position: relative;
 
+			.icon-search {
+				left: 18px;
+				position: absolute;
+				top: 8px;
+			}
+
 			.cancel-search {
 				color: #f88;
 				display: none;
@@ -571,7 +577,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 				}
 
 				input {
-					padding-left: 40px;
+					padding-left: 28px;
 				}
 			}
 		}
@@ -617,7 +623,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 			.control-panel-tools {
 				cursor: pointer;
-				padding-top: 16px;
+				padding: 12px 0;
 
 				&:hover {
 					background-color: #DDD;
@@ -690,10 +696,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 			}
 
 			.search-panels {
-				background: url(../images/custom/search_navigation_min_icon.png) no-repeat right;
-				padding: 14px 10px 14px;
-				right: 10px;
-				top: -7px;
+				padding: 0;
+				text-align: center;
+
+				.icon-search {
+					position: static;
+				}
 			}
 
 			.search-panels-bar {

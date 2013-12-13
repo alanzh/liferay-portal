@@ -25,7 +25,6 @@
 		</execute>
 	</command>
 
-
 	<command name="KaleoWebSmoke" priority="5">
 		<property name="web.plugins.includes" value="kaleo-web" />
 
@@ -49,7 +48,7 @@
 	</command>
 
 	<command name="ResourcesImporterWebSmoke" priority="5">
-		<property name="web.plugins.includes" value="resource-importer-web" />
+		<property name="web.plugins.includes" value="resources-importer-web" />
 
 		<var name="appName" value="Resources Importer" />
 
@@ -157,7 +156,6 @@
 			<var name="appName" value="${appName}" />
 		</execute>
 	</command>
-
 
 	<command name="WurflWebSmoke" priority="5">
 		<property name="web.plugins.includes" value="wurfl-web" />

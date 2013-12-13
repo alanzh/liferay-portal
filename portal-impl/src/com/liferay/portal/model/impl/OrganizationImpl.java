@@ -178,33 +178,6 @@ public class OrganizationImpl extends OrganizationBaseImpl {
 	}
 
 	@Override
-	public long getLogoId() {
-		long logoId = 0;
-
-		try {
-			Group group = getGroup();
-
-			LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				group.getGroupId(), false);
-
-			logoId = publicLayoutSet.getLogoId();
-
-			if (logoId == 0) {
-				LayoutSet privateLayoutSet =
-					LayoutSetLocalServiceUtil.getLayoutSet(
-						group.getGroupId(), true);
-
-				logoId = privateLayoutSet.getLogoId();
-			}
-		}
-		catch (Exception e) {
-			_log.error(e);
-		}
-
-		return logoId;
-	}
-
-	@Override
 	public Organization getParentOrganization()
 		throws PortalException, SystemException {
 

@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.ResourceConstants;
@@ -276,6 +277,15 @@ public class LayoutPrototypeLocalServiceImpl
 		group.setName(layoutPrototype.getName(LocaleUtil.getDefault()));
 
 		groupPersistence.update(group);
+
+		// Layout
+
+		Layout layout = layoutPrototype.getLayout();
+
+		layout.setModifiedDate(layoutPrototype.getModifiedDate());
+		layout.setNameMap(nameMap);
+
+		layoutPersistence.update(layout);
 
 		return layoutPrototype;
 	}

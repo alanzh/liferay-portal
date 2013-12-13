@@ -290174,6 +290174,33 @@ See http://issues.liferay.com/browse/LPS-15626.
 			<return>
 				<comment><![CDATA[]]></comment>
 			</return>
+			<deprecated><![CDATA[As of 7.0.0 replaced by {@link #getPortraitURL(String, boolean, long, String)}]]></deprecated>
+		</method>
+		<method>
+			<name>getPortraitURL</name>
+			<param>
+				<name>imagePath</name>
+				<type>java.lang.String</type>
+				<comment><![CDATA[]]></comment>
+			</param>
+			<param>
+				<name>male</name>
+				<type>boolean</type>
+				<comment><![CDATA[]]></comment>
+			</param>
+			<param>
+				<name>portraitId</name>
+				<type>long</type>
+				<comment><![CDATA[]]></comment>
+			</param>
+			<param>
+				<name>userUuid</name>
+				<type>java.lang.String</type>
+				<comment><![CDATA[]]></comment>
+			</param>
+			<return>
+				<comment><![CDATA[]]></comment>
+			</return>
 		</method>
 		<field>
 			<name>FULL_NAME_MAX_LENGTH</name>
@@ -290192,6 +290219,12 @@ See http://issues.liferay.com/browse/LPS-15626.
 		</field>
 		<field>
 			<name>USERS_EMAIL_ADDRESS_AUTO_SUFFIX</name>
+		</field>
+		<field>
+			<name>_USERS_IMAGE_PORTRAIT_ENUMERATION_CHECK</name>
+		</field>
+		<field>
+			<name>_log</name>
 		</field>
 	</javadoc>
 	<javadoc>

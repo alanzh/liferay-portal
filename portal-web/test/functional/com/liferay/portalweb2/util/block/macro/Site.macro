@@ -168,7 +168,7 @@
 	<command name="approveJoinSiteRestrictedViaMySitesPG">
 		<var name="key_userScreenName" value="${userScreenName}" />
 
-		<execute action="CPSitememberships#assertTextEquals" locator-key1="MEMBERSHIP_TYPE" value1="Membership Type: Restricted"/>
+		<execute action="CPSitememberships#assertTextEquals" locator-key1="MEMBERSHIP_TYPE" value1="Membership Type: Restricted" />
 		<execute action="CPSitememberships#assertTextEquals" locator-key1="REQUEST_MESSAGE" value1="There are 1 membership requests pending." />
 		<execute action="CPSitememberships#assertClick" locator-key1="TOOLBAR_VIEW_MEMBERSHIP_REQUESTS" value1="View Membership Requests" />
 
@@ -192,7 +192,7 @@
 
 	<command name="assignRoleCP">
 		<execute action="CPSitememberships#assertClick" locator-key1="TOOLBAR_ADD_SITE_ROLES_TO" value1="Add Site Roles to" />
-		<execute action="CPSitememberships#assertClick" locator-key1="ADD_SITE_ROLES_TO_MENULIST_USERS" value1="Users"/>
+		<execute action="CPSitememberships#assertClick" locator-key1="ADD_SITE_ROLES_TO_MENULIST_USERS" value1="Users" />
 
 		<var name="key_roleName" value="${roleName}" />
 
@@ -213,7 +213,17 @@
 
 		<execute action="CPSitemembershipsAssignuserrolesUser#click" locator-key1="CURRENT" />
 		<execute action="CPSitemembershipsAssignuserrolesUser#assertChecked" locator-key1="USER_TABLE_CHECKBOX" />
-		<execute action="CPSitemembershipsAssignuserrolesUser#assertTextEquals" locator-key1="USER_TABLE_USER_NAME" value1="${userFirstName} ${userLastName}" />
+
+		<if>
+			<isset var="userMiddleName" />
+			<then>
+				<execute action="CPSitemembershipsAssignuserrolesUser#assertTextEquals" locator-key1="USER_TABLE_USER_NAME" value1="${userFirstName} ${userMiddleName} ${userLastName}" />
+			</then>
+			<else>
+				<execute action="CPSitemembershipsAssignuserrolesUser#assertTextEquals" locator-key1="USER_TABLE_USER_NAME" value1="${userFirstName} ${userLastName}" />
+			</else>
+		</if>
+
 		<execute action="CPSitemembershipsAssignuserrolesUser#assertTextEquals" locator-key1="USER_TABLE_SCREEN_NAME" value1="${userScreenName}" />
 	</command>
 
@@ -249,7 +259,7 @@
 		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="SEARCH_BUTTON" value1="Search" />
 
 		<execute action="CPSitemembershipsUsergroups#assertTextEquals" locator-key1="USER_GROUP_TABLE_NAME" value1="${userGroupName}" />
-		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="USER_GROUP_TABLE_ACTIONS" value1="Actions"/>
+		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="USER_GROUP_TABLE_ACTIONS" value1="Actions" />
 		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="USER_GROUP_MENULIST_ASSIGN_SITE_ROLES" value1="Assign Site Roles" />
 
 		<execute action="CPSitemembershipsUsergroups#check" locator-key1="SITE_OWNER_CHECKBOX" />
@@ -262,7 +272,7 @@
 		<var name="key_siteName" value="${siteName}" />
 
 		<execute action="CPSites#type" locator-key1="BASIC_SEARCH_FIELD" value1="Name" />
-		<execute action="CPSites#assertClick" locator-key1="BASIC_SEARCH_BUTTON" value1="Search"/>
+		<execute action="CPSites#assertClick" locator-key1="BASIC_SEARCH_BUTTON" value1="Search" />
 		<execute action="CPSites#assertTextEquals" locator-key1="SITE_TABLE_NAME" value1="${siteName}" />
 		<execute action="CPSites#assertClick" locator-key1="SITE_TABLE_ACTIONS" value1="Actions" />
 		<execute action="CPSites#assertClick" locator-key1="SITE_MENULIST_DELETE" value1="Delete" />
@@ -286,11 +296,11 @@
 		<execute action="CPSitesettings#assertClick" locator-key1="MENU_BASIC_INFORMATION_SITE_URL" value1="Site URL" />
 
 		<execute action="CPSitesettingsSiteURL#assertTextEquals" locator-key1="SITE_URL_FRIENDLY_URL_LABEL" value1="Friendly URL" />
-		<execute action="CPSitesettingsSiteURL#type" locator-key1="SITE_URL_FRIENDLY_URL_FIELD" value1="${siteFriendlyURLInvalid}" />
+		<execute action="CPSitesettingsSiteURL#type" locator-key1="SITE_URL_FRIENDLY_URL_FIELD" value1="${siteFriendlyURLEdit}" />
 		<execute action="CPSitesettingsSiteURL#assertClick" locator-key1="SAVE_BUTTON" value1="Save" />
 
 		<if>
-			<isset var="friendlyURLInvalid" />
+			<equals arg1="${friendlyURLInvalid}" arg2="true" />
 			<then>
 				<execute action="CPSitesettingsSiteURL#assertTextEquals" locator-key1="ERROR_MESSAGE" value1="Your request failed to complete." />
 				<execute action="CPSitesettingsSiteURL#assertTextEquals" locator-key1="SITE_URL_ERROR_MESSAGE" value1="The friendly URL has too many slashes." />
@@ -395,7 +405,7 @@
 		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="SEARCH_BUTTON" value1="Search" />
 
 		<execute action="CPSitemembershipsUsergroups#assertTextEquals" locator-key1="USER_GROUP_TABLE_NAME" value1="${userGroupName}" />
-		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="USER_GROUP_TABLE_ACTIONS" value1="Actions"/>
+		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="USER_GROUP_TABLE_ACTIONS" value1="Actions" />
 		<execute action="CPSitemembershipsUsergroups#assertClick" locator-key1="USER_GROUP_MENULIST_ASSIGN_SITE_ROLES" value1="Assign Site Roles" />
 
 		<execute action="CPSitemembershipsUsergroups#uncheck" locator-key1="SITE_OWNER_CHECKBOX" />
@@ -588,7 +598,7 @@
 		<execute action="Home#assertTextEquals" locator-key1="BREADCRUMB_1" value1="${siteName}" />
 		<execute action="Home#assertTextEquals" locator-key1="BREADCRUMB_2" value1="${sitePageName}" />
 		<execute action="Home#assertTextEquals" locator-key1="SITE_NAME" value1="${siteName}" />
-		<execute action="Home#assertLocation" value1="${sitePageURL}"/>
+		<execute action="Home#assertLocation" value1="${sitePageURL}" />
 	</command>
 
 	<command name="viewSitePG">
@@ -600,7 +610,7 @@
 		<execute action="Home#assertTextEquals" locator-key1="BREADCRUMB_2" value1="${childSiteName}" />
 		<execute action="Home#assertTextEquals" locator-key1="BREADCRUMB_3" value1="${sitePageName}" />
 		<execute action="Home#assertTextEquals" locator-key1="SITE_NAME" value1="${childSiteName}" />
-		<execute action="Home#assertLocation" value1="${sitePageURL}"/>
+		<execute action="Home#assertLocation" value1="${sitePageURL}" />
 	</command>
 
 	<command name="viewVirtualHostsURLPG">
@@ -611,6 +621,6 @@
         <execute action="Home#assertTextEquals" locator-key1="BREADCRUMB_1" value1="${siteName}" />
         <execute action="Home#assertTextEquals" locator-key1="BREADCRUMB_2" value1="${sitePageName}" />
 
-        <execute action="Home#assertLocation" value1="${sitePageURL}"/>
+        <execute action="Home#assertLocation" value1="${sitePageURL}" />
     </command>
 </definition>
