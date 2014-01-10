@@ -477,28 +477,35 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 			String mimeType = MimeTypesUtil.getExtensionContentType(extension);
 
-			long size = DLStoreUtil.getFileSize(
-				companyId, CompanyConstants.SYSTEM, attachment);
+			try {
+				long size = DLStoreUtil.getFileSize(
+					companyId, CompanyConstants.SYSTEM, attachment);
 
-			long fileEntryId = addDLFileEntry(
-				groupId, companyId, userId, getClassName(), resourcePrimKey,
-				userName, createDate, repositoryId, containerModelFolderId,
-				name, extension, mimeType, title, size);
+				long fileEntryId = addDLFileEntry(
+					groupId, companyId, userId, getClassName(), resourcePrimKey,
+					userName, createDate, repositoryId, containerModelFolderId,
+					name, extension, mimeType, title, size);
 
-			if (fileEntryId < 0) {
-				continue;
+				if (fileEntryId < 0) {
+					continue;
+				}
+
+				addDLFileVersion(
+					increment(), groupId, companyId, userId, userName,
+					createDate, repositoryId, containerModelFolderId,
+					fileEntryId, extension, mimeType, title, size);
+
+				byte[] bytes = DLStoreUtil.getFileAsBytes(
+					companyId, CompanyConstants.SYSTEM, attachment);
+
+				DLStoreUtil.addFile(
+					companyId, containerModelFolderId, name, false, bytes);
 			}
-
-			addDLFileVersion(
-				increment(), groupId, companyId, userId, userName, createDate,
-				repositoryId, containerModelFolderId, fileEntryId, extension,
-				mimeType, title, size);
-
-			byte[] bytes = DLStoreUtil.getFileAsBytes(
-				companyId, CompanyConstants.SYSTEM, attachment);
-
-			DLStoreUtil.addFile(
-				companyId, containerModelFolderId, name, false, bytes);
+			catch (Exception e) {
+				if (_log.isWarnEnabled()) {
+					_log.warn("Unable to add attachment " + attachment, e);
+				}
+			}
 
 			try {
 				DLStoreUtil.deleteFile(
@@ -506,8 +513,7 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			}
 			catch (Exception e) {
 				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Unable to delete the attachment " + attachment, e);
+					_log.warn("Unable to delete attachment " + attachment, e);
 				}
 			}
 		}

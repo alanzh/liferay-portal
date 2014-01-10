@@ -3291,9 +3291,11 @@ public class PortalImpl implements Portal {
 			}
 		}
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
 
-		if (session.getAttribute(Globals.LOCALE_KEY) != null) {
+		if ((session != null) &&
+			session.getAttribute(Globals.LOCALE_KEY) != null) {
+
 			locale = (Locale)session.getAttribute(Globals.LOCALE_KEY);
 
 			if (LanguageUtil.isAvailableLocale(groupId, locale)) {
@@ -5001,7 +5003,7 @@ public class PortalImpl implements Portal {
 			((parameterMap == null) || !parameterMap.containsKey("themeId"))) {
 
 			sb.append("&themeId=");
-			sb.append(theme.getThemeId());
+			sb.append(HttpUtil.encodeURL(theme.getThemeId()));
 		}
 
 		if (uri.endsWith(".jsp") &&
@@ -5009,7 +5011,7 @@ public class PortalImpl implements Portal {
 			 !parameterMap.containsKey("colorSchemeId"))) {
 
 			sb.append("&colorSchemeId=");
-			sb.append(colorScheme.getColorSchemeId());
+			sb.append(HttpUtil.encodeURL(colorScheme.getColorSchemeId()));
 		}
 
 		// Minifier

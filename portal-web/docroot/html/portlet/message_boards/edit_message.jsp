@@ -19,6 +19,8 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
+String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
+
 MBMessage message = (MBMessage)request.getAttribute(WebKeys.MESSAGE_BOARDS_MESSAGE);
 
 long messageId = BeanParamUtil.getLong(message, request, "messageId");
@@ -99,7 +101,9 @@ else {
 }
 %>
 
-<liferay-util:include page="/html/portlet/message_boards/top_links.jsp" />
+<c:if test="<%= Validator.isNull(referringPortletResource) %>">
+	<liferay-util:include page="/html/portlet/message_boards/top_links.jsp" />
+</c:if>
 
 <liferay-ui:header
 	backURL="<%= redirect %>"
@@ -170,9 +174,7 @@ else {
 
 	<liferay-ui:error exception="<%= CaptchaMaxChallengesException.class %>" message="maximum-number-of-captcha-attempts-exceeded" />
 	<liferay-ui:error exception="<%= CaptchaTextException.class %>" message="text-verification-failed" />
-	<liferay-ui:error exception="<%= LockedThreadException.class %>" message="thread-is-locked" />
-	<liferay-ui:error exception="<%= MessageBodyException.class %>" message="please-enter-a-valid-message" />
-	<liferay-ui:error exception="<%= MessageSubjectException.class %>" message="please-enter-a-valid-subject" />
+	<liferay-ui:error exception="<%= DuplicateFileException.class %>" message="please-enter-a-unique-document-name" />
 
 	<liferay-ui:error exception="<%= FileExtensionException.class %>">
 		<liferay-ui:message key="document-names-must-end-with-one-of-the-following-extensions" /><%= StringUtil.merge(PrefsPropsUtil.getStringArray(PropsKeys.DL_FILE_EXTENSIONS, StringPool.COMMA), StringPool.COMMA_AND_SPACE) %>.
@@ -194,6 +196,10 @@ else {
 
 		<liferay-ui:message arguments="<%= fileMaxSize %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" />
 	</liferay-ui:error>
+
+	<liferay-ui:error exception="<%= LockedThreadException.class %>" message="thread-is-locked" />
+	<liferay-ui:error exception="<%= MessageBodyException.class %>" message="please-enter-a-valid-message" />
+	<liferay-ui:error exception="<%= MessageSubjectException.class %>" message="please-enter-a-valid-subject" />
 
 	<liferay-ui:asset-categories-error />
 

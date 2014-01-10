@@ -407,12 +407,6 @@ $dockbarOpenGradientStart: #0EA6F9;
 		background-color: #A9A9A9;
 	}
 
-	.portlet-borderless-bar .portlet-options {
-		.dropdown-toggle {
-			background-image: url(../images/portlet/options_borderless.png);
-		}
-	}
-
 	.signed-in.controls-visible .portlet-title {
 		padding-right: 80px;
 	}
@@ -615,7 +609,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 		@include border-radius(0 0 3px 3px);
 	}
 
-	.portlet-content {
+	.portlet-borderless-container, .portlet-content {
 		.lfr-icon-actions {
 			@extend %portlet-action-bar-custom;
 		}
