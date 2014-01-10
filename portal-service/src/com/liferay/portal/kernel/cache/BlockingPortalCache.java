@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.concurrent.CompeteLatch;
 
 import java.io.Serializable;
 
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -30,15 +29,6 @@ public class BlockingPortalCache<K extends Serializable, V>
 
 	public BlockingPortalCache(PortalCache<K, V> portalCache) {
 		_portalCache = portalCache;
-	}
-
-	@Override
-	public void destroy() {
-	}
-
-	@Override
-	public Collection<V> get(Collection<K> keys) {
-		return _portalCache.get(keys);
 	}
 
 	@Override

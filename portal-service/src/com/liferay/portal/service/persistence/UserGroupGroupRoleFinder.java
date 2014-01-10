@@ -12,29 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.cache.memcached;
+package com.liferay.portal.service.persistence;
 
-import net.spy.memcached.MemcachedClientIF;
+import aQute.bnd.annotation.ProviderType;
 
 /**
- * @author Michael C. Han
+ * @author Brian Wing Shun Chan
  */
-public interface MemcachedClientFactory {
-
-	public void clear() throws Exception;
-
-	public void close() throws Exception;
-
-	public MemcachedClientIF getMemcachedClient() throws Exception;
-
-	public int getNumActive();
-
-	public int getNumIdle();
-
-	public void invalidateMemcachedClient(MemcachedClientIF memcachedClient)
-		throws Exception;
-
-	public void returnMemcachedObject(MemcachedClientIF memcachedClient)
-		throws Exception;
-
+@ProviderType
+public interface UserGroupGroupRoleFinder {
+	public java.util.List<com.liferay.portal.model.UserGroupGroupRole> findByUserGroupsUsers(
+		long userId) throws com.liferay.portal.kernel.exception.SystemException;
 }
