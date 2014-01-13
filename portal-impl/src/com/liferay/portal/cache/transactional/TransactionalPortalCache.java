@@ -20,10 +20,6 @@ import com.liferay.portal.kernel.cache.PortalCache;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
  * @author Shuyang Zhou
  * @author Edward Han
@@ -33,21 +29,6 @@ public class TransactionalPortalCache<K extends Serializable, V>
 
 	public TransactionalPortalCache(PortalCache<K, V> portalCache) {
 		_portalCache = portalCache;
-	}
-
-	@Override
-	public void destroy() {
-	}
-
-	@Override
-	public Collection<V> get(Collection<K> keys) {
-		List<V> values = new ArrayList<V>(keys.size());
-
-		for (K key : keys) {
-			values.add(get(key));
-		}
-
-		return values;
 	}
 
 	@Override
