@@ -133,6 +133,7 @@ create table AssetEntry (
 	classPK LONG,
 	classUuid VARCHAR(75) null,
 	classTypeId LONG,
+	listable BOOLEAN,
 	visible BOOLEAN,
 	startDate DATE null,
 	endDate DATE null,
@@ -523,6 +524,7 @@ create table DDMTemplate (
 	classNameId LONG,
 	classPK LONG,
 	templateKey VARCHAR(75) null,
+	version VARCHAR(75) null,
 	name STRING null,
 	description STRING null,
 	type_ VARCHAR(75) null,
@@ -533,6 +535,21 @@ create table DDMTemplate (
 	smallImage BOOLEAN,
 	smallImageId LONG,
 	smallImageURL VARCHAR(75) null
+);
+
+create table DDMTemplateVersion (
+	templateVersionId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	templateId LONG,
+	version VARCHAR(75) null,
+	name STRING null,
+	description STRING null,
+	language VARCHAR(75) null,
+	script TEXT null
 );
 
 create table DLContent (
@@ -687,7 +704,7 @@ create table DLFolder (
 	mountPoint BOOLEAN,
 	parentFolderId LONG,
 	treePath STRING null,
-	name VARCHAR(100) null,
+	name VARCHAR(255) null,
 	description STRING null,
 	lastPostDate DATE null,
 	defaultFileEntryTypeId LONG,
@@ -789,7 +806,8 @@ create table Group_ (
 	parentGroupId LONG,
 	liveGroupId LONG,
 	treePath STRING null,
-	name VARCHAR(150) null,
+	groupKey VARCHAR(150) null,
+	name STRING null,
 	description STRING null,
 	type_ INTEGER,
 	typeSettings TEXT null,
@@ -981,7 +999,7 @@ create table Layout (
 
 create table LayoutBranch (
 	mvccVersion LONG default 0,
-	LayoutBranchId LONG not null primary key,
+	layoutBranchId LONG not null primary key,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,

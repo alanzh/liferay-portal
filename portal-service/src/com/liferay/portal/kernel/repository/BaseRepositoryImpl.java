@@ -129,6 +129,12 @@ public abstract class BaseRepositoryImpl
 			serviceContext);
 	}
 
+	@Override
+	public abstract Folder addFolder(
+			long userId, long parentFolderId, String name, String description,
+			ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #addFolder(long, long,
 	 *             String, String, ServiceContext)}
@@ -190,6 +196,17 @@ public abstract class BaseRepositoryImpl
 				getUserId(),
 			fileEntryId, lockUuid, serviceContext);
 	}
+
+	@Override
+	public abstract FileEntry checkOutFileEntry(
+			long fileEntryId, ServiceContext serviceContext)
+		throws PortalException;
+
+	@Override
+	public abstract FileEntry checkOutFileEntry(
+			long fileEntryId, String owner, long expirationTime,
+			ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #copyFileEntry(long, long,

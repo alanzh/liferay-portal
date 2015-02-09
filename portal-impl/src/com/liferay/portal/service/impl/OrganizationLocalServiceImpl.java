@@ -299,8 +299,8 @@ public class OrganizationLocalServiceImpl
 
 		Group group = groupLocalService.addGroup(
 			userId, parentGroupId, Organization.class.getName(), organizationId,
-			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, null,
-			GroupConstants.TYPE_SITE_PRIVATE, false,
+			GroupConstants.DEFAULT_LIVE_GROUP_ID, getLocalizationMap(name),
+			null, GroupConstants.TYPE_SITE_PRIVATE, false,
 			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, site, true,
 			null);
 
@@ -1838,10 +1838,16 @@ public class OrganizationLocalServiceImpl
 
 		long parentGroupId = group.getParentGroupId();
 
+		boolean createSite = false;
+
+		if (!group.isSite() && site) {
+			createSite = true;
+		}
+
 		boolean organizationGroup = isOrganizationGroup(
 			oldParentOrganizationId, group.getParentGroupId());
 
-		if (organizationGroup) {
+		if (createSite || organizationGroup) {
 			if (parentOrganizationId !=
 					OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
 
@@ -1863,16 +1869,38 @@ public class OrganizationLocalServiceImpl
 			}
 		}
 
-		if (!oldName.equals(name) || organizationGroup) {
+		if (createSite || !oldName.equals(name) || organizationGroup) {
 			groupLocalService.updateGroup(
-				group.getGroupId(), parentGroupId, name, group.getDescription(),
-				group.getType(), group.isManualMembership(),
-				group.getMembershipRestriction(), group.getFriendlyURL(),
-				group.isInheritContent(), group.isActive(), null);
+				group.getGroupId(), parentGroupId, getLocalizationMap(name),
+				group.getDescriptionMap(), group.getType(),
+				group.isManualMembership(), group.getMembershipRestriction(),
+				group.getFriendlyURL(), group.isInheritContent(),
+				group.isActive(), null);
 		}
 
 		if (group.isSite() != site) {
 			groupLocalService.updateSite(group.getGroupId(), site);
+		}
+
+		// Organizations
+
+		if (createSite) {
+			List<Organization> childOrganizations =
+				organizationLocalService.getOrganizations(
+					companyId, organizationId);
+
+			for (Organization childOrganization : childOrganizations) {
+				Group childGroup = childOrganization.getGroup();
+
+				if (childGroup.isSite() &&
+					(childGroup.getParentGroupId() ==
+						GroupConstants.DEFAULT_PARENT_GROUP_ID)) {
+
+					childGroup.setParentGroupId(group.getGroupId());
+
+					groupLocalService.updateGroup(childGroup);
+				}
+			}
 		}
 
 		// Asset

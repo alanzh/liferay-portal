@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
@@ -76,7 +77,6 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -327,7 +327,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 
 		Map<String, List<URL>> extraPackageMap = getExtraPackageMap();
 
-		Dictionary<String, Object> properties = new Hashtable<>();
+		Dictionary<String, Object> properties =
+			new HashMapDictionary<String, Object>();
 
 		properties.put("jsp.compiler.resource.map", "portal.extra.packages");
 
@@ -819,6 +820,16 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		return new File(fileName);
 	}
 
+	private String _getLiferayLibPortalDir() {
+		String liferayLibPortalDir = PropsValues.LIFERAY_LIB_PORTAL_DIR;
+
+		if (liferayLibPortalDir.startsWith(StringPool.SLASH)) {
+			liferayLibPortalDir = liferayLibPortalDir.substring(1);
+		}
+
+		return liferayLibPortalDir;
+	}
+
 	private String _getSystemPackagesExtra() {
 		String[] systemPackagesExtra =
 			PropsValues.MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA;
@@ -1134,7 +1145,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		if (Validator.isNull(bundleSymbolicName)) {
 			String urlString = url.toString();
 
-			if (urlString.contains(PropsValues.LIFERAY_LIB_PORTAL_DIR)) {
+			if (urlString.contains(_getLiferayLibPortalDir())) {
 				manifest = _calculateManifest(url, manifest);
 
 				attributes = manifest.getMainAttributes();
@@ -1249,7 +1260,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			return;
 		}
 
-		Hashtable<String, Object> properties = new Hashtable<String, Object>();
+		HashMapDictionary<String, Object> properties =
+			new HashMapDictionary<String, Object>();
 
 		Map<String, Object> osgiBeanProperties =
 			OSGiBeanProperties.Convert.fromObject(bean);
@@ -1269,7 +1281,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 	private void _registerServletContext(ServletContext servletContext) {
 		BundleContext bundleContext = _framework.getBundleContext();
 
-		Hashtable<String, Object> properties = new Hashtable<String, Object>();
+		Dictionary<String, Object> properties =
+			new HashMapDictionary<String, Object>();
 
 		properties.put(
 			ServicePropsKeys.BEAN_ID, ServletContext.class.getName());

@@ -5,32 +5,17 @@
 
 	<property name="deploy.dir" value="${app.server.lib.global.dir}" />
 	<property name="jar.file" value="${ant.project.name}" />
+	<property name="javac.classpathref" value="web.classpath" />
+	<property name="javac.destdir" value="classes" />
+	<property name="javac.srcdir" value="src" />
 	<property name="release.info.version" value="1.0.0" />
 
-	<target name="clean">
-		<antcall target="build-common-java.clean" />
+	<path id="web-lib.classpath">
+		<fileset dir="${app.server.websphere.dir}/plugins" includes="com.ibm.ws.runtime.jar" />
+	</path>
 
+	<target name="clean" depends="build-common-java.clean">
 		<delete file="${deploy.dir}/${jar.file}.jar" />
-	</target>
-
-	<target name="compile">
-		<mkdir dir="classes" />
-
-		<path id="web-lib.classpath">
-			<fileset dir="${app.server.websphere.dir}/plugins" includes="com.ibm.ws.runtime.jar" />
-		</path>
-
-		<javac
-			classpathref="web.classpath"
-			compiler="${javac.compiler}"
-			debug="${javac.debug}"
-			deprecation="${javac.deprecation}"
-			destdir="classes"
-			encoding="${javac.encoding}"
-			includeAntRuntime="false"
-			nowarn="${javac.nowarn}"
-			srcdir="src"
-		/>
 	</target>
 
 	<target name="deploy" depends="jar">

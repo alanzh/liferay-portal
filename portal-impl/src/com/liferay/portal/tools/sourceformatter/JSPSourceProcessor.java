@@ -1235,9 +1235,16 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			return false;
 		}
 
-		String regex = "[^A-Za-z0-9_\"]" + variableName + "[^A-Za-z0-9_\"]";
+		StringBundler sb = new StringBundler(6);
 
-		return hasUnusedJSPTerm(fileName, regex, "variable");
+		sb.append("((/)|(\\*)|(\\+(\\+)?)|(-(-)?)|\\(|=)?( )?");
+		sb.append(variableName);
+		sb.append("( )?(\\.");
+		sb.append("|(((\\+)|(-)|(\\*)|(/)|(%)|(\\|)|(&)|(\\^))?(=))");
+		sb.append("|(\\+(\\+)?)|(-(-)?)");
+		sb.append("|(\\)))?");
+
+		return hasUnusedJSPTerm(fileName, sb.toString(), "variable");
 	}
 
 	protected boolean isJSPDuplicateImport(
@@ -1520,7 +1527,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 		"(?:confirmation|label|(?:M|m)essage|message key|names|title)=\"[^A-Z" +
 			"<=%\\[\\s]+\"");
 	private Pattern _taglibLanguageKeyPattern2 = Pattern.compile(
-		"(aui:)(?:input|select|field-wrapper) (?!.*label=(?:'|\").+(?:'|\").*" +
+		"(aui:)(?:input|select|field-wrapper) (?!.*label=(?:'|\").*(?:'|\").*" +
 			"name=\"[^<=%\\[\\s]+\")(?!.*name=\"[^<=%\\[\\s]+\".*title=" +
 				"(?:'|\").+(?:'|\"))(?!.*name=\"[^<=%\\[\\s]+\".*type=\"" +
 					"hidden\").*name=\"([^<=%\\[\\s]+)\"");

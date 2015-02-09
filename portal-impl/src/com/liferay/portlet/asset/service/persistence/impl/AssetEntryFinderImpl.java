@@ -283,6 +283,10 @@ public class AssetEntryFinderImpl
 			sb.append(" AND (AssetEntry.entryId != ?)");
 		}
 
+		if (entryQuery.isListable() != null) {
+			sb.append(" AND (listable = ?)");
+		}
+
 		if (entryQuery.isVisible() != null) {
 			sb.append(" AND (visible = ?)");
 		}
@@ -446,6 +450,10 @@ public class AssetEntryFinderImpl
 			qPos.add(entryQuery.getLinkedAssetEntryId());
 			qPos.add(entryQuery.getLinkedAssetEntryId());
 			qPos.add(entryQuery.getLinkedAssetEntryId());
+		}
+
+		if (entryQuery.isListable() != null) {
+			qPos.add(entryQuery.isListable());
 		}
 
 		if (entryQuery.isVisible() != null) {

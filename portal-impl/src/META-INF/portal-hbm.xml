@@ -112,6 +112,7 @@
 	<import class="com.liferay.portlet.dynamicdatamapping.model.DDMStructureLink" />
 	<import class="com.liferay.portlet.dynamicdatamapping.model.DDMStructureVersion" />
 	<import class="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate" />
+	<import class="com.liferay.portlet.dynamicdatamapping.model.DDMTemplateVersion" />
 	<import class="com.liferay.portlet.expando.model.ExpandoColumn" />
 	<import class="com.liferay.portlet.expando.model.ExpandoRow" />
 	<import class="com.liferay.portlet.expando.model.ExpandoTable" />
@@ -388,6 +389,7 @@
 		<property name="parentGroupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="liveGroupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="treePath" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="groupKey" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="type_" />
@@ -450,7 +452,7 @@
 	</class>
 	<class name="com.liferay.portal.model.impl.LayoutBranchImpl" table="LayoutBranch" dynamic-update="true">
 		<cache usage="read-write" />
-		<id name="LayoutBranchId" type="long">
+		<id name="layoutBranchId" type="long">
 			<generator class="assigned" />
 		</id>
 		<version name="mvccVersion" type="long" access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" />
@@ -1380,6 +1382,7 @@
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="classUuid" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="classTypeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="listable" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="visible" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="startDate" type="org.hibernate.type.TimestampType" />
 		<property name="endDate" type="org.hibernate.type.TimestampType" />
@@ -1872,6 +1875,7 @@
 		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="templateKey" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="version" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.StringType" column="type_" />
@@ -1882,6 +1886,23 @@
 		<property name="smallImage" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="smallImageId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="smallImageURL" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.liferay.portlet.dynamicdatamapping.model.impl.DDMTemplateVersionImpl" table="DDMTemplateVersion">
+		<cache usage="read-write" />
+		<id name="templateVersionId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="createDate" type="org.hibernate.type.TimestampType" />
+		<property name="templateId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="version" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="language" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="script" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.portlet.expando.model.impl.ExpandoColumnImpl" table="ExpandoColumn">
 		<cache usage="read-write" />

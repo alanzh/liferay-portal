@@ -55,6 +55,8 @@ import name.pachler.nio.file.ext.ExtendedWatchEventKind;
 import name.pachler.nio.file.ext.ExtendedWatchEventModifier;
 import name.pachler.nio.file.impl.PathImpl;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -330,9 +332,11 @@ public class Watcher implements Runnable {
 							BasicFileAttributes basicFileAttributes)
 						throws IOException {
 
-						if (!filePath.equals(_dataFilePath)) {
-							doRegister(filePath, false);
+						if (filePath.equals(_dataFilePath)) {
+							return FileVisitResult.SKIP_SUBTREE;
 						}
+
+						doRegister(filePath, false);
 
 						return FileVisitResult.CONTINUE;
 					}
@@ -369,13 +373,9 @@ public class Watcher implements Runnable {
 							Path filePath, IOException ioe)
 						throws IOException {
 
-						if (ioe != null) {
-							_failedFilePaths.add(filePath);
+						_failedFilePaths.add(filePath);
 
-							return FileVisitResult.CONTINUE;
-						}
-
-						return super.visitFileFailed(filePath, ioe);
+						return FileVisitResult.CONTINUE;
 					}
 
 				}
@@ -454,6 +454,20 @@ public class Watcher implements Runnable {
 			}
 
 			return true;
+		}
+
+		if (!OSDetector.isWindows()) {
+			String trimmedFilePathName = StringUtils.stripEnd(
+				filePath.toString(), " ");
+
+			if (!trimmedFilePathName.equals(filePath.toString())) {
+				Path trimmedFilePath = java.nio.file.Paths.get(
+					trimmedFilePathName);
+
+				FileUtil.moveFile(filePath, trimmedFilePath);
+
+				return true;
+			}
 		}
 
 		return false;
