@@ -52,7 +52,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("mvccVersion", getMvccVersion());
-		attributes.put("LayoutBranchId", getLayoutBranchId());
+		attributes.put("layoutBranchId", getLayoutBranchId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("companyId", getCompanyId());
 		attributes.put("userId", getUserId());
@@ -74,10 +74,10 @@ public class LayoutBranchWrapper implements LayoutBranch,
 			setMvccVersion(mvccVersion);
 		}
 
-		Long LayoutBranchId = (Long)attributes.get("LayoutBranchId");
+		Long layoutBranchId = (Long)attributes.get("layoutBranchId");
 
-		if (LayoutBranchId != null) {
-			setLayoutBranchId(LayoutBranchId);
+		if (layoutBranchId != null) {
+			setLayoutBranchId(layoutBranchId);
 		}
 
 		Long groupId = (Long)attributes.get("groupId");
@@ -346,8 +346,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	}
 
 	@Override
-	public void setExpandoBridgeAttributes(
-		com.liferay.portal.model.BaseModel<?> baseModel) {
+	public void setExpandoBridgeAttributes(BaseModel<?> baseModel) {
 		_layoutBranch.setExpandoBridgeAttributes(baseModel);
 	}
 
@@ -376,11 +375,11 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	/**
 	* Sets the layout branch ID of this layout branch.
 	*
-	* @param LayoutBranchId the layout branch ID of this layout branch
+	* @param layoutBranchId the layout branch ID of this layout branch
 	*/
 	@Override
-	public void setLayoutBranchId(long LayoutBranchId) {
-		_layoutBranch.setLayoutBranchId(LayoutBranchId);
+	public void setLayoutBranchId(long layoutBranchId) {
+		_layoutBranch.setLayoutBranchId(layoutBranchId);
 	}
 
 	/**
@@ -484,7 +483,7 @@ public class LayoutBranchWrapper implements LayoutBranch,
 	}
 
 	@Override
-	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.LayoutBranch> toCacheModel() {
+	public CacheModel<com.liferay.portal.model.LayoutBranch> toCacheModel() {
 		return _layoutBranch.toCacheModel();
 	}
 

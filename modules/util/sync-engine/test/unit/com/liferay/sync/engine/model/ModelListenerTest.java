@@ -17,7 +17,7 @@ package com.liferay.sync.engine.model;
 import com.liferay.sync.engine.BaseTestCase;
 import com.liferay.sync.engine.service.SyncFileService;
 import com.liferay.sync.engine.util.FileUtil;
-import com.liferay.sync.engine.util.SyncFileTestUtil;
+import com.liferay.sync.engine.util.test.SyncFileTestUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,33 +49,16 @@ public class ModelListenerTest extends BaseTestCase {
 		Assert.assertEquals(
 			FileUtil.getFilePathName(filePathName, "test"),
 			_originalFieldValues.get("filePathName"));
-		Assert.assertEquals(3, _originalFieldValues.size());
+		Assert.assertEquals(2, _originalFieldValues.size());
 
 		SyncFileService.deleteSyncFile(syncFile);
 
 		Assert.assertTrue(_onRemoveCalled);
 	}
 
-	@Test
-	public void testUpdateSyncFileIdSyncFile() throws Exception {
-		SyncFileService.registerModelListener(new SyncFileModelListener());
-
-		SyncFile syncFile = SyncFileTestUtil.addFileSyncFile(
-			FileUtil.getFilePathName(filePathName, "test"), 0,
-			syncAccount.getSyncAccountId());
-
-		syncFile.setSyncFileId(12345);
-
-		SyncFileService.update(syncFile);
-
-		Assert.assertEquals(1, _originalFieldValues.size());
-		Assert.assertFalse(_onRemoveCalled);
-	}
-
 	private boolean _onCreateCalled;
 	private boolean _onRemoveCalled;
-	private Map<String, Object> _originalFieldValues =
-		new HashMap<String, Object>();
+	private Map<String, Object> _originalFieldValues = new HashMap<>();
 
 	private class SyncFileModelListener implements ModelListener<SyncFile> {
 

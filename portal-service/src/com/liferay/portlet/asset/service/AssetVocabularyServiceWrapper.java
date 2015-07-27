@@ -35,38 +35,23 @@ public class AssetVocabularyServiceWrapper implements AssetVocabularyService,
 
 	@Override
 	public com.liferay.portlet.asset.model.AssetVocabulary addVocabulary(
-		java.lang.String title,
+		long groupId, java.lang.String title,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _assetVocabularyService.addVocabulary(title, serviceContext);
+		return _assetVocabularyService.addVocabulary(groupId, title,
+			serviceContext);
 	}
 
 	@Override
 	public com.liferay.portlet.asset.model.AssetVocabulary addVocabulary(
-		java.lang.String title,
+		long groupId, java.lang.String title,
 		java.util.Map<java.util.Locale, java.lang.String> titleMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.lang.String settings,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _assetVocabularyService.addVocabulary(title, titleMap,
+		return _assetVocabularyService.addVocabulary(groupId, title, titleMap,
 			descriptionMap, settings, serviceContext);
-	}
-
-	/**
-	* @deprecated As of 6.1.0 {@link #addVocabulary(String, Map, Map, String,
-	ServiceContext)}
-	*/
-	@Deprecated
-	@Override
-	public com.liferay.portlet.asset.model.AssetVocabulary addVocabulary(
-		java.util.Map<java.util.Locale, java.lang.String> titleMap,
-		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
-		java.lang.String settings,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _assetVocabularyService.addVocabulary(titleMap, descriptionMap,
-			settings, serviceContext);
 	}
 
 	/**
@@ -93,6 +78,13 @@ public class AssetVocabularyServiceWrapper implements AssetVocabularyService,
 	public void deleteVocabulary(long vocabularyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_assetVocabularyService.deleteVocabulary(vocabularyId);
+	}
+
+	@Override
+	public com.liferay.portlet.asset.model.AssetVocabulary fetchVocabulary(
+		long vocabularyId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetVocabularyService.fetchVocabulary(vocabularyId);
 	}
 
 	/**
@@ -230,7 +222,7 @@ public class AssetVocabularyServiceWrapper implements AssetVocabularyService,
 
 	/**
 	* @deprecated As of 7.0.0, replaced by {@link
-	#AssetUtil.filterVocabularyIds(PermissionChecker, long[])}
+	AssetUtil#filterVocabularyIds(PermissionChecker, long[])}
 	*/
 	@Deprecated
 	@Override
@@ -276,23 +268,6 @@ public class AssetVocabularyServiceWrapper implements AssetVocabularyService,
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _assetVocabularyService.updateVocabulary(vocabularyId, title,
 			titleMap, descriptionMap, settings, serviceContext);
-	}
-
-	/**
-	* @deprecated As of 6.1.0, {@link #updateVocabulary(long, String, Map, Map,
-	String, ServiceContext)}
-	*/
-	@Deprecated
-	@Override
-	public com.liferay.portlet.asset.model.AssetVocabulary updateVocabulary(
-		long vocabularyId,
-		java.util.Map<java.util.Locale, java.lang.String> titleMap,
-		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
-		java.lang.String settings,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _assetVocabularyService.updateVocabulary(vocabularyId, titleMap,
-			descriptionMap, settings, serviceContext);
 	}
 
 	/**

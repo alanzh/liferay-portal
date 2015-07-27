@@ -16,6 +16,7 @@ package com.liferay.portal.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.util.HashUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
@@ -38,6 +39,33 @@ import java.io.ObjectOutput;
 public class LayoutBranchCacheModel implements CacheModel<LayoutBranch>,
 	Externalizable, MVCCModel {
 	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof LayoutBranchCacheModel)) {
+			return false;
+		}
+
+		LayoutBranchCacheModel layoutBranchCacheModel = (LayoutBranchCacheModel)obj;
+
+		if ((layoutBranchId == layoutBranchCacheModel.layoutBranchId) &&
+				(mvccVersion == layoutBranchCacheModel.mvccVersion)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = HashUtil.hash(0, layoutBranchId);
+
+		return HashUtil.hash(hashCode, mvccVersion);
+	}
+
+	@Override
 	public long getMvccVersion() {
 		return mvccVersion;
 	}
@@ -53,8 +81,8 @@ public class LayoutBranchCacheModel implements CacheModel<LayoutBranch>,
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
-		sb.append(", LayoutBranchId=");
-		sb.append(LayoutBranchId);
+		sb.append(", layoutBranchId=");
+		sb.append(layoutBranchId);
 		sb.append(", groupId=");
 		sb.append(groupId);
 		sb.append(", companyId=");
@@ -83,7 +111,7 @@ public class LayoutBranchCacheModel implements CacheModel<LayoutBranch>,
 		LayoutBranchImpl layoutBranchImpl = new LayoutBranchImpl();
 
 		layoutBranchImpl.setMvccVersion(mvccVersion);
-		layoutBranchImpl.setLayoutBranchId(LayoutBranchId);
+		layoutBranchImpl.setLayoutBranchId(layoutBranchId);
 		layoutBranchImpl.setGroupId(groupId);
 		layoutBranchImpl.setCompanyId(companyId);
 		layoutBranchImpl.setUserId(userId);
@@ -122,7 +150,7 @@ public class LayoutBranchCacheModel implements CacheModel<LayoutBranch>,
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		mvccVersion = objectInput.readLong();
-		LayoutBranchId = objectInput.readLong();
+		layoutBranchId = objectInput.readLong();
 		groupId = objectInput.readLong();
 		companyId = objectInput.readLong();
 		userId = objectInput.readLong();
@@ -138,7 +166,7 @@ public class LayoutBranchCacheModel implements CacheModel<LayoutBranch>,
 	public void writeExternal(ObjectOutput objectOutput)
 		throws IOException {
 		objectOutput.writeLong(mvccVersion);
-		objectOutput.writeLong(LayoutBranchId);
+		objectOutput.writeLong(layoutBranchId);
 		objectOutput.writeLong(groupId);
 		objectOutput.writeLong(companyId);
 		objectOutput.writeLong(userId);
@@ -171,7 +199,7 @@ public class LayoutBranchCacheModel implements CacheModel<LayoutBranch>,
 	}
 
 	public long mvccVersion;
-	public long LayoutBranchId;
+	public long layoutBranchId;
 	public long groupId;
 	public long companyId;
 	public long userId;

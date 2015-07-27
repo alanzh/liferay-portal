@@ -36,7 +36,9 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureFinder;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructurePersistence;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateFinder;
+import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateLinkPersistence;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplatePersistence;
+import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateVersionPersistence;
 
 import javax.sql.DataSource;
 
@@ -84,7 +86,7 @@ public abstract class DDMTemplateServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @return the d d m template remote service
 	 */
-	public com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService getDDMTemplateService() {
+	public DDMTemplateService getDDMTemplateService() {
 		return ddmTemplateService;
 	}
 
@@ -93,8 +95,7 @@ public abstract class DDMTemplateServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * @param ddmTemplateService the d d m template remote service
 	 */
-	public void setDDMTemplateService(
-		com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService ddmTemplateService) {
+	public void setDDMTemplateService(DDMTemplateService ddmTemplateService) {
 		this.ddmTemplateService = ddmTemplateService;
 	}
 
@@ -547,6 +548,101 @@ public abstract class DDMTemplateServiceBaseImpl extends BaseServiceImpl
 		this.ddmStructureFinder = ddmStructureFinder;
 	}
 
+	/**
+	 * Returns the d d m template link local service.
+	 *
+	 * @return the d d m template link local service
+	 */
+	public com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLinkLocalService getDDMTemplateLinkLocalService() {
+		return ddmTemplateLinkLocalService;
+	}
+
+	/**
+	 * Sets the d d m template link local service.
+	 *
+	 * @param ddmTemplateLinkLocalService the d d m template link local service
+	 */
+	public void setDDMTemplateLinkLocalService(
+		com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLinkLocalService ddmTemplateLinkLocalService) {
+		this.ddmTemplateLinkLocalService = ddmTemplateLinkLocalService;
+	}
+
+	/**
+	 * Returns the d d m template link persistence.
+	 *
+	 * @return the d d m template link persistence
+	 */
+	public DDMTemplateLinkPersistence getDDMTemplateLinkPersistence() {
+		return ddmTemplateLinkPersistence;
+	}
+
+	/**
+	 * Sets the d d m template link persistence.
+	 *
+	 * @param ddmTemplateLinkPersistence the d d m template link persistence
+	 */
+	public void setDDMTemplateLinkPersistence(
+		DDMTemplateLinkPersistence ddmTemplateLinkPersistence) {
+		this.ddmTemplateLinkPersistence = ddmTemplateLinkPersistence;
+	}
+
+	/**
+	 * Returns the d d m template version local service.
+	 *
+	 * @return the d d m template version local service
+	 */
+	public com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionLocalService getDDMTemplateVersionLocalService() {
+		return ddmTemplateVersionLocalService;
+	}
+
+	/**
+	 * Sets the d d m template version local service.
+	 *
+	 * @param ddmTemplateVersionLocalService the d d m template version local service
+	 */
+	public void setDDMTemplateVersionLocalService(
+		com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionLocalService ddmTemplateVersionLocalService) {
+		this.ddmTemplateVersionLocalService = ddmTemplateVersionLocalService;
+	}
+
+	/**
+	 * Returns the d d m template version remote service.
+	 *
+	 * @return the d d m template version remote service
+	 */
+	public com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionService getDDMTemplateVersionService() {
+		return ddmTemplateVersionService;
+	}
+
+	/**
+	 * Sets the d d m template version remote service.
+	 *
+	 * @param ddmTemplateVersionService the d d m template version remote service
+	 */
+	public void setDDMTemplateVersionService(
+		com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionService ddmTemplateVersionService) {
+		this.ddmTemplateVersionService = ddmTemplateVersionService;
+	}
+
+	/**
+	 * Returns the d d m template version persistence.
+	 *
+	 * @return the d d m template version persistence
+	 */
+	public DDMTemplateVersionPersistence getDDMTemplateVersionPersistence() {
+		return ddmTemplateVersionPersistence;
+	}
+
+	/**
+	 * Sets the d d m template version persistence.
+	 *
+	 * @param ddmTemplateVersionPersistence the d d m template version persistence
+	 */
+	public void setDDMTemplateVersionPersistence(
+		DDMTemplateVersionPersistence ddmTemplateVersionPersistence) {
+		this.ddmTemplateVersionPersistence = ddmTemplateVersionPersistence;
+	}
+
 	public void afterPropertiesSet() {
 	}
 
@@ -607,8 +703,8 @@ public abstract class DDMTemplateServiceBaseImpl extends BaseServiceImpl
 
 	@BeanReference(type = com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalService.class)
 	protected com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalService ddmTemplateLocalService;
-	@BeanReference(type = com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService.class)
-	protected com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService ddmTemplateService;
+	@BeanReference(type = DDMTemplateService.class)
+	protected DDMTemplateService ddmTemplateService;
 	@BeanReference(type = DDMTemplatePersistence.class)
 	protected DDMTemplatePersistence ddmTemplatePersistence;
 	@BeanReference(type = DDMTemplateFinder.class)
@@ -657,5 +753,15 @@ public abstract class DDMTemplateServiceBaseImpl extends BaseServiceImpl
 	protected DDMStructurePersistence ddmStructurePersistence;
 	@BeanReference(type = DDMStructureFinder.class)
 	protected DDMStructureFinder ddmStructureFinder;
+	@BeanReference(type = com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLinkLocalService.class)
+	protected com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLinkLocalService ddmTemplateLinkLocalService;
+	@BeanReference(type = DDMTemplateLinkPersistence.class)
+	protected DDMTemplateLinkPersistence ddmTemplateLinkPersistence;
+	@BeanReference(type = com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionLocalService.class)
+	protected com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionLocalService ddmTemplateVersionLocalService;
+	@BeanReference(type = com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionService.class)
+	protected com.liferay.portlet.dynamicdatamapping.service.DDMTemplateVersionService ddmTemplateVersionService;
+	@BeanReference(type = DDMTemplateVersionPersistence.class)
+	protected DDMTemplateVersionPersistence ddmTemplateVersionPersistence;
 	private String _beanIdentifier;
 }

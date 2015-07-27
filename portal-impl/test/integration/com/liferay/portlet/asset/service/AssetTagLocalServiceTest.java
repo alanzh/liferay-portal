@@ -16,19 +16,20 @@ package com.liferay.portlet.asset.service;
 
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.test.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
+import com.liferay.portal.kernel.test.rule.Sync;
+import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.test.DeleteAfterTestRun;
-import com.liferay.portal.test.LiferayIntegrationTestRule;
-import com.liferay.portal.test.MainServletTestRule;
-import com.liferay.portal.test.Sync;
-import com.liferay.portal.util.test.GroupTestUtil;
-import com.liferay.portal.util.test.ServiceContextTestUtil;
-import com.liferay.portal.util.test.TestPropsValues;
+import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.blogs.model.BlogsEntry;
-import com.liferay.portlet.blogs.util.test.BlogsTestUtil;
+import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,12 +53,12 @@ public class AssetTagLocalServiceTest {
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
-		_blogsIndexer = IndexerRegistryUtil.getIndexer(BlogsEntry.class);
+		_blogsEntryIndexer = IndexerRegistryUtil.getIndexer(BlogsEntry.class);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		IndexerRegistryUtil.register(BlogsEntry.class.getName(), _blogsIndexer);
+		IndexerRegistryUtil.register(_blogsEntryIndexer);
 	}
 
 	@Test
@@ -67,25 +68,26 @@ public class AssetTagLocalServiceTest {
 				_group.getGroupId(), TestPropsValues.getUserId());
 
 		AssetTag assetTag = AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), "Tag", null, serviceContext);
+			TestPropsValues.getUserId(), _group.getGroupId(), "Tag",
+			serviceContext);
 
 		serviceContext.setAssetTagNames(new String[] {assetTag.getName()});
 
-		BlogsEntry blogsEntry = BlogsTestUtil.addEntry(
-			TestPropsValues.getUserId(), "Test", true, serviceContext);
+		BlogsEntry blogsEntry = BlogsEntryLocalServiceUtil.addEntry(
+			TestPropsValues.getUserId(), "Test", RandomTestUtil.randomString(),
+			serviceContext);
 
-		AssetTestIndexer assetTestIndexer = new AssetTestIndexer();
+		TestAssetIndexer testAssetIndexer = new TestAssetIndexer();
 
-		assetTestIndexer.setExpectedValues(
+		testAssetIndexer.setExpectedValues(
 			BlogsEntry.class.getName(), blogsEntry.getEntryId());
 
-		IndexerRegistryUtil.register(
-			BlogsEntry.class.getName(), assetTestIndexer);
+		IndexerRegistryUtil.register(testAssetIndexer);
 
 		AssetTagLocalServiceUtil.deleteTag(assetTag);
 	}
 
-	private Indexer _blogsIndexer;
+	private Indexer<BlogsEntry> _blogsEntryIndexer;
 
 	@DeleteAfterTestRun
 	private Group _group;

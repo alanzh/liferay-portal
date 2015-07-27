@@ -16,13 +16,10 @@
 
 <%@ include file="/html/taglib/init.jsp" %>
 
-<%@ page import="com.liferay.portal.kernel.lar.ExportImportDateUtil" %><%@
-page import="com.liferay.portal.kernel.util.DateRange" %><%@
-page import="com.liferay.portal.lar.LayoutExporter" %>
-
 <liferay-staging:defineObjects />
 
 <%
+String cmd = GetterUtil.getString(request.getAttribute("liferay-staging:content:cmd"));
 boolean disableInputs = GetterUtil.getBoolean(request.getAttribute("liferay-staging:content:disableInputs"));
 PortletRequest renderRequest = (PortletRequest)request.getAttribute("liferay-staging:content:renderRequest");
 Map<String, String[]> parameterMap = (Map<String, String[]>)GetterUtil.getObject(request.getAttribute("liferay-staging:content:parameterMap"), Collections.emptyMap());
@@ -30,17 +27,24 @@ String type = GetterUtil.getString(request.getAttribute("liferay-staging:content
 
 DateRange dateRange = null;
 String defaultRange = null;
+long exportGroupId = groupId;
 
 if (type.equals(Constants.EXPORT)) {
 	defaultRange = ExportImportDateUtil.RANGE_ALL;
 
-	dateRange = ExportImportDateUtil.getDateRange(renderRequest, liveGroupId, privateLayout, 0, null, defaultRange);
+	if (liveGroupId > 0) {
+		exportGroupId = liveGroupId;
+	}
 }
 else {
 	defaultRange = ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE;
 
-	dateRange = ExportImportDateUtil.getDateRange(renderRequest, stagingGroupId, privateLayout, 0, null, defaultRange);
+	if (stagingGroupId > 0) {
+		exportGroupId = stagingGroupId;
+	}
 }
+
+dateRange = ExportImportDateUtil.getDateRange(renderRequest, exportGroupId, privateLayout, 0, null, defaultRange);
 
 Date startDate = dateRange.getStartDate();
 Date endDate = dateRange.getEndDate();

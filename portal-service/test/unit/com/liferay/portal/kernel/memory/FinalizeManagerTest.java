@@ -15,12 +15,12 @@
 package com.liferay.portal.kernel.memory;
 
 import com.liferay.portal.kernel.memory.FinalizeManager.ReferenceFactory;
-import com.liferay.portal.kernel.test.AggregateTestRule;
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.GCUtil;
-import com.liferay.portal.kernel.test.NewEnv;
-import com.liferay.portal.kernel.test.NewEnvTestRule;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
+import com.liferay.portal.kernel.test.rule.NewEnv;
+import com.liferay.portal.kernel.test.rule.NewEnvTestRule;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.ThreadUtil;
 
@@ -95,7 +95,7 @@ public class FinalizeManagerTest {
 	}
 
 	@Test
-	public void testManuelClear() throws InterruptedException {
+	public void testManualClear() throws InterruptedException {
 		System.setProperty(_THREAD_ENABLED_KEY, StringPool.FALSE);
 
 		Object object = new Object();
@@ -117,7 +117,7 @@ public class FinalizeManagerTest {
 
 		object = null;
 
-		GCUtil.gc();
+		GCUtil.gc(true);
 
 		ReflectionTestUtil.invoke(
 			FinalizeManager.class, "_pollingCleanup", new Class<?>[0]);
@@ -246,11 +246,14 @@ public class FinalizeManagerTest {
 
 		// First GC to trigger Object#finalize
 
-		if (referenceType == ReferenceType.SOFT) {
-			GCUtil.fullGC();
+		if (referenceType == ReferenceType.PHANTOM) {
+			GCUtil.gc(false);
+		}
+		else if (referenceType == ReferenceType.SOFT) {
+			GCUtil.fullGC(true);
 		}
 		else {
-			GCUtil.gc();
+			GCUtil.gc(true);
 		}
 
 		Assert.assertEquals(id, _finalizedIds.take());
@@ -260,7 +263,7 @@ public class FinalizeManagerTest {
 
 			// Second GC to trigger ReferenceQueue#enqueue
 
-			GCUtil.gc();
+			GCUtil.gc(false);
 		}
 
 		if (threadEnabled) {
@@ -307,11 +310,9 @@ public class FinalizeManagerTest {
 		long startTime = System.currentTimeMillis();
 
 		while (finalizeThread.getState() != Thread.State.WAITING) {
-			if ((System.currentTimeMillis() - startTime) > 10000) {
-				Assert.fail(
-					"Timeout on waiting finialize thread to enter waiting " +
-						"state");
-			}
+			Assert.assertTrue(
+				"Timeout on waiting finialize thread to enter waiting state",
+				(System.currentTimeMillis() - startTime) <= 10000);
 		}
 
 		// Interrupt to wake up
@@ -321,11 +322,9 @@ public class FinalizeManagerTest {
 		// Second waiting state
 
 		while (finalizeThread.getState() != Thread.State.WAITING) {
-			if ((System.currentTimeMillis() - startTime) > 10000) {
-				Assert.fail(
-					"Timeout on waiting finialize thread to enter waiting " +
-						"state");
-			}
+			Assert.assertTrue(
+				"Timeout on waiting finialize thread to enter waiting state",
+				(System.currentTimeMillis() - startTime) <= 10000);
 		}
 	}
 
@@ -351,7 +350,7 @@ public class FinalizeManagerTest {
 		FinalizeManager.class.getName() + ".thread.enabled";
 
 	private final BlockingQueue<String> _finalizedIds =
-		new LinkedBlockingDeque<String>();
+		new LinkedBlockingDeque<>();
 
 	private static enum ReferenceType {
 

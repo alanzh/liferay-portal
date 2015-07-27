@@ -20,13 +20,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.upgrade.v7_0_0.util.AssetEntryTable;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
-import com.liferay.portlet.journal.model.JournalArticle;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,7 +53,7 @@ public class UpgradeAsset extends UpgradeProcess {
 				AssetEntryTable.TABLE_SQL_ADD_INDEXES);
 		}
 
-		updateAssetClassTypeId();
+		updateAssetEntries();
 		updateAssetVocabularies();
 	}
 
@@ -83,8 +83,9 @@ public class UpgradeAsset extends UpgradeProcess {
 		}
 	}
 
-	protected void updateAssetClassTypeId() throws Exception {
-		long classNameId = PortalUtil.getClassNameId(JournalArticle.class);
+	protected void updateAssetEntries() throws Exception {
+		long classNameId = PortalUtil.getClassNameId(
+			"com.liferay.portlet.journal.model.JournalArticle");
 
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -109,6 +110,38 @@ public class UpgradeAsset extends UpgradeProcess {
 					"update AssetEntry set classTypeId = " + ddmStructureId +
 						" where classNameId = " + classNameId +
 							" and classPK = " + resourcePrimKey);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			StringBundler sb = new StringBundler(9);
+
+			sb.append("select JournalArticle.resourcePrimKey from (select ");
+			sb.append("JournalArticle.resourcePrimkey as primKey, ");
+			sb.append("max(JournalArticle.version) as maxVersion from ");
+			sb.append("JournalArticle group by ");
+			sb.append("JournalArticle.resourcePrimkey) temp_table inner join ");
+			sb.append("JournalArticle on (JournalArticle.indexable = ");
+			sb.append("[$FALSE$]) and (JournalArticle.status = 0) and ");
+			sb.append("(JournalArticle.resourcePrimkey = temp_table.primKey) ");
+			sb.append("and (JournalArticle.version = temp_table.maxVersion)");
+
+			ps = con.prepareStatement(sb.toString());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				long classPK = rs.getLong("resourcePrimKey");
+
+				runSQL(
+					"update AssetEntry set listable = [$FALSE$] where " +
+						"classNameId = " + classNameId + " and classPK = " +
+							classPK);
 			}
 		}
 		finally {
@@ -205,6 +238,6 @@ public class UpgradeAsset extends UpgradeProcess {
 		return vocabularySettingsHelper.toString();
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(UpgradeAsset.class);
+	private static final Log _log = LogFactoryUtil.getLog(UpgradeAsset.class);
 
 }

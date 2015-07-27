@@ -15,19 +15,21 @@
 package com.liferay.portal.repository.capabilities;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.lock.Lock;
 import com.liferay.portal.kernel.repository.Repository;
-import com.liferay.portal.kernel.repository.capabilities.SyncCapability;
+import com.liferay.portal.kernel.repository.capabilities.CapabilityProvider;
 import com.liferay.portal.kernel.repository.event.RepositoryEventTrigger;
 import com.liferay.portal.kernel.repository.event.RepositoryEventType;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.repository.model.RepositoryEntry;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.model.Lock;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 
@@ -43,9 +45,10 @@ public class CapabilityRepository
 	extends BaseCapabilityRepository<Repository> implements Repository {
 
 	public CapabilityRepository(
-		Repository repository, RepositoryEventTrigger repositoryEventTrigger) {
+		Repository repository, CapabilityProvider capabilityProvider,
+		RepositoryEventTrigger repositoryEventTrigger) {
 
-		super(repository);
+		super(repository, capabilityProvider);
 
 		_repositoryEventTrigger = repositoryEventTrigger;
 	}
@@ -125,6 +128,23 @@ public class CapabilityRepository
 				getUserId(),
 			folderId, sourceFileName, mimeType, title, description, changeLog,
 			is, size, serviceContext);
+	}
+
+	@Override
+	public FileShortcut addFileShortcut(
+			long userId, long folderId, long toFileEntryId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		Repository repository = getRepository();
+
+		FileShortcut fileShortcut = repository.addFileShortcut(
+			userId, folderId, toFileEntryId, serviceContext);
+
+		_repositoryEventTrigger.trigger(
+			RepositoryEventType.Add.class, FileShortcut.class, fileShortcut);
+
+		return fileShortcut;
 	}
 
 	@Override
@@ -330,13 +350,6 @@ public class CapabilityRepository
 		_repositoryEventTrigger.trigger(
 			RepositoryEventType.Delete.class, Repository.class, repository);
 
-		SyncCapability syncCapability = getInternalCapability(
-			SyncCapability.class);
-
-		if (syncCapability != null) {
-			syncCapability.destroyDocumentRepository(this);
-		}
-
 		repository.deleteAll();
 	}
 
@@ -364,6 +377,35 @@ public class CapabilityRepository
 			RepositoryEventType.Delete.class, FileEntry.class, fileEntry);
 
 		repository.deleteFileEntry(folderId, title);
+	}
+
+	@Override
+	public void deleteFileShortcut(long fileShortcutId) throws PortalException {
+		Repository repository = getRepository();
+
+		FileShortcut fileShortcut = repository.getFileShortcut(fileShortcutId);
+
+		_repositoryEventTrigger.trigger(
+			RepositoryEventType.Delete.class, FileShortcut.class, fileShortcut);
+
+		repository.deleteFileShortcut(fileShortcutId);
+	}
+
+	@Override
+	public void deleteFileShortcuts(long toFileEntryId) throws PortalException {
+		Repository repository = getRepository();
+
+		FileEntry fileEntry = repository.getFileEntry(toFileEntryId);
+
+		List<FileShortcut> fileShortcuts = fileEntry.getFileShortcuts();
+
+		for (FileShortcut fileShortcut : fileShortcuts) {
+			_repositoryEventTrigger.trigger(
+				RepositoryEventType.Delete.class, FileShortcut.class,
+				fileShortcut);
+		}
+
+		repository.deleteFileShortcuts(toFileEntryId);
 	}
 
 	@Override
@@ -408,6 +450,16 @@ public class CapabilityRepository
 
 	@Override
 	public List<FileEntry> getFileEntries(
+			long folderId, int status, int start, int end,
+			OrderByComparator<FileEntry> obc)
+		throws PortalException {
+
+		return getRepository().getFileEntries(
+			folderId, status, start, end, obc);
+	}
+
+	@Override
+	public List<FileEntry> getFileEntries(
 			long folderId, int start, int end, OrderByComparator<FileEntry> obc)
 		throws PortalException {
 
@@ -435,7 +487,7 @@ public class CapabilityRepository
 	}
 
 	@Override
-	public List<Object> getFileEntriesAndFileShortcuts(
+	public List<RepositoryEntry> getFileEntriesAndFileShortcuts(
 			long folderId, int status, int start, int end)
 		throws PortalException {
 
@@ -463,6 +515,13 @@ public class CapabilityRepository
 	@Override
 	public int getFileEntriesCount(long folderId) throws PortalException {
 		return getRepository().getFileEntriesCount(folderId);
+	}
+
+	@Override
+	public int getFileEntriesCount(long folderId, int status)
+		throws PortalException {
+
+		return getRepository().getFileEntriesCount(folderId, status);
 	}
 
 	@Override
@@ -494,6 +553,13 @@ public class CapabilityRepository
 	@Override
 	public FileEntry getFileEntryByUuid(String uuid) throws PortalException {
 		return getRepository().getFileEntryByUuid(uuid);
+	}
+
+	@Override
+	public FileShortcut getFileShortcut(long fileShortcutId)
+		throws PortalException {
+
+		return getRepository().getFileShortcut(fileShortcutId);
 	}
 
 	@Override
@@ -536,7 +602,7 @@ public class CapabilityRepository
 	}
 
 	@Override
-	public List<Object> getFoldersAndFileEntriesAndFileShortcuts(
+	public List<RepositoryEntry> getFoldersAndFileEntriesAndFileShortcuts(
 			long folderId, int status, boolean includeMountFolders, int start,
 			int end, OrderByComparator<?> obc)
 		throws PortalException {
@@ -546,7 +612,7 @@ public class CapabilityRepository
 	}
 
 	@Override
-	public List<Object> getFoldersAndFileEntriesAndFileShortcuts(
+	public List<RepositoryEntry> getFoldersAndFileEntriesAndFileShortcuts(
 			long folderId, int status, String[] mimetypes,
 			boolean includeMountFolders, int start, int end,
 			OrderByComparator<?> obc)
@@ -669,22 +735,6 @@ public class CapabilityRepository
 		throws PortalException {
 
 		return getRepository().getSubfolderIds(folderId, recurse);
-	}
-
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(long fileEntryId) throws PortalException {
-		return getRepository().lockFileEntry(fileEntryId);
-	}
-
-	@Deprecated
-	@Override
-	public Lock lockFileEntry(
-			long fileEntryId, String owner, long expirationTime)
-		throws PortalException {
-
-		return getRepository().lockFileEntry(
-			fileEntryId, owner, expirationTime);
 	}
 
 	@Override
@@ -955,6 +1005,43 @@ public class CapabilityRepository
 			RepositoryEventType.Update.class, FileEntry.class, fileEntry);
 
 		return fileEntry;
+	}
+
+	@Override
+	public FileShortcut updateFileShortcut(
+			long userId, long fileShortcutId, long folderId, long toFileEntryId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		Repository repository = getRepository();
+
+		FileShortcut fileShortcut = repository.updateFileShortcut(
+			userId, fileShortcutId, folderId, toFileEntryId, serviceContext);
+
+		_repositoryEventTrigger.trigger(
+			RepositoryEventType.Update.class, FileShortcut.class, fileShortcut);
+
+		return fileShortcut;
+	}
+
+	@Override
+	public void updateFileShortcuts(
+			long oldToFileEntryId, long newToFileEntryId)
+		throws PortalException {
+
+		Repository repository = getRepository();
+
+		FileEntry oldToFileEntry = repository.getFileEntry(oldToFileEntryId);
+
+		List<FileShortcut> fileShortcuts = oldToFileEntry.getFileShortcuts();
+
+		for (FileShortcut fileShortcut : fileShortcuts) {
+			_repositoryEventTrigger.trigger(
+				RepositoryEventType.Update.class, FileShortcut.class,
+				fileShortcut);
+		}
+
+		repository.updateFileShortcuts(oldToFileEntryId, newToFileEntryId);
 	}
 
 	@Override

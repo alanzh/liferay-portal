@@ -22,22 +22,6 @@ String redirect = ParamUtil.getString(request, "redirect");
 long breadcrumbsFolderId = ParamUtil.getLong(request, "breadcrumbsFolderId");
 
 long searchFolderId = ParamUtil.getLong(request, "searchFolderId");
-long searchFolderIds = ParamUtil.getLong(request, "searchFolderIds");
-
-long[] folderIdsArray = null;
-
-if (searchFolderId > 0) {
-	folderIdsArray = new long[] {searchFolderId};
-}
-else {
-	List folderIds = new ArrayList();
-
-	folderIds.add(new Long(searchFolderIds));
-
-	BookmarksFolderServiceUtil.getSubfolderIds(folderIds, scopeGroupId, searchFolderIds, true);
-
-	folderIdsArray = StringUtil.split(StringUtil.merge(folderIds), 0L);
-}
 
 String keywords = ParamUtil.getString(request, "keywords");
 
@@ -57,7 +41,6 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "search"
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= breadcrumbsFolderId %>" />
 	<aui:input name="searchFolderId" type="hidden" value="<%= searchFolderId %>" />
-	<aui:input name="searchFolderIds" type="hidden" value="<%= searchFolderIds %>" />
 
 	<liferay-ui:header
 		backURL="<%= redirect %>"
@@ -71,7 +54,6 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "search"
 	portletURL.setParameter("redirect", redirect);
 	portletURL.setParameter("breadcrumbsFolderId", String.valueOf(breadcrumbsFolderId));
 	portletURL.setParameter("searchFolderId", String.valueOf(searchFolderId));
-	portletURL.setParameter("searchFolderIds", String.valueOf(searchFolderIds));
 	portletURL.setParameter("keywords", keywords);
 	%>
 
@@ -81,13 +63,13 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "search"
 	>
 
 		<%
-		Indexer indexer = BookmarksSearcher.getInstance();
+		Indexer<?> indexer = BookmarksSearcher.getInstance();
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 		searchContext.setAttribute("paginationType", "more");
 		searchContext.setEnd(searchContainer.getEnd());
-		searchContext.setFolderIds(folderIdsArray);
+		searchContext.setFolderIds(new long[] {searchFolderId});
 		searchContext.setKeywords(keywords);
 		searchContext.setStart(searchContainer.getStart());
 
@@ -144,7 +126,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "search"
 						name="type"
 						target="_blank"
 						title="<%= entry.getDescription() %>"
-						value='<%= LanguageUtil.get(locale, "entry") %>'
+						value='<%= LanguageUtil.get(request, "entry") %>'
 					/>
 
 					<liferay-ui:search-container-column-text
@@ -200,14 +182,14 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "search"
 						href="<%= rowURL %>"
 						name="type"
 						title="<%= folder.getDescription() %>"
-						value='<%= LanguageUtil.get(locale, "folder") %>'
+						value='<%= LanguageUtil.get(request, "folder") %>'
 					/>
 
 					<liferay-ui:search-container-column-text
 						href="<%= rowURL %>"
 						name="folder"
 						title="<%= folder.getDescription() %>"
-						value='<%= (parentFolder != null) ? parentFolder.getName() : LanguageUtil.get(locale, "home") %>'
+						value='<%= (parentFolder != null) ? parentFolder.getName() : LanguageUtil.get(request, "home") %>'
 					/>
 
 					<c:if test='<%= ArrayUtil.contains(folderColumns, "action") %>'>
@@ -221,7 +203,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "search"
 		</liferay-ui:search-container-row>
 
 		<div class="form-search">
-			<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" placeholder='<%= LanguageUtil.get(locale, "keywords") %>' title='<%= LanguageUtil.get(locale, "search-categories") %>' />
+			<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" placeholder='<%= LanguageUtil.get(request, "keywords") %>' title='<%= LanguageUtil.get(request, "search-categories") %>' />
 		</div>
 
 		<liferay-ui:search-iterator type="more" />

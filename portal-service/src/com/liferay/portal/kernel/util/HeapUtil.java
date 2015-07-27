@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.util;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.process.OutputProcessor;
 import com.liferay.portal.kernel.process.ProcessUtil;
 
 import java.lang.management.ManagementFactory;
@@ -39,14 +40,16 @@ public class HeapUtil {
 		return _PROCESS_ID;
 	}
 
-	public static Future<ObjectValuePair<Void, Void>> heapDump(
-		boolean live, boolean binary, String file) {
+	public static <O, E> Future<ObjectValuePair<O, E>> heapDump(
+		boolean live, boolean binary, String file,
+		OutputProcessor<O, E> outputProcessor) {
 
-		return heapDump(_PROCESS_ID, live, binary, file);
+		return heapDump(_PROCESS_ID, live, binary, file, outputProcessor);
 	}
 
-	public static Future<ObjectValuePair<Void, Void>> heapDump(
-		int processId, boolean live, boolean binary, String file) {
+	public static <O, E> Future<ObjectValuePair<O, E>> heapDump(
+		int processId, boolean live, boolean binary, String file,
+		OutputProcessor<O, E> outputProcessor) {
 
 		if (!_SUPPORTED) {
 			throw new IllegalStateException(
@@ -68,15 +71,14 @@ public class HeapUtil {
 		sb.append("file=");
 		sb.append(file);
 
-		List<String> arguments = new ArrayList<String>();
+		List<String> arguments = new ArrayList<>();
 
 		arguments.add("jmap");
 		arguments.add(sb.toString());
 		arguments.add(String.valueOf(processId));
 
 		try {
-			return ProcessUtil.execute(
-				ProcessUtil.LOGGING_OUTPUT_PROCESSOR, arguments);
+			return ProcessUtil.execute(outputProcessor, arguments);
 		}
 		catch (Exception e) {
 			throw new RuntimeException("Unable to perform heap dump", e);
@@ -88,10 +90,9 @@ public class HeapUtil {
 	}
 
 	private static void _checkJMap(int processId) throws Exception {
-		Future<ObjectValuePair<byte[], byte[]>> future =
-			ProcessUtil.execute(
-				ProcessUtil.COLLECTOR_OUTPUT_PROCESSOR, "jmap", "-histo:live",
-				String.valueOf(processId));
+		Future<ObjectValuePair<byte[], byte[]>> future = ProcessUtil.execute(
+			ProcessUtil.COLLECTOR_OUTPUT_PROCESSOR, "jmap", "-histo:live",
+			String.valueOf(processId));
 
 		ObjectValuePair<byte[], byte[]> objectValuePair = future.get();
 

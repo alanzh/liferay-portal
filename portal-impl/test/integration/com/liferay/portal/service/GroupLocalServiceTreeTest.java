@@ -14,15 +14,15 @@
 
 package com.liferay.portal.service;
 
-import com.liferay.portal.kernel.test.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.TreeModel;
-import com.liferay.portal.test.LiferayIntegrationTestRule;
-import com.liferay.portal.test.MainServletTestRule;
-import com.liferay.portal.util.test.GroupTestUtil;
-import com.liferay.portal.util.test.RandomTestUtil;
-import com.liferay.portal.util.test.TestPropsValues;
+import com.liferay.portal.service.test.BaseLocalServiceTreeTestCase;
+import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.test.rule.MainServletTestRule;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -50,8 +50,7 @@ public class GroupLocalServiceTreeTest extends BaseLocalServiceTreeTestCase {
 			parentGroupId = group.getGroupId();
 		}
 
-		Group group = GroupTestUtil.addGroup(
-			parentGroupId, RandomTestUtil.randomString());
+		Group group = GroupTestUtil.addGroup(parentGroupId);
 
 		group.setTreePath(null);
 

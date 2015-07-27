@@ -11,13 +11,33 @@
 		<#assign lineId = "${macroNameStack.peek()?uncap_first}Macro">
 	</#if>
 
-	<li id="${lineId}${lineNumber}">
+	<#if element.getName() == "task">
+		<#assign blockElement = element>
+
+		<#include "block_element_html.ftl">
+	<#else>
+		<li id="${lineId}${lineNumber}">
+
 		<#if element.getName() == "echo" || element.getName() == "fail" || element.getName() == "property" || element.getName() == "var">
 			<#assign displayElement = element>
 
 			<#include "element_whole_html.ftl">
 		<#elseif element.getName() == "execute">
 			<#if element.attributeValue("action")??>
+				<#assign displayElement = element>
+
+				<#include "element_whole_html.ftl">
+
+				<#if element.element("var")??>
+					<#assign displayElement = element>
+
+					<#include "element_open_html.ftl">
+
+					<#assign displayElement = element>
+
+					<#include "element_close_html.ftl">
+				</#if>
+			<#elseif element.attributeValue("function")??>
 				<#assign displayElement = element>
 
 				<#include "element_whole_html.ftl">
@@ -129,5 +149,7 @@
 
 			<#include "element_close_html.ftl">
 		</#if>
-	</li>
+
+		</li>
+	</#if>
 </#list>

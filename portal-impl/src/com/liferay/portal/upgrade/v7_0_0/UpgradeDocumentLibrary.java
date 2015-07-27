@@ -16,6 +16,8 @@ package com.liferay.portal.upgrade.v7_0_0;
 
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -27,13 +29,16 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.repository.portletrepository.PortletRepository;
+import com.liferay.portal.upgrade.v7_0_0.util.DLFolderTable;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -44,12 +49,44 @@ import java.util.Map;
  */
 public class UpgradeDocumentLibrary extends UpgradeProcess {
 
+	protected void addDDMStructureLink(
+			long ddmStructureLinkId, long classNameId, long classPK,
+			long ddmStructureId)
+		throws Exception {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"insert into DDMStructureLink (structureLinkId, classNameId, " +
+					"classPK, structureId) values (?, ?, ?, ?)");
+
+			ps.setLong(1, ddmStructureLinkId);
+			ps.setLong(2, classNameId);
+			ps.setLong(3, classPK);
+			ps.setLong(4, ddmStructureId);
+
+			ps.executeUpdate();
+		}
+		catch (Exception e) {
+			_log.error(
+				"Unable to add dynamic data mapping structure link " +
+					"for file entry type " + classPK);
+
+			throw e;
+		}
+		finally {
+			DataAccess.cleanUp(con, ps);
+		}
+	}
+
 	@Override
 	protected void doUpgrade() throws Exception {
 
 		// DLFileEntry
-
-		runSQL("alter table DLFileEntry add fileName VARCHAR(255) null");
 
 		updateFileEntryFileNames();
 
@@ -57,13 +94,25 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 
 		updateFileEntryTypeNamesAndDescriptions();
 
-		// DLFileVersion
+		updateFileEntryTypeDDMStructureLinks();
 
-		runSQL("alter table DLFileVersion add fileName VARCHAR(255) null");
+		// DLFileVersion
 
 		updateFileVersionFileNames();
 
-		updateClassNameIds();
+		// DLFolder
+
+		try {
+			runSQL("alter_column_type DLFolder name VARCHAR(255) null");
+		}
+		catch (SQLException sqle) {
+			upgradeTable(
+				DLFolderTable.TABLE_NAME, DLFolderTable.TABLE_COLUMNS,
+				DLFolderTable.TABLE_SQL_CREATE,
+				DLFolderTable.TABLE_SQL_ADD_INDEXES);
+		}
+
+		updateRepositoryClassNameIds();
 	}
 
 	protected boolean hasFileEntry(long groupId, long folderId, String fileName)
@@ -101,31 +150,6 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 	}
 
-	protected void updateClassNameIds() throws Exception {
-		long liferayRepositoryClassNameId = PortalUtil.getClassNameId(
-			LiferayRepository.class);
-		long portletRepositoryClassNameId = PortalUtil.getClassNameId(
-			PortletRepository.class);
-
-		Connection con = null;
-		PreparedStatement ps = null;
-
-		try {
-			con = DataAccess.getUpgradeOptimizedConnection();
-
-			ps = con.prepareStatement(
-				"update Repository set classNameId = ? where classNameId = ?");
-
-			ps.setLong(1, portletRepositoryClassNameId);
-			ps.setLong(2, liferayRepositoryClassNameId);
-
-			ps.executeUpdate();
-		}
-		finally {
-			DataAccess.cleanUp(con, ps);
-		}
-	}
-
 	protected void updateFileEntryFileName(long fileEntryId, String fileName)
 		throws Exception {
 
@@ -149,6 +173,8 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 	}
 
 	protected void updateFileEntryFileNames() throws Exception {
+		runSQL("alter table DLFileEntry add fileName VARCHAR(255) null");
+
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -246,6 +272,36 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 	}
 
+	protected void updateFileEntryTypeDDMStructureLinks() throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"select * from DLFileEntryTypes_DDMStructures");
+
+			rs = ps.executeQuery();
+
+			long classNameId = PortalUtil.getClassNameId(DLFileEntryType.class);
+
+			while (rs.next()) {
+				long structureId = rs.getLong("structureId");
+				long fileEntryTypeId = rs.getLong("fileEntryTypeId");
+
+				addDDMStructureLink(
+					increment(), classNameId, fileEntryTypeId, structureId);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
+
+		runSQL("drop table DLFileEntryTypes_DDMStructures");
+	}
+
 	protected void updateFileEntryTypeNamesAndDescriptions() throws Exception {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -279,7 +335,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 			long companyId, long groupId)
 		throws Exception {
 
-		Map<String, String> nameLanguageKeys = new HashMap<String, String>();
+		Map<String, String> nameLanguageKeys = new HashMap<>();
 
 		nameLanguageKeys.put(
 			DLFileEntryTypeConstants.NAME_CONTRACT,
@@ -466,6 +522,8 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 	}
 
 	protected void updateFileVersionFileNames() throws Exception {
+		runSQL("alter table DLFileVersion add fileName VARCHAR(255) null");
+
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -493,5 +551,33 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 			DataAccess.cleanUp(con, ps, rs);
 		}
 	}
+
+	protected void updateRepositoryClassNameIds() throws Exception {
+		long liferayRepositoryClassNameId = PortalUtil.getClassNameId(
+			LiferayRepository.class);
+		long portletRepositoryClassNameId = PortalUtil.getClassNameId(
+			PortletRepository.class);
+
+		Connection con = null;
+		PreparedStatement ps = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"update Repository set classNameId = ? where classNameId = ?");
+
+			ps.setLong(1, portletRepositoryClassNameId);
+			ps.setLong(2, liferayRepositoryClassNameId);
+
+			ps.executeUpdate();
+		}
+		finally {
+			DataAccess.cleanUp(con, ps);
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UpgradeDocumentLibrary.class);
 
 }

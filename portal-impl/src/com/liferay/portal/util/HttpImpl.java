@@ -16,11 +16,13 @@ package com.liferay.portal.util;
 
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
+import com.liferay.portal.kernel.io.unsync.UnsyncFilterInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.memory.FinalizeAction;
+import com.liferay.portal.kernel.memory.FinalizeManager;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
-import com.liferay.portal.kernel.upload.ProgressInputStream;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -36,6 +38,8 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.lang.ref.Reference;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -56,7 +60,6 @@ import java.util.regex.Pattern;
 import javax.net.SocketFactory;
 
 import javax.portlet.ActionRequest;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 
 import javax.servlet.http.Cookie;
@@ -132,6 +135,9 @@ public class HttpImpl implements Http {
 
 			_nonProxyHostsPattern = Pattern.compile(nonProxyHostsRegEx);
 		}
+		else {
+			_nonProxyHostsPattern = null;
+		}
 
 		MultiThreadedHttpConnectionManager httpConnectionManager =
 			new MultiThreadedHttpConnectionManager();
@@ -141,19 +147,21 @@ public class HttpImpl implements Http {
 
 		httpConnectionManagerParams.setConnectionTimeout(_TIMEOUT);
 		httpConnectionManagerParams.setDefaultMaxConnectionsPerHost(
-			new Integer(_MAX_CONNECTIONS_PER_HOST));
+			Integer.valueOf(_MAX_CONNECTIONS_PER_HOST));
 		httpConnectionManagerParams.setMaxTotalConnections(
-			new Integer(_MAX_TOTAL_CONNECTIONS));
+			Integer.valueOf(_MAX_TOTAL_CONNECTIONS));
 		httpConnectionManagerParams.setSoTimeout(_TIMEOUT);
 
 		_httpClient.setHttpConnectionManager(httpConnectionManager);
 		_proxyHttpClient.setHttpConnectionManager(httpConnectionManager);
 
 		if (!hasProxyConfig() || Validator.isNull(_PROXY_USERNAME)) {
+			_proxyCredentials = null;
+
 			return;
 		}
 
-		List<String> authPrefs = new ArrayList<String>();
+		List<String> authPrefs = new ArrayList<>();
 
 		if (_PROXY_AUTH_TYPE.equals("username-password")) {
 			_proxyCredentials = new UsernamePasswordCredentials(
@@ -171,6 +179,9 @@ public class HttpImpl implements Http {
 			authPrefs.add(AuthPolicy.NTLM);
 			authPrefs.add(AuthPolicy.BASIC);
 			authPrefs.add(AuthPolicy.DIGEST);
+		}
+		else {
+			_proxyCredentials = null;
 		}
 
 		HttpClientParams httpClientParams = _proxyHttpClient.getParams();
@@ -720,16 +731,79 @@ public class HttpImpl implements Http {
 	}
 
 	@Override
+	public String normalizePath(String uri) {
+		if (Validator.isNull(uri)) {
+			return uri;
+		}
+
+		uri = removePathParameters(uri);
+
+		String path = null;
+		String queryString = null;
+
+		int pos = uri.indexOf('?');
+
+		if (pos != -1) {
+			path = uri.substring(0, pos);
+			queryString = uri.substring(pos + 1);
+		}
+		else {
+			path = uri;
+		}
+
+		String[] uriParts = StringUtil.split(
+			path.substring(1), StringPool.SLASH);
+
+		List<String> parts = new ArrayList<>(uriParts.length);
+
+		for (int i = 0; i < uriParts.length; i++) {
+			String curUriPart = URLCodec.decodeURL(uriParts[i]);
+			String prevUriPart = null;
+
+			if (i > 0) {
+				prevUriPart = URLCodec.decodeURL(uriParts[i - 1]);
+			}
+
+			if (curUriPart.equals(StringPool.DOUBLE_PERIOD)) {
+				if (!prevUriPart.equals(StringPool.PERIOD)) {
+					parts.remove(parts.size() - 1);
+				}
+			}
+			else if ((curUriPart.length() > 0) &&
+					 !curUriPart.equals(StringPool.PERIOD)) {
+
+				parts.add(URLCodec.encodeURL(curUriPart));
+			}
+		}
+
+		if (parts.isEmpty()) {
+			return StringPool.SLASH;
+		}
+
+		StringBundler sb = new StringBundler(parts.size() * 2 + 2);
+
+		for (String part : parts) {
+			sb.append(StringPool.SLASH);
+			sb.append(part);
+		}
+
+		if (Validator.isNotNull(queryString)) {
+			sb.append(StringPool.QUESTION);
+			sb.append(queryString);
+		}
+
+		return sb.toString();
+	}
+
+	@Override
 	public Map<String, String[]> parameterMapFromString(String queryString) {
-		Map<String, String[]> parameterMap =
-			new LinkedHashMap<String, String[]>();
+		Map<String, String[]> parameterMap = new LinkedHashMap<>();
 
 		if (Validator.isNull(queryString)) {
 			return parameterMap;
 		}
 
-		Map<String, List<String>> tempParameterMap =
-			new LinkedHashMap<String, List<String>>();
+		Map<String, List<String>> tempParameterMap = new LinkedHashMap<>();
 
 		String[] parameters = StringUtil.split(queryString, CharPool.AMPERSAND);
 
@@ -764,7 +838,7 @@ public class HttpImpl implements Http {
 				List<String> values = tempParameterMap.get(key);
 
 				if (values == null) {
-					values = new ArrayList<String>();
+					values = new ArrayList<>();
 
 					tempParameterMap.put(key, values);
 				}
@@ -988,10 +1062,17 @@ public class HttpImpl implements Http {
 				sb.append(StringPool.SLASH);
 				sb.append(uriPart);
 			}
+			else if (pos == 0) {
+				continue;
+			}
 			else {
 				sb.append(StringPool.SLASH);
 				sb.append(uriPart.substring(0, pos));
 			}
+		}
+
+		if (sb.length() == 0) {
+			return StringPool.SLASH;
 		}
 
 		return sb.toString();
@@ -1144,8 +1225,7 @@ public class HttpImpl implements Http {
 			options.getLocation(), options.getMethod(), options.getHeaders(),
 			options.getCookies(), options.getAuth(), options.getBody(),
 			options.getFileParts(), options.getParts(), options.getResponse(),
-			options.isFollowRedirects(), options.getProgressId(),
-			options.getPortletRequest());
+			options.isFollowRedirects());
 	}
 
 	@Override
@@ -1167,6 +1247,38 @@ public class HttpImpl implements Http {
 		options.setPost(post);
 
 		return URLtoByteArray(options);
+	}
+
+	@Override
+	public InputStream URLtoInputStream(Http.Options options)
+		throws IOException {
+
+		return URLtoInputStream(
+			options.getLocation(), options.getMethod(), options.getHeaders(),
+			options.getCookies(), options.getAuth(), options.getBody(),
+			options.getFileParts(), options.getParts(), options.getResponse(),
+			options.isFollowRedirects());
+	}
+
+	@Override
+	public InputStream URLtoInputStream(String location) throws IOException {
+		Http.Options options = new Http.Options();
+
+		options.setLocation(location);
+
+		return URLtoInputStream(options);
+	}
+
+	@Override
+	public InputStream URLtoInputStream(String location, boolean post)
+		throws IOException {
+
+		Http.Options options = new Http.Options();
+
+		options.setLocation(location);
+		options.setPost(post);
+
+		return URLtoInputStream(options);
 	}
 
 	@Override
@@ -1212,6 +1324,14 @@ public class HttpImpl implements Http {
 		}
 
 		URLConnection urlConnection = url.openConnection();
+
+		if (urlConnection == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Unable to open a connection to " + url);
+			}
+
+			return null;
+		}
 
 		try (InputStream inputStream = urlConnection.getInputStream();
 			UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
@@ -1259,7 +1379,7 @@ public class HttpImpl implements Http {
 			}
 		}
 		else {
-			List<Part> partsList = new ArrayList<Part>();
+			List<Part> partsList = new ArrayList<>();
 
 			if (parts != null) {
 				for (Map.Entry<String, String> entry : parts.entrySet()) {
@@ -1386,11 +1506,46 @@ public class HttpImpl implements Http {
 			String location, Http.Method method, Map<String, String> headers,
 			Cookie[] cookies, Http.Auth auth, Http.Body body,
 			List<Http.FilePart> fileParts, Map<String, String> parts,
-			Http.Response response, boolean followRedirects, String progressId,
-			PortletRequest portletRequest)
+			Http.Response response, boolean followRedirects)
 		throws IOException {
 
-		byte[] bytes = null;
+		InputStream inputStream = URLtoInputStream(
+			location, method, headers, cookies, auth, body, fileParts, parts,
+			response, followRedirects);
+
+		if (inputStream == null) {
+			return null;
+		}
+
+		try {
+			long contentLengthLong = response.getContentLengthLong();
+
+			if (contentLengthLong > _MAX_BYTE_ARRAY_LENGTH) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("Retrieving ");
+				sb.append(location);
+				sb.append(" yields a file of size ");
+				sb.append(contentLengthLong);
+				sb.append(
+					" bytes that is too large to convert to a byte array");
+
+				throw new OutOfMemoryError(sb.toString());
+			}
+
+			return FileUtil.getBytes(inputStream);
+		}
+		finally {
+			inputStream.close();
+		}
+	}
+
+	protected InputStream URLtoInputStream(
+			String location, Http.Method method, Map<String, String> headers,
+			Cookie[] cookies, Http.Auth auth, Http.Body body,
+			List<Http.FilePart> fileParts, Map<String, String> parts,
+			Http.Response response, boolean followRedirects)
+		throws IOException {
 
 		HttpMethod httpMethod = null;
 		HttpState httpState = null;
@@ -1520,71 +1675,75 @@ public class HttpImpl implements Http {
 				String redirect = locationHeader.getValue();
 
 				if (followRedirects) {
-					return URLtoByteArray(
+					return URLtoInputStream(
 						redirect, Http.Method.GET, headers, cookies, auth, body,
-						fileParts, parts, response, followRedirects, progressId,
-						portletRequest);
+						fileParts, parts, response, followRedirects);
 				}
 				else {
 					response.setRedirect(redirect);
 				}
 			}
 
-			InputStream inputStream = httpMethod.getResponseBodyAsStream();
+			long contentLengthLong = 0;
 
-			if (inputStream != null) {
-				int contentLength = 0;
+			Header contentLengthHeader = httpMethod.getResponseHeader(
+				HttpHeaders.CONTENT_LENGTH);
 
-				Header contentLengthHeader = httpMethod.getResponseHeader(
-					HttpHeaders.CONTENT_LENGTH);
+			if (contentLengthHeader != null) {
+				contentLengthLong = GetterUtil.getLong(
+					contentLengthHeader.getValue());
 
-				if (contentLengthHeader != null) {
-					contentLength = GetterUtil.getInteger(
-						contentLengthHeader.getValue());
+				response.setContentLengthLong(contentLengthLong);
+
+				if (contentLengthLong > _MAX_BYTE_ARRAY_LENGTH) {
+					response.setContentLength(-1);
+				}
+				else {
+					int contentLength = (int)contentLengthLong;
 
 					response.setContentLength(contentLength);
 				}
+			}
 
-				Header contentType = httpMethod.getResponseHeader(
-					HttpHeaders.CONTENT_TYPE);
+			Header contentType = httpMethod.getResponseHeader(
+				HttpHeaders.CONTENT_TYPE);
 
-				if (contentType != null) {
-					response.setContentType(contentType.getValue());
-				}
-
-				if (Validator.isNotNull(progressId) &&
-					(portletRequest != null)) {
-
-					ProgressInputStream progressInputStream =
-						new ProgressInputStream(
-							portletRequest, inputStream, contentLength,
-							progressId);
-
-					try (UnsyncByteArrayOutputStream
-							unsyncByteArrayOutputStream =
-								new UnsyncByteArrayOutputStream(
-									contentLength)) {
-
-						progressInputStream.readAll(
-							unsyncByteArrayOutputStream);
-
-						bytes =
-							unsyncByteArrayOutputStream.unsafeGetByteArray();
-					}
-					finally {
-						progressInputStream.clearProgress();
-					}
-				}
-				else {
-					bytes = FileUtil.getBytes(inputStream);
-				}
+			if (contentType != null) {
+				response.setContentType(contentType.getValue());
 			}
 
 			for (Header header : httpMethod.getResponseHeaders()) {
 				response.addHeader(header.getName(), header.getValue());
 			}
 
-			return bytes;
+			InputStream inputStream = httpMethod.getResponseBodyAsStream();
+
+			final HttpMethod referenceHttpMethod = httpMethod;
+
+			final Reference<InputStream> reference = FinalizeManager.register(
+				inputStream,
+				new FinalizeAction() {
+
+					@Override
+					public void doFinalize(Reference<?> reference) {
+						referenceHttpMethod.releaseConnection();
+					}
+
+				},
+				FinalizeManager.WEAK_REFERENCE_FACTORY);
+
+			return new UnsyncFilterInputStream(inputStream) {
+
+				@Override
+				public void close() throws IOException {
+					super.close();
+
+					referenceHttpMethod.releaseConnection();
+
+					reference.clear();
+				}
+
+			};
 		}
 		finally {
 			try {
@@ -1595,20 +1754,13 @@ public class HttpImpl implements Http {
 			catch (Exception e) {
 				_log.error(e, e);
 			}
-
-			try {
-				if (httpMethod != null) {
-					httpMethod.releaseConnection();
-				}
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
 		}
 	}
 
 	private static final String _DEFAULT_USER_AGENT =
 		"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
+
+	private static final int _MAX_BYTE_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
 
 	private static final int _MAX_CONNECTIONS_PER_HOST = GetterUtil.getInteger(
 		PropsUtil.get(HttpImpl.class.getName() + ".max.connections.per.host"),
@@ -1646,14 +1798,14 @@ public class HttpImpl implements Http {
 	private static final int _TIMEOUT = GetterUtil.getInteger(
 		PropsUtil.get(HttpImpl.class.getName() + ".timeout"), 5000);
 
-	private static Log _log = LogFactoryUtil.getLog(HttpImpl.class);
+	private static final Log _log = LogFactoryUtil.getLog(HttpImpl.class);
 
-	private static ThreadLocal<Cookie[]> _cookies = new ThreadLocal<Cookie[]>();
+	private static final ThreadLocal<Cookie[]> _cookies = new ThreadLocal<>();
 
-	private HttpClient _httpClient = new HttpClient();
-	private Pattern _nonProxyHostsPattern;
-	private Credentials _proxyCredentials;
-	private HttpClient _proxyHttpClient = new HttpClient();
+	private final HttpClient _httpClient = new HttpClient();
+	private final Pattern _nonProxyHostsPattern;
+	private final Credentials _proxyCredentials;
+	private final HttpClient _proxyHttpClient = new HttpClient();
 
 	private class FastProtocolSocketFactory
 		extends DefaultProtocolSocketFactory {

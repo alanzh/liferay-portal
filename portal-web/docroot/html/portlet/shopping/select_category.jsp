@@ -76,7 +76,7 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 			<%
 			List subcategoryIds = new ArrayList();
 
-			subcategoryIds.add(new Long(curCategory.getCategoryId()));
+			subcategoryIds.add(Long.valueOf(curCategory.getCategoryId()));
 
 			ShoppingCategoryServiceUtil.getSubcategoryIds(subcategoryIds, scopeGroupId, curCategory.getCategoryId());
 
@@ -114,6 +114,6 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script use="aui-base">
+<aui:script>
 	Liferay.Util.selectEntityHandler('#<portlet:namespace />fm', '<%= HtmlUtil.escapeJS(eventName) %>');
 </aui:script>

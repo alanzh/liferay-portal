@@ -63,6 +63,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 		attributes.put("classPK", getClassPK());
 		attributes.put("classUuid", getClassUuid());
 		attributes.put("classTypeId", getClassTypeId());
+		attributes.put("listable", getListable());
 		attributes.put("visible", getVisible());
 		attributes.put("startDate", getStartDate());
 		attributes.put("endDate", getEndDate());
@@ -148,6 +149,12 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 
 		if (classTypeId != null) {
 			setClassTypeId(classTypeId);
+		}
+
+		Boolean listable = (Boolean)attributes.get("listable");
+
+		if (listable != null) {
+			setListable(listable);
 		}
 
 		Boolean visible = (Boolean)attributes.get("visible");
@@ -342,7 +349,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the create date of this asset entry
 	*/
 	@Override
-	public java.util.Date getCreateDate() {
+	public Date getCreateDate() {
 		return _assetEntry.getCreateDate();
 	}
 
@@ -425,7 +432,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the locales and localized descriptions of this asset entry
 	*/
 	@Override
-	public java.util.Map<java.util.Locale, java.lang.String> getDescriptionMap() {
+	public Map<java.util.Locale, java.lang.String> getDescriptionMap() {
 		return _assetEntry.getDescriptionMap();
 	}
 
@@ -435,7 +442,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the end date of this asset entry
 	*/
 	@Override
-	public java.util.Date getEndDate() {
+	public Date getEndDate() {
 		return _assetEntry.getEndDate();
 	}
 
@@ -460,7 +467,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the expiration date of this asset entry
 	*/
 	@Override
-	public java.util.Date getExpirationDate() {
+	public Date getExpirationDate() {
 		return _assetEntry.getExpirationDate();
 	}
 
@@ -495,6 +502,16 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	}
 
 	/**
+	* Returns the listable of this asset entry.
+	*
+	* @return the listable of this asset entry
+	*/
+	@Override
+	public boolean getListable() {
+		return _assetEntry.getListable();
+	}
+
+	/**
 	* Returns the mime type of this asset entry.
 	*
 	* @return the mime type of this asset entry
@@ -510,7 +527,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the modified date of this asset entry
 	*/
 	@Override
-	public java.util.Date getModifiedDate() {
+	public Date getModifiedDate() {
 		return _assetEntry.getModifiedDate();
 	}
 
@@ -545,7 +562,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the publish date of this asset entry
 	*/
 	@Override
-	public java.util.Date getPublishDate() {
+	public Date getPublishDate() {
 		return _assetEntry.getPublishDate();
 	}
 
@@ -555,7 +572,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the start date of this asset entry
 	*/
 	@Override
-	public java.util.Date getStartDate() {
+	public Date getStartDate() {
 		return _assetEntry.getStartDate();
 	}
 
@@ -633,7 +650,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the locales and localized summaries of this asset entry
 	*/
 	@Override
-	public java.util.Map<java.util.Locale, java.lang.String> getSummaryMap() {
+	public Map<java.util.Locale, java.lang.String> getSummaryMap() {
 		return _assetEntry.getSummaryMap();
 	}
 
@@ -720,7 +737,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @return the locales and localized titles of this asset entry
 	*/
 	@Override
-	public java.util.Map<java.util.Locale, java.lang.String> getTitleMap() {
+	public Map<java.util.Locale, java.lang.String> getTitleMap() {
 		return _assetEntry.getTitleMap();
 	}
 
@@ -807,6 +824,16 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	@Override
 	public boolean isEscapedModel() {
 		return _assetEntry.isEscapedModel();
+	}
+
+	/**
+	* Returns <code>true</code> if this asset entry is listable.
+	*
+	* @return <code>true</code> if this asset entry is listable; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isListable() {
+		return _assetEntry.isListable();
 	}
 
 	@Override
@@ -908,7 +935,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param createDate the create date of this asset entry
 	*/
 	@Override
-	public void setCreateDate(java.util.Date createDate) {
+	public void setCreateDate(Date createDate) {
 		_assetEntry.setCreateDate(createDate);
 	}
 
@@ -959,7 +986,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	*/
 	@Override
 	public void setDescriptionMap(
-		java.util.Map<java.util.Locale, java.lang.String> descriptionMap) {
+		Map<java.util.Locale, java.lang.String> descriptionMap) {
 		_assetEntry.setDescriptionMap(descriptionMap);
 	}
 
@@ -971,7 +998,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	*/
 	@Override
 	public void setDescriptionMap(
-		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.util.Locale defaultLocale) {
 		_assetEntry.setDescriptionMap(descriptionMap, defaultLocale);
 	}
@@ -982,7 +1009,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param endDate the end date of this asset entry
 	*/
 	@Override
-	public void setEndDate(java.util.Date endDate) {
+	public void setEndDate(Date endDate) {
 		_assetEntry.setEndDate(endDate);
 	}
 
@@ -1020,7 +1047,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param expirationDate the expiration date of this asset entry
 	*/
 	@Override
-	public void setExpirationDate(java.util.Date expirationDate) {
+	public void setExpirationDate(Date expirationDate) {
 		_assetEntry.setExpirationDate(expirationDate);
 	}
 
@@ -1055,6 +1082,16 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	}
 
 	/**
+	* Sets whether this asset entry is listable.
+	*
+	* @param listable the listable of this asset entry
+	*/
+	@Override
+	public void setListable(boolean listable) {
+		_assetEntry.setListable(listable);
+	}
+
+	/**
 	* Sets the mime type of this asset entry.
 	*
 	* @param mimeType the mime type of this asset entry
@@ -1070,7 +1107,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param modifiedDate the modified date of this asset entry
 	*/
 	@Override
-	public void setModifiedDate(java.util.Date modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		_assetEntry.setModifiedDate(modifiedDate);
 	}
 
@@ -1110,7 +1147,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param publishDate the publish date of this asset entry
 	*/
 	@Override
-	public void setPublishDate(java.util.Date publishDate) {
+	public void setPublishDate(Date publishDate) {
 		_assetEntry.setPublishDate(publishDate);
 	}
 
@@ -1120,7 +1157,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param startDate the start date of this asset entry
 	*/
 	@Override
-	public void setStartDate(java.util.Date startDate) {
+	public void setStartDate(Date startDate) {
 		_assetEntry.setStartDate(startDate);
 	}
 
@@ -1170,7 +1207,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	*/
 	@Override
 	public void setSummaryMap(
-		java.util.Map<java.util.Locale, java.lang.String> summaryMap) {
+		Map<java.util.Locale, java.lang.String> summaryMap) {
 		_assetEntry.setSummaryMap(summaryMap);
 	}
 
@@ -1182,7 +1219,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	*/
 	@Override
 	public void setSummaryMap(
-		java.util.Map<java.util.Locale, java.lang.String> summaryMap,
+		Map<java.util.Locale, java.lang.String> summaryMap,
 		java.util.Locale defaultLocale) {
 		_assetEntry.setSummaryMap(summaryMap, defaultLocale);
 	}
@@ -1232,8 +1269,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param titleMap the locales and localized titles of this asset entry
 	*/
 	@Override
-	public void setTitleMap(
-		java.util.Map<java.util.Locale, java.lang.String> titleMap) {
+	public void setTitleMap(Map<java.util.Locale, java.lang.String> titleMap) {
 		_assetEntry.setTitleMap(titleMap);
 	}
 
@@ -1244,8 +1280,7 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	* @param defaultLocale the default locale
 	*/
 	@Override
-	public void setTitleMap(
-		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+	public void setTitleMap(Map<java.util.Locale, java.lang.String> titleMap,
 		java.util.Locale defaultLocale) {
 		_assetEntry.setTitleMap(titleMap, defaultLocale);
 	}

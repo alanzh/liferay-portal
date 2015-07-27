@@ -14,15 +14,8 @@
 
 package com.liferay.portal.kernel.repository.capabilities;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.repository.DocumentRepository;
-
 /**
  * @author Adolfo Pérez
  */
 public interface SyncCapability extends Capability {
-
-	public void destroyDocumentRepository(DocumentRepository documentRepository)
-		throws PortalException;
-
 }

@@ -46,6 +46,9 @@ public class ProcessUtil {
 	public static final ConsumerOutputProcessor CONSUMER_OUTPUT_PROCESSOR =
 		new ConsumerOutputProcessor();
 
+	public static final EchoOutputProcessor ECHO_OUTPUT_PROCESSOR =
+		new EchoOutputProcessor();
+
 	public static final LoggingOutputProcessor LOGGING_OUTPUT_PROCESSOR =
 		new LoggingOutputProcessor();
 
@@ -140,8 +143,7 @@ public class ProcessUtil {
 			final Process process) {
 
 		final DefaultNoticeableFuture<ObjectValuePair<O, E>>
-			defaultNoticeableFuture =
-				new DefaultNoticeableFuture<ObjectValuePair<O, E>>();
+			defaultNoticeableFuture = new DefaultNoticeableFuture<>();
 
 		defaultNoticeableFuture.addFutureListener(
 			new FutureListener<ObjectValuePair<O, E>>() {
@@ -162,10 +164,10 @@ public class ProcessUtil {
 			});
 
 		final AtomicMarkableReference<O> stdOutReference =
-			new AtomicMarkableReference<O>(null, false);
+			new AtomicMarkableReference<>(null, false);
 
 		final AtomicMarkableReference<E> stdErrReference =
-			new AtomicMarkableReference<E>(null, false);
+			new AtomicMarkableReference<>(null, false);
 
 		stdOutNoticeableFuture.addFutureListener(
 			new BaseFutureListener<O>() {

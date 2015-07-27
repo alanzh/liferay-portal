@@ -21,13 +21,17 @@ import com.liferay.sync.engine.util.FileUtil;
 import com.liferay.sync.engine.util.LoggerUtil;
 import com.liferay.sync.engine.util.PropsKeys;
 import com.liferay.sync.engine.util.PropsUtil;
+import com.liferay.sync.engine.util.PropsValues;
 import com.liferay.sync.engine.util.StreamUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import java.util.concurrent.Executors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -47,6 +51,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
@@ -69,9 +74,9 @@ public abstract class BaseTestCase {
 	public void setUp() throws Exception {
 		PropsUtil.set(PropsKeys.SYNC_DATABASE_NAME, "sync-test");
 		PropsUtil.set(
-			PropsKeys.SYNC_LOGGER_CONFIGURATION_FILE, "sync-test-log4j.xml");
+			PropsKeys.SYNC_LOGGER_CONFIGURATION_FILE, "sync-test-logback.xml");
 
-		LoggerUtil.initLogger();
+		LoggerUtil.init();
 
 		UpgradeUtil.upgrade();
 
@@ -79,7 +84,7 @@ public abstract class BaseTestCase {
 			System.getProperty("user.home"), "liferay-sync-test");
 
 		syncAccount = SyncAccountService.addSyncAccount(
-			filePathName, "test@liferay.com", 1, "test", "test", 5, null, false,
+			filePathName, "test@liferay.com", 1, "test", 5, null, null, false,
 			"http://localhost:8080");
 
 		syncAccount.setActive(true);
@@ -87,22 +92,44 @@ public abstract class BaseTestCase {
 
 		SyncAccountService.update(syncAccount);
 
-		PowerMockito.mockStatic(SyncEngine.class);
+		PowerMockito.stub(
+			PowerMockito.method(SyncEngine.class, "getExecutorService")
+		).toReturn(
+			Executors.newCachedThreadPool()
+		);
 
-		Mockito.when(
-			SyncEngine.isRunning()
-		).thenReturn(
+		PowerMockito.stub(
+			PowerMockito.method(SyncEngine.class, "isRunning")
+		).toReturn(
 			true
 		);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		Path filePath = Paths.get(filePathName);
+		try {
+			Path filePath = Paths.get(filePathName);
 
-		FileUtils.deleteDirectory(filePath.toFile());
+			FileUtils.deleteDirectory(filePath.toFile());
 
-		SyncAccountService.deleteSyncAccount(syncAccount.getSyncAccountId());
+			syncAccount = SyncAccountService.fetchSyncAccount(
+				syncAccount.getSyncAccountId());
+
+			if (syncAccount != null) {
+				SyncAccountService.deleteSyncAccount(
+					syncAccount.getSyncAccountId());
+			}
+		}
+		catch (Exception e) {
+			_logger.error(e.getMessage(), e);
+		}
+		finally {
+			Path databaseFilePath = FileUtil.getFilePath(
+				PropsValues.SYNC_CONFIGURATION_DIRECTORY,
+				PropsValues.SYNC_DATABASE_NAME + ".h2.db");
+
+			Files.deleteIfExists(databaseFilePath);
+		}
 	}
 
 	protected final InputStream getInputStream(String fileName) {
@@ -120,7 +147,7 @@ public abstract class BaseTestCase {
 		Mockito.when(
 			closeableHttpClient.execute(
 				Mockito.any(HttpHost.class), Mockito.any(HttpRequest.class),
-				Mockito.any(ResponseHandler.class),
+				Matchers.<ResponseHandler<Void>>any(),
 				Mockito.any(HttpContext.class))
 		).thenCallRealMethod();
 

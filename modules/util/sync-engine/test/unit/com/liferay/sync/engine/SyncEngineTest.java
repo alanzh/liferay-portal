@@ -17,6 +17,9 @@ package com.liferay.sync.engine;
 import com.liferay.sync.engine.listener.SyncEngineListener;
 import com.liferay.sync.engine.util.SyncEngineUtil;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,14 +30,20 @@ public class SyncEngineTest {
 
 	@Test
 	public void testStop() throws Exception {
+		final CountDownLatch countDownLatch = new CountDownLatch(1);
+
 		SyncEngineListener syncEngineListener = new SyncEngineListener() {
 
 			@Override
-			public void syncEngineStateChanged(int syncEngineState) {
+			public void syncEngineStateChanged(
+				long syncAccountId, int syncEngineState) {
+
 				if (syncEngineState ==
 						SyncEngineUtil.SYNC_ENGINE_STATE_STOPPED) {
 
 					_stopped = true;
+
+					countDownLatch.countDown();
 				}
 			}
 
@@ -42,27 +51,13 @@ public class SyncEngineTest {
 
 		SyncEngineUtil.registerSyncEngineListener(syncEngineListener);
 
-		Thread thread = new Thread(
-			new Runnable() {
-
-				@Override
-				public void run() {
-					SyncEngine.start();
-				}
-
-			});
-
-		thread.start();
-
-		Thread.sleep(100);
+		SyncEngine.start();
 
 		SyncEngine.stop();
 
-		Thread.sleep(100);
+		countDownLatch.await(5, TimeUnit.SECONDS);
 
-		if (!_stopped) {
-			Assert.fail();
-		}
+		Assert.assertTrue(_stopped);
 	}
 
 	private boolean _stopped;
